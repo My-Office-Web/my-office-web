@@ -1,5 +1,5 @@
 # My Office
-Uma ferramenta para divulgação e busca de aluguel de salas de reunião. 
+Uma plataforma prática e intuitiva para buscar e alugar salas de reunião. Oferece uma seleção de espaços ideais para eventos corporativos, treinamentos e encontros profissionais. Com filtros personalizados, facilita a escolha do ambiente perfeito conforme suas necessidades.
 
 ## Membros da Equipe
 - [Agustin Emanuel Fernandez](https://github.com/agustindefino22) 
@@ -17,8 +17,8 @@ Uma ferramenta para divulgação e busca de aluguel de salas de reunião.
 
 ## Requisitos Funcionais
 
-- Cadastro de Usuário: O sistema permitirá que os usuários criem uma conta, fornecendo informações pessoais como nome, e-mail, senha e outros dados necessários para o cadastro. (Agustin Emanuel Fernandez)
-- Edição de Conta de Usuário: O sistema permitirá que o usuário altere seus dados como senha, telefone, email ou até mesmo inserir alguma imagem como avatar de sua conta. (Glauberty Alerrando Chagas Ribeiro)
-- Cadastro de Salas: O sistema permitirá que os locadores registrem suas salas de reunião, incluindo dados essenciais como capacidade, localização, infraestrutura disponível (Wi-Fi, projetores, etc.) e fotos das salas. (Maria Pilar Aponte)
-- Filtros de Pesquisa: O sistema permitirá que os locatários filtrem as salas com base em critérios como localização, capacidade, preço e serviços disponíveis, proporcionando uma busca personalizada e eficiente. (Hayla Alzirio Alves)
-- Edição de Salas: O sistema permitirá que os locatários editem informações das salas, caso necessário, garantindo que as informações estejam sempre atualizadas e precisas. (Fernando Agostini Ecker)
+- **CRUD de Usuário:** O sistema permitirá que os usuários criem, editem e deletem uma conta, fornecendo informações pessoais como nome, e-mail, senha e outros dados necessários para o cadastro. *(Agustin Emanuel Fernandez)*
+- **CRUD de Salas:** O sistema permitirá que os locadores registrem, editem e deletem suas salas de reunião, incluindo dados essenciais como capacidade, localização, infraestrutura disponível (Wi-Fi, projetores, etc.) e fotos das salas. *(Maria Pilar Aponte)*
+- **Filtros de Pesquisa:** O sistema permitirá que os locatários filtrem as salas com base em critérios como localização, capacidade, preço e serviços disponíveis, proporcionando uma busca personalizada e eficiente. *(Hayla Alzirio Alves)*
+- **Reserva de Salas:** O sistema permitirá que o usuário reserve alguma sala específica para manter disponível com antecedência algum horario que deseja locar, assim como alterar o status de reserva ou cancelá-la. *(Glauberty Alerrando Chagas Ribeiro)*
+- **Salas Favoritas:** O sistema permitirá que os usuários favoritem salas especificas a sua vontade, podendo favoritar e desfavoritas varias salas para então observá-las numa página que listariam suas salas favoritas. *(Fernando Agostini Ecker)*

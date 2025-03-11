@@ -14,6 +14,8 @@ Uma plataforma prática e intuitiva para buscar e alugar salas de reunião. Ofer
 - [Cadastro de Sala](prototipo-telas/cadastro-sala.jpeg)
 - [Tela de Login](prototipo-telas/login.jpeg)
 - [Salas Cadastradas](prototipo-telas/salas-cadastradas.jpeg)
+- [Salas Favoritas](prototipo-telas/salas-favoritas.jpg)
+- [Detalhes de Sala](prototipo-telas/reserva-de-sala.jpg)
 
 ## Requisitos Funcionais
 

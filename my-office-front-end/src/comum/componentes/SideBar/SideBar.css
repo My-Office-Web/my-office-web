@@ -1,0 +1,222 @@
+/* Reset e base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  background-color: #f7f7f7;
+  color: #2c3e50; 
+}
+
+/* Barra superior estilo My-Office */
+.my-office-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: linear-gradient(to right, #083796, #08967D);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  border-bottom: 3px solid #16a085;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.my-office-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.my-office-menu-btn {
+  font-size: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+.my-office-logo {
+  font-weight: bold;
+  font-size: 26px;
+  letter-spacing: 1px;
+}
+
+.my-office-logo .z {
+  color: #8000ff;
+}
+
+.my-office-logo .ap {
+  color: #ff6d00;
+}
+
+.my-office-links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  list-style: none;
+}
+
+.my-office-links li {
+  cursor: pointer;
+  color: white;
+  transition: 0.2s;
+}
+
+.my-office-links li:hover {
+  text-decoration: underline;
+  color: #ff6d00;
+}
+
+.my-office-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.my-office-btn-primary {
+  background: linear-gradient(135deg, #ff7403, #ff9900);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 12px;
+  box-shadow: 0 4px 10px rgba(255, 116, 3, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.my-office-btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(255, 116, 3, 0.5);
+}
+
+.my-office-btn-outline {
+  background: transparent;
+  border: 2px solid #ff7403;
+  color: #ff7403;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(255, 116, 3, 0.2);
+}
+
+.my-office-btn-outline:hover {
+  background-color: #ff7403;
+  color: white;
+  transform: scale(1.05);
+}
+
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(to right, #1444a5, #08967D);
+  position: fixed;
+  top: 0;
+  left: -250px;
+  transition: left 0.3s ease;
+  z-index: 998;
+  padding-top: 80px;
+  box-shadow: 2px 0px 8px rgba(0, 0, 0, 0.3); 
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #ecf0f1;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 18px 25px;
+  color: #bdc3c7;
+  font-size: 18px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  border-bottom: 1px solid #2c3e50;
+}
+
+.nav-item:hover {
+  background-color: #08967D;
+  color: white;
+}
+
+.nav-item:active {
+  background-color: #1abc9c;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+.sidebar-footer {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  color: #ecf0f1;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.sidebar-footer a {
+  color: #ecf0f1;
+  text-decoration: none;
+}
+
+.sidebar-footer a:hover {
+  color: #16a085;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .my-office-navbar {
+    padding: 12px 20px;
+  }
+
+  .my-office-logo {
+    font-size: 22px;
+  }
+
+  .sidebar {
+    width: 200px;
+    padding-top: 70px;
+  }
+
+  .nav-item {
+    font-size: 16px;
+  }
+
+  .my-office-links {
+    display: none; /* Esconde o menu horizontal em telas pequenas */
+  }
+}

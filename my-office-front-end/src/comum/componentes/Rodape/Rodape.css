@@ -1,0 +1,41 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Rodapé */
+  .rodape_root {
+    background: linear-gradient(to right, #083796, #08967D);
+    color: white;
+    padding: 20px 30px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+  }
+  
+  .rodape-content p {
+    font-size: 14px;
+    color: #bdc3c7;
+  }
+  
+  .rodape_root:hover {
+    background-color: #34495e;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .rodape_root {
+      padding: 15px 20px;
+    }
+  
+    .rodape-content p {
+      font-size: 12px;
+    }
+  }
+  

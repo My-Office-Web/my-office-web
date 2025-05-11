@@ -90,17 +90,17 @@ const PaginaInicial = () => {
               <img src="/imagem-inicial.jpg" alt="Imagem 1" />
             </div>
             <div>
-              <img src="/imagem-inicial.jpg" alt="Imagem 2" />
+              <img src="/escritorio.jpg" alt="Imagem 2" />
             </div>
             <div>
-              <img src="/imagem-inicial.jpg" alt="Imagem 3" />
+              <img src="/predio-comercial.jpg" alt="Imagem 3" />
             </div>
           </Slider>
         </div>
 
         <div className="my-office-container">
           <div className="my-office-title">
-            A casa que você quer está aqui. Só no My Office você encontra 7 milhões de imóveis.
+            A lugar que você quer está aqui. Só no My Office você encontra 2 milhões de salas.
           </div>
 
           <div className="my-office-tabs">

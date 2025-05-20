@@ -4,8 +4,9 @@ import PaginaInicial from './comum/Componentes/Paginas/PaginaInicial/PaginaInici
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CadastroSala from './comum/Componentes/Paginas/PaginaCadatroSala/PaginaCadastroSala';
-import AppBarLogado from './comum/Componentes/Paginas/PaginaLogado/AppBarLogado';
 import PaginaInicialLogado from './comum/Componentes/Paginas/PaginaLogado/PaginaInicialLogado';
+import AlugarlSala from './comum/Componentes/Paginas/AlugarSala/AlugarSala';
+import Anunciar from './comum/Componentes/Paginas/AnunciarSala/Anunciar';
 
 // Apenas páginas reais no roteador
 const router = createBrowserRouter([
@@ -20,6 +21,14 @@ const router = createBrowserRouter([
   {
     path: '/pagina-logado',
     element: <PaginaInicialLogado/>
+  },
+  {
+    path: '/alugar',
+    element: <AlugarlSala/>
+  },
+  {
+    path: '/anunciar',
+    element:<Anunciar/>
   },
 ]);
 

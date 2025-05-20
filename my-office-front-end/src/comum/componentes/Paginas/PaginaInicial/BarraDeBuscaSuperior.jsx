@@ -16,10 +16,10 @@ export default function FiltroImoveis() {
 
   const tiposImovel = [
     'Todos as salas',
-    'Residencial',
     'Comercial',
     'Corporativo',
     'Educacional',
+    'Residencial',
   ];
 
   return (

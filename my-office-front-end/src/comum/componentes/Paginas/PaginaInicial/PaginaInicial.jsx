@@ -30,9 +30,9 @@ const PaginaInicial = () => {
         <CustomCarousel />
       </Container>
 
-      <Container sx={{ py: 4 }} maxWidth="">
-        <Footer />
-      </Container>
+      <Container maxWidth={false} disableGutters sx={{ py: 4 }}>
+          <Footer />
+        </Container>
     </ThemeProvider>
       </>
   );

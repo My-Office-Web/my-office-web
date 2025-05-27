@@ -14,6 +14,9 @@ import HomeIcon from "@mui/icons-material/Home"; // Icone para "Início"
 import FavoriteIcon from "@mui/icons-material/Favorite"; // Icone para "Favoritos"
 import HelpIcon from "@mui/icons-material/Help"; // Icone para "Ajuda"
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom"; // Icone para "Salas"
+import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+
+const instanciaAutenticacao = new ServicoAutenticacao()
 
 export default function AppBarLogado() {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -30,6 +33,10 @@ export default function AppBarLogado() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  
+  const handleLogout = () => {
+    instanciaAutenticacao.logout()
+  }
 
   // Nome do usuário
   const userName = "João Silva";
@@ -106,7 +113,7 @@ export default function AppBarLogado() {
               }}
             >
               <MenuItem onClick={handleCloseUserMenu}>Perfil</MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>Sair</MenuItem>
+              <MenuItem onClick={handleLogout}>Sair</MenuItem>
             </Menu>
           </Box>
         </Toolbar>

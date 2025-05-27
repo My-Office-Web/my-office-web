@@ -5,9 +5,15 @@ import {
 } from '@mui/material';
 import { toast } from 'react-toastify';
 import ValidarLogin from '../../../../classes/ValidarImputs/validarLogin';
+import ServicoAutenticacao from '../../../servicos/ServicoAutenticacao';
+import { useNavigate } from 'react-router-dom';
+
+const instanciaAutenticacao = new ServicoAutenticacao()
 
 export default function ModalLogin({ open, onClose, toggleModalCadastro }) {
   const [form, setForm] = useState({ email: '', senha: '' });
+
+  const navigate = useNavigate()
 
   const handleChange = ({ target }) => {
     setForm((prev) => ({ ...prev, [target.name]: target.value }));
@@ -21,9 +27,10 @@ export default function ModalLogin({ open, onClose, toggleModalCadastro }) {
       Object.values(erros).forEach((msg) => toast.error(msg));
       return;
     }
-
+    const { email, senha } = form
+    instanciaAutenticacao.login(email,senha)
     toast.success('Login realizado com sucesso!');
-
+    navigate("/pagina-logado")
     setTimeout(() => {
       onClose();
     }, 500);

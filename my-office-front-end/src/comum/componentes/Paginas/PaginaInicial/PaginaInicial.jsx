@@ -8,6 +8,7 @@ import Footer from "../Footer/Footer";
 import React, { useEffect, useState } from "react";
 import { lightTheme, darkTheme } from "../../../Theme/theme";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+import AppBarLogado from "../PaginaLogado/AppBarLogado";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
@@ -30,8 +31,7 @@ const PaginaInicial = () => {
     <DarkMode isDark={isDark} toggleTheme={toggleTheme} />
     <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
       <CssBaseline />
-
-      <ButtonAppBar />
+      {usuarioAutenticado ? <AppBarLogado/> : <ButtonAppBar />}
 
       <Container sx={{ py: 4 }} maxWidth="">
         <FiltroImoveis />

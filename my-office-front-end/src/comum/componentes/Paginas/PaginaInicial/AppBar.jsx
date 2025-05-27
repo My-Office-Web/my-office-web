@@ -48,18 +48,6 @@ export default function ButtonAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 15 }}>
             MyOffice
           </Typography>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 5 }}>
-            MyOffice
-          </Typography>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 5 }}>
-            MyOffice
-          </Typography>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 5 }}>
-            MyOffice
-          </Typography>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 15 }}>
-            MyOffice
-          </Typography>
 
           {/* BOTÃO CRIAR CONTA abre modal */}
           <Button

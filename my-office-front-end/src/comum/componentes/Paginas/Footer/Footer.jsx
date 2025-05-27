@@ -22,7 +22,7 @@ const Footer = () => {
       component="footer"
       sx={{ bgcolor: "#0d1b2a", color: "#ffffff", pt: 6, pb: 3 }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" >
         <Grid container spacing={30} alignItems="flex-start">
           <Grid item xs={12} sm={6} md={3}>
             <Box display="flex" flexDirection="column" height="100%">

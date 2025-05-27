@@ -5,15 +5,26 @@ import CustomCarousel from "../../../Componentes/Paginas/CarrousselInicial/Carro
 import DarkMode from "../../DarkMode/DarkMode";
 import Footer from "../Footer/Footer";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { lightTheme, darkTheme } from "../../../Theme/theme";
+import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+
+const instanciaAutenticacao = new ServicoAutenticacao();
 
 const PaginaInicial = () => {
+
+  const [usuarioAutenticado, setUsuarioAutenticado ] = useState(false)
+
   const [isDark, setIsDark] = useState(false);
 
   const toggleTheme = (checked) => {
     setIsDark(checked);
   };
+   
+  useEffect(() =>{
+    const usuarioLogado = instanciaAutenticacao.usuarioEstaLogado();
+    setUsuarioAutenticado(usuarioLogado)
+  },[])
 
   return ( <>
     <DarkMode isDark={isDark} toggleTheme={toggleTheme} />

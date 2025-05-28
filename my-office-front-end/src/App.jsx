@@ -6,7 +6,7 @@ import CadastroSala from './comum/Componentes/Paginas/PaginaCadatroSala/PaginaCa
 import PaginaInicialLogado from './comum/Componentes/Paginas/PaginaLogado/PaginaInicialLogado';
 import AlugarlSala from './comum/Componentes/Paginas/AlugarSala/AlugarSala';
 import Anunciar from './comum/Componentes/Paginas/AnunciarSala/Anunciar';
-import PaginaInicial from './comum/componentes/Paginas/PaginaInicial/PaginaInicial';
+import PaginaInicial from './comum/Componentes/Paginas/PaginaInicial/PaginaInicial';
 
 // Apenas páginas reais no roteador
 const router = createBrowserRouter([

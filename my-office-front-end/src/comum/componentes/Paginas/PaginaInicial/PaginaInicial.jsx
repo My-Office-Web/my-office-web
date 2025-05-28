@@ -1,4 +1,4 @@
-import { Container, ThemeProvider, CssBaseline } from "@mui/material";
+import { Container, ThemeProvider, CssBaseline, Box } from "@mui/material";
 import ButtonAppBar from "../../Paginas/PaginaInicial/AppBar";
 import FiltroImoveis from "../../Paginas/PaginaInicial/BarraDeBuscaSuperior";
 import CustomCarousel from "../../../Componentes/Paginas/CarrousselInicial/CarrousselInicial";
@@ -9,43 +9,54 @@ import React, { useEffect, useState } from "react";
 import { lightTheme, darkTheme } from "../../../Theme/theme";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import AppBarLogado from "../PaginaLogado/AppBarLogado";
+import CardSala from "../../CardSala/CardSala";
+import SalasLista from "../../CardSala/SalasLista";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
 const PaginaInicial = () => {
-
-  const [usuarioAutenticado, setUsuarioAutenticado ] = useState(false)
+  const [usuarioAutenticado, setUsuarioAutenticado] = useState(false);
 
   const [isDark, setIsDark] = useState(false);
 
   const toggleTheme = (checked) => {
     setIsDark(checked);
   };
-   
-  useEffect(() =>{
+
+  useEffect(() => {
     const usuarioLogado = instanciaAutenticacao.usuarioEstaLogado();
-    setUsuarioAutenticado(usuarioLogado)
-  },[])
+    setUsuarioAutenticado(usuarioLogado);
+  }, []);
 
-  return ( <>
-    <DarkMode isDark={isDark} toggleTheme={toggleTheme} />
-    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-      <CssBaseline />
-      {usuarioAutenticado ? <AppBarLogado/> : <ButtonAppBar />}
+  return (
+    <>
+      <DarkMode isDark={isDark} toggleTheme={toggleTheme} />
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <CssBaseline />
+        {usuarioAutenticado ? <AppBarLogado /> : <ButtonAppBar />}
 
-      <Container sx={{ py: 4 }} maxWidth="">
-        <FiltroImoveis />
-      </Container>
+        <Container sx={{ py: 4 }} maxWidth="">
+          <FiltroImoveis />
+        </Container>
+        <Container
+  sx={{
+    py: 4,
+  }}
+  maxWidth={false}
+>
 
-      <Container sx={{ py: 4 }} maxWidth="">
-        <CustomCarousel />
-      </Container>
+  <SalasLista />
+</Container>
 
-      <Container maxWidth={false} disableGutters sx={{ py: 0 }}>
+        <Container sx={{ py: 4 }} maxWidth="">
+          <CustomCarousel />
+        </Container>
+
+        <Container maxWidth={false} disableGutters sx={{ py: 0 }}>
           <Footer />
         </Container>
-    </ThemeProvider>
-      </>
+      </ThemeProvider>
+    </>
   );
 };
 

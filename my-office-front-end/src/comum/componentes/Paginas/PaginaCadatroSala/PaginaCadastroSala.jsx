@@ -17,16 +17,83 @@ import { UploadFile } from '@mui/icons-material';
 export default function CadastroSalaCompleto() {
   const [preview, setPreview] = useState(null);
   const [tipoSala, setTipoSala] = useState('');
+  const [form, setForm] = useState({
+    cep: '',
+    estado: '',
+    cidade: '',
+    bairro: '',
+    rua: '',
+    numero: '',
+    preco: '',
+    capacidade: '',
+    descricao: '',
+    imagem: '',
+  });
 
-  const handleImageChange = (e) => {
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setPreview(URL.createObjectURL(file));
+      const base64 = await toBase64(file);
+      setPreview(base64);
+      setForm({ ...form, imagem: base64 });
     }
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleCancelar = () => {
     alert('Cadastro cancelado.');
+    setForm({
+      cep: '',
+      estado: '',
+      cidade: '',
+      bairro: '',
+      rua: '',
+      numero: '',
+      preco: '',
+      capacidade: '',
+      descricao: '',
+      imagem: '',
+    });
+    setTipoSala('');
+    setPreview(null);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/salas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...form,
+          tipo: tipoSala,
+          preco: parseFloat(form.preco),
+          capacidade: parseInt(form.capacidade),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao cadastrar sala');
+      }
+
+      alert('Sala cadastrada com sucesso!');
+      handleCancelar();
+    } catch (error) {
+      alert('Erro ao cadastrar sala.');
+      console.error(error);
+    }
   };
 
   return (
@@ -66,31 +133,103 @@ export default function CadastroSalaCompleto() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <TextField label="CEP" fullWidth variant="outlined" size="medium" sx={{ height: 56 }} />
+            <TextField
+              name="cep"
+              label="CEP"
+              fullWidth
+              variant="outlined"
+              size="medium"
+              sx={{ height: 56 }}
+              value={form.cep}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField label="Estado" fullWidth variant="outlined" size="medium" sx={{ height: 56 }} />
+            <TextField
+              name="estado"
+              label="Estado"
+              fullWidth
+              variant="outlined"
+              size="medium"
+              sx={{ height: 56 }}
+              value={form.estado}
+              onChange={handleChange}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField label="Cidade" fullWidth variant="outlined" size="medium" sx={{ height: 56 }} />
+            <TextField
+              name="cidade"
+              label="Cidade"
+              fullWidth
+              variant="outlined"
+              size="medium"
+              sx={{ height: 56 }}
+              value={form.cidade}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField label="Bairro" fullWidth variant="outlined" size="medium" sx={{ height: 56 }} />
+            <TextField
+              name="bairro"
+              label="Bairro"
+              fullWidth
+              variant="outlined"
+              size="medium"
+              sx={{ height: 56 }}
+              value={form.bairro}
+              onChange={handleChange}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField label="Rua" fullWidth variant="outlined" size="medium" sx={{ height: 56 }} />
+            <TextField
+              name="rua"
+              label="Rua"
+              fullWidth
+              variant="outlined"
+              size="medium"
+              sx={{ height: 56 }}
+              value={form.rua}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField label="Número" fullWidth variant="outlined" size="medium" sx={{ height: 56 }} />
+            <TextField
+              name="numero"
+              label="Número"
+              fullWidth
+              variant="outlined"
+              size="medium"
+              sx={{ height: 56 }}
+              value={form.numero}
+              onChange={handleChange}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField label="Preço (Diária)" fullWidth variant="outlined" size="medium" sx={{ height: 56 }} />
+            <TextField
+              name="preco"
+              label="Preço (Diária)"
+              fullWidth
+              variant="outlined"
+              size="medium"
+              sx={{ height: 56 }}
+              value={form.preco}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField label="Capacidade" fullWidth variant="outlined" size="medium" sx={{ height: 56 }} />
+            <TextField
+              name="capacidade"
+              label="Capacidade"
+              fullWidth
+              variant="outlined"
+              size="medium"
+              sx={{ height: 56 }}
+              value={form.capacidade}
+              onChange={handleChange}
+            />
           </Grid>
 
           <Grid item xs={12}>
@@ -102,7 +241,13 @@ export default function CadastroSalaCompleto() {
                 value={tipoSala}
                 onChange={(e) => setTipoSala(e.target.value)}
                 label="Tipo de Sala"
-                sx={{ height: 56, width: 225, fontSize: '1rem', borderRadius: 2, backgroundColor: '#f3f4f6' }}
+                sx={{
+                  height: 56,
+                  width: 225,
+                  fontSize: '1rem',
+                  borderRadius: 2,
+                  backgroundColor: '#f3f4f6',
+                }}
               >
                 <MenuItem value="comercial">Comercial</MenuItem>
                 <MenuItem value="corporativo">Corporativo</MenuItem>
@@ -114,11 +259,14 @@ export default function CadastroSalaCompleto() {
 
           <Grid item xs={12}>
             <TextField
+              name="descricao"
               label="Descrição"
               multiline
               rows={4}
               fullWidth
               variant="outlined"
+              value={form.descricao}
+              onChange={handleChange}
             />
           </Grid>
 
@@ -133,7 +281,12 @@ export default function CadastroSalaCompleto() {
               fullWidth
             >
               Importar Imagem
-              <input hidden accept="image/*" type="file" onChange={handleImageChange} />
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                onChange={handleImageChange}
+              />
             </Button>
           </Grid>
 
@@ -158,18 +311,20 @@ export default function CadastroSalaCompleto() {
           </Grid>
 
           <Grid item xs={12}>
-            <Stack direction="row" spacing={2} justifyContent="flex-end" mt={3}>
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={handleCancelar}
-              >
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="flex-end"
+              mt={3}
+            >
+              <Button variant="outlined" color="secondary" onClick={handleCancelar}>
                 Cancelar
               </Button>
               <Button
                 variant="contained"
                 color="primary"
                 sx={{ fontWeight: 'bold', textTransform: 'none' }}
+                onClick={handleSubmit}
               >
                 Cadastrar
               </Button>

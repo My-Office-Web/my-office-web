@@ -1,0 +1,17 @@
+CREATE DATABASE salasdb;
+USE salasdb;
+
+CREATE TABLE salas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cep VARCHAR(20),
+  estado VARCHAR(50),
+  cidade VARCHAR(100),
+  bairro VARCHAR(100),
+  rua VARCHAR(150),
+  numero VARCHAR(20),
+  preco DECIMAL(10,2),
+  capacidade INT,
+  tipo VARCHAR(50),
+  descricao TEXT,
+  imagem LONGTEXT
+)

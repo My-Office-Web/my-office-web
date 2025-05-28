@@ -19,6 +19,7 @@ import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 const instanciaAutenticacao = new ServicoAutenticacao()
 
 export default function AppBarLogado() {
+
   const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -36,6 +37,7 @@ export default function AppBarLogado() {
   
   const handleLogout = () => {
     instanciaAutenticacao.logout()
+    window.location.reload()
   }
 
   // Nome do usuário
@@ -79,7 +81,7 @@ export default function AppBarLogado() {
             </IconButton>
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <MeetingRoomIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>minhas Salas</Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>Minhas Salas</Typography>
             </IconButton>
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <FavoriteIcon />

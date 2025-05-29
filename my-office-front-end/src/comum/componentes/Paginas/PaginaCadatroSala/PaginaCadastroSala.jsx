@@ -52,7 +52,6 @@ export default function CadastroSalaCompleto() {
   };
 
   const handleCancelar = () => {
-    alert('Cadastro cancelado.');
     setForm({
       cep: '',
       estado: '',
@@ -71,7 +70,7 @@ export default function CadastroSalaCompleto() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:3001/salas', {
+      const response = await fetch('http://localhost:3000/salas', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ export default function SalasLista() {
   useEffect(() => {
     const fetchSalas = async () => {
       try {
-        const response = await fetch('http://localhost:3001/salas');
+        const response = await fetch('http://localhost:3000/salas');
         const data = await response.json();
         setSalas(data);
       } catch (error) {

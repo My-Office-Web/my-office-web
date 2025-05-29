@@ -10,18 +10,20 @@ import Tooltip from "@mui/material/Tooltip";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import TemporaryDrawer from "../PaginaInicial/MenuLateral";
-import HomeIcon from "@mui/icons-material/Home"; // Icone para "Início"
-import FavoriteIcon from "@mui/icons-material/Favorite"; // Icone para "Favoritos"
-import HelpIcon from "@mui/icons-material/Help"; // Icone para "Ajuda"
-import MeetingRoomIcon from "@mui/icons-material/MeetingRoom"; // Icone para "Salas"
+import HomeIcon from "@mui/icons-material/Home";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import HelpIcon from "@mui/icons-material/Help";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+import ModalCadastroSala from "../PaginaCadatroSala/PaginaCadastroSala";
 
-const instanciaAutenticacao = new ServicoAutenticacao()
+const instanciaAutenticacao = new ServicoAutenticacao();
 
 export default function AppBarLogado() {
-
   const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [openModalCadastroSala, setOpenModalCadastroSala] = useState(false); // modal de cadastro
 
   const toggleDrawer = (open) => () => {
     setOpenDrawer(open);
@@ -34,13 +36,12 @@ export default function AppBarLogado() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  
-  const handleLogout = () => {
-    instanciaAutenticacao.logout()
-    window.location.reload()
-  }
 
-  // Nome do usuário
+  const handleLogout = () => {
+    instanciaAutenticacao.logout();
+    window.location.reload();
+  };
+
   const userName = "João Silva";
   const initials = userName
     .split(" ")
@@ -69,24 +70,37 @@ export default function AppBarLogado() {
             </Typography>
           </Box>
 
-          {/* Itens centralizados no AppBar */}
+          {/* Central Items */}
           <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1, justifyContent: "center" }}>
             <IconButton color="inherit">
               <HomeIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Início</Typography>
             </IconButton>
+
+            <IconButton
+              color="inherit"
+              sx={{ marginLeft: 2 }}
+              onClick={() => setOpenModalCadastroSala(true)}
+            >
+              <AddBusinessIcon />
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>Cadastrar Sala</Typography>
+            </IconButton>
+
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <HomeIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Alugar</Typography>
             </IconButton>
+
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <MeetingRoomIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Minhas Salas</Typography>
             </IconButton>
+
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <FavoriteIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Favoritos</Typography>
             </IconButton>
+
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <HelpIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Ajuda</Typography>
@@ -121,7 +135,14 @@ export default function AppBarLogado() {
         </Toolbar>
       </AppBar>
 
+      {/* Menu lateral */}
       <TemporaryDrawer open={openDrawer} toggleDrawer={toggleDrawer} />
+
+      {/* Modal de Cadastro de Sala */}
+      <ModalCadastroSala
+        open={openModalCadastroSala}
+        onClose={() => setOpenModalCadastroSala(false)}
+      />
     </Box>
   );
 }

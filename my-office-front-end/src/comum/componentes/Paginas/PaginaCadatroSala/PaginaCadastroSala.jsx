@@ -1,20 +1,15 @@
 import React, { useState } from 'react';
 import {
-  Box,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-  Paper,
-  Stack,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Select,
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  TextField, Button, Typography, Box, Grid,
+  FormControl, InputLabel, Select, MenuItem,
 } from '@mui/material';
 import { UploadFile } from '@mui/icons-material';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import ValidarCadastroSala from '../../../../classes/ValidarInputsSala/validarCadastroSala';
 
-export default function CadastroSalaCompleto() {
+export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
   const [tipoSala, setTipoSala] = useState('');
   const [form, setForm] = useState({
@@ -28,8 +23,11 @@ export default function CadastroSalaCompleto() {
     capacidade: '',
     descricao: '',
     imagem: '',
+    latitude: '',
+    longitude: '',
   });
 
+  // Função para converter imagem para base64
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -38,6 +36,39 @@ export default function CadastroSalaCompleto() {
       reader.onerror = (error) => reject(error);
     });
 
+  // Função para buscar o CEP na API e preencher os campos
+  const buscarCep = async () => {
+    if (!form.cep || form.cep.length < 8) {
+      toast.error('Informe um CEP válido.');
+      return;
+    }
+
+    try {
+      const cepSemMascara = form.cep.replace(/\D/g, '');
+      const resp = await axios.get(`https://brasilapi.com.br/api/cep/v2/${cepSemMascara}`);
+
+      setForm((prev) => ({
+        ...prev,
+        rua: resp.data.street || '',
+        bairro: resp.data.neighborhood || '',
+        cidade: resp.data.city || '',
+        estado: resp.data.state || '',
+        latitude: resp.data.location?.coordinates?.latitude || '',
+        longitude: resp.data.location?.coordinates?.longitude || '',
+      }));
+
+      toast.success('Endereço preenchido com sucesso!');
+    } catch (error) {
+      toast.error('CEP não encontrado ou erro na consulta.');
+      console.error(error);
+    }
+  };
+
+  // Handle mudança dos campos
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -45,10 +76,6 @@ export default function CadastroSalaCompleto() {
       setPreview(base64);
       setForm({ ...form, imagem: base64 });
     }
-  };
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleCancelar = () => {
@@ -63,18 +90,27 @@ export default function CadastroSalaCompleto() {
       capacidade: '',
       descricao: '',
       imagem: '',
+      latitude: '',
+      longitude: '',
     });
     setTipoSala('');
     setPreview(null);
+    onClose();
   };
 
   const handleSubmit = async () => {
+    const dados = { ...form, tipo: tipoSala };
+    const erros = ValidarCadastroSala.validarTodos(dados);
+
+    if (Object.keys(erros).length > 0) {
+      Object.values(erros).forEach((msg) => toast.error(msg));
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:3000/salas', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
           tipo: tipoSala,
@@ -83,170 +119,51 @@ export default function CadastroSalaCompleto() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Erro ao cadastrar sala');
-      }
+      if (!response.ok) throw new Error('Erro ao cadastrar sala.');
 
-      alert('Sala cadastrada com sucesso!');
+      toast.success('Sala cadastrada com sucesso!');
       handleCancelar();
     } catch (error) {
-      alert('Erro ao cadastrar sala.');
+      toast.error('Erro ao cadastrar sala.');
       console.error(error);
     }
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        bgcolor: '#f9fafb',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        px: 2,
-        py: 6,
-      }}
-    >
-      <Paper
-        elevation={6}
-        sx={{
-          p: { xs: 4, sm: 6 },
-          width: '100%',
-          maxWidth: 900,
-          borderRadius: 4,
-          bgcolor: '#ffffff',
-        }}
-      >
-        <Typography variant="h4" fontWeight={600} align="center" gutterBottom>
-          Cadastro de Sala
-        </Typography>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.5rem' }}>
+        Cadastro de Sala
+      </DialogTitle>
 
-        <Typography
-          variant="body1"
-          align="center"
-          color="text.secondary"
-          sx={{ mb: 5 }}
-        >
-          Preencha os campos abaixo para cadastrar sua sala de forma rápida e elegante.
-        </Typography>
-
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="cep"
-              label="CEP"
-              fullWidth
-              variant="outlined"
-              size="medium"
-              sx={{ height: 56 }}
-              value={form.cep}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="estado"
-              label="Estado"
-              fullWidth
-              variant="outlined"
-              size="medium"
-              sx={{ height: 56 }}
-              value={form.estado}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="cidade"
-              label="Cidade"
-              fullWidth
-              variant="outlined"
-              size="medium"
-              sx={{ height: 56 }}
-              value={form.cidade}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="bairro"
-              label="Bairro"
-              fullWidth
-              variant="outlined"
-              size="medium"
-              sx={{ height: 56 }}
-              value={form.bairro}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="rua"
-              label="Rua"
-              fullWidth
-              variant="outlined"
-              size="medium"
-              sx={{ height: 56 }}
-              value={form.rua}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="numero"
-              label="Número"
-              fullWidth
-              variant="outlined"
-              size="medium"
-              sx={{ height: 56 }}
-              value={form.numero}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="preco"
-              label="Preço (Diária)"
-              fullWidth
-              variant="outlined"
-              size="medium"
-              sx={{ height: 56 }}
-              value={form.preco}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="capacidade"
-              label="Capacidade"
-              fullWidth
-              variant="outlined"
-              size="medium"
-              sx={{ height: 56 }}
-              value={form.capacidade}
-              onChange={handleChange}
-            />
-          </Grid>
+      <DialogContent dividers>
+        <Grid container spacing={2}>
+          {[
+            ['cep', 'CEP'], ['estado', 'Estado'], ['cidade', 'Cidade'], ['bairro', 'Bairro'],
+            ['rua', 'Rua'], ['numero', 'Número'], ['preco', 'Preço (Diária)'], ['capacidade', 'Capacidade']
+          ].map(([name, label], i) => (
+            <Grid item xs={12} sm={6} key={i}>
+              <TextField
+                name={name}
+                label={label}
+                fullWidth
+                variant="outlined"
+                size="medium"
+                value={form[name]}
+                onChange={handleChange}
+                onBlur={name === 'cep' ? buscarCep : undefined} 
+              />
+            </Grid>
+          ))}
 
           <Grid item xs={12}>
             <FormControl fullWidth>
               <InputLabel id="tipo-label">Tipo de Sala</InputLabel>
               <Select
+                sx={{ minWidth: 223 }}
                 labelId="tipo-label"
-                id="tipo"
                 value={tipoSala}
                 onChange={(e) => setTipoSala(e.target.value)}
                 label="Tipo de Sala"
-                sx={{
-                  height: 56,
-                  width: 225,
-                  fontSize: '1rem',
-                  borderRadius: 2,
-                  backgroundColor: '#f3f4f6',
-                }}
               >
                 <MenuItem value="comercial">Comercial</MenuItem>
                 <MenuItem value="corporativo">Corporativo</MenuItem>
@@ -280,12 +197,7 @@ export default function CadastroSalaCompleto() {
               fullWidth
             >
               Importar Imagem
-              <input
-                hidden
-                accept="image/*"
-                type="file"
-                onChange={handleImageChange}
-              />
+              <input hidden accept="image/*" type="file" onChange={handleImageChange} />
             </Button>
           </Grid>
 
@@ -298,39 +210,22 @@ export default function CadastroSalaCompleto() {
                 <img
                   src={preview}
                   alt="Preview"
-                  style={{
-                    width: '100%',
-                    height: 200,
-                    objectFit: 'cover',
-                    borderRadius: 12,
-                  }}
+                  style={{ width: '100%', height: 200, objectFit: 'cover', borderRadius: 12 }}
                 />
               </Box>
             )}
           </Grid>
-
-          <Grid item xs={12}>
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="flex-end"
-              mt={3}
-            >
-              <Button variant="outlined" color="secondary" onClick={handleCancelar}>
-                Cancelar
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ fontWeight: 'bold', textTransform: 'none' }}
-                onClick={handleSubmit}
-              >
-                Cadastrar
-              </Button>
-            </Stack>
-          </Grid>
         </Grid>
-      </Paper>
-    </Box>
+      </DialogContent>
+
+      <DialogActions sx={{ justifyContent: 'space-between', px: 3, py: 2 }}>
+        <Button onClick={handleCancelar} color="secondary" variant="outlined">
+          Cancelar
+        </Button>
+        <Button onClick={handleSubmit} variant="contained" color="primary" sx={{ fontWeight: 'bold' }}>
+          Cadastrar
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

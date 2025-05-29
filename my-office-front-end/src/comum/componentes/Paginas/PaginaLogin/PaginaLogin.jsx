@@ -4,7 +4,7 @@ import {
   TextField, Button, Typography, Box, Link,
 } from '@mui/material';
 import { toast } from 'react-toastify';
-import ValidarLogin from '../../../../classes/ValidarImputs/validarLogin';
+import ValidarLogin from '../../../../classes/ValidarInputsUsuario/validarLogin';
 import ServicoAutenticacao from '../../../servicos/ServicoAutenticacao';
 
 

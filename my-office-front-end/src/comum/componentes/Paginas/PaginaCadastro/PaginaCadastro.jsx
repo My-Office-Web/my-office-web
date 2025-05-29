@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import InputMask from 'react-input-mask';
 import { toast } from 'react-toastify';
-import ValidarCadastro from '../../../../classes/ValidarImputs/validarCadastro';
+import ValidarCadastro from '../../../../classes/ValidarInputsUsuario/validarCadastro';
 
 const campos = [
   { label: 'Nome completo', name: 'nome' },

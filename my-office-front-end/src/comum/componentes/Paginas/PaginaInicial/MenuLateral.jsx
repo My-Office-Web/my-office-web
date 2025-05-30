@@ -78,7 +78,7 @@ export default function TemporaryDrawer({ open, toggleDrawer }) {
 
       {/* Modal: Quem somos */}
       <Dialog open={openAboutModal} onClose={handleCloseAboutModal} fullWidth maxWidth="md">
-        <DialogTitle sx={{ fontWeight: "bold", color: "#1976d2" }}>Quem somos</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold", color: "#1976d2", fontSize: "1.8rem" }}>QUEM SOMOS</DialogTitle>
         <DialogContent>
           <PaginaAbout />
         </DialogContent>
@@ -91,7 +91,7 @@ export default function TemporaryDrawer({ open, toggleDrawer }) {
 
       {/* Modal: Suporte */}
       <Dialog open={openSupportModal} onClose={handleCloseSupportModal} fullWidth maxWidth="md">
-        <DialogTitle sx={{ fontWeight: "bold", color: "#1976d2" }}>Suporte</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold", color: "#1976d2", fontSize: "1.8rem" }}>SUPORTE</DialogTitle>
         <DialogContent>
           <SupportPage />
         </DialogContent>

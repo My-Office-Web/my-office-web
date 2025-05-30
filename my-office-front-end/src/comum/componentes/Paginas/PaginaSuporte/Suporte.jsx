@@ -15,7 +15,7 @@ const SupportPage = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       {/* Descrição */}
-      <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555" }}>
+      <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555", textAlign: "justify"  }}>
         A Central de Suporte da My Office está sempre disponível para resolver qualquer problema ou responder
         às suas dúvidas. Oferecemos atendimento personalizado para garantir que sua experiência seja sempre a
         melhor possível.
@@ -26,9 +26,9 @@ const SupportPage = () => {
       {/* Seções: Como podemos ajudar */}
       <Box component="section" sx={{ mb: 4 }}>
         <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
-          Como Podemos Ajudar?
+          COMO PODEMOS AJUDAR?
         </Typography>
-        <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555" }}>
+        <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555", textAlign: "justify"   }}>
           Escolha a categoria que melhor descreve o seu problema ou dúvida, e nossa equipe de suporte estará pronta
           para ajudar você da melhor forma possível.
         </Typography>
@@ -43,7 +43,7 @@ const SupportPage = () => {
             </Avatar>
             <ListItemText
               primary="Dúvidas Frequentes"
-              secondary="Consulte nossa seção de perguntas frequentes para resolver rapidamente sua dúvida."
+              secondary="Consulte nossa seção de perguntas frequentes organizadas para resolver rapidamente sua dúvida ou demanda."
             />
           </Paper>
         </Grid>
@@ -54,7 +54,7 @@ const SupportPage = () => {
             </Avatar>
             <ListItemText
               primary="Suporte por E-mail"
-              secondary="Envie um e-mail detalhado sobre seu problema e nossa equipe responderá o mais breve possível."
+              secondary="Envie um e-mail detalhado sobre seu problema e nossa equipe especializada responderá o mais breve possível."
             />
           </Paper>
         </Grid>
@@ -65,7 +65,7 @@ const SupportPage = () => {
             </Avatar>
             <ListItemText
               primary="Suporte por Telefone"
-              secondary="Precisa de ajuda imediata? Entre em contato com nossa equipe pelo telefone."
+              secondary="Precisa de ajuda imediata? Entre em contato com nossa equipe de suporte técnico agora mesmo pelo telefone."
             />
           </Paper>
         </Grid>
@@ -76,7 +76,7 @@ const SupportPage = () => {
       {/* Formulário de Contato */}
       <Box component="section" sx={{ mb: 4 }}>
         <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
-          Fale Conosco
+          FALE CONOSCO
         </Typography>
         <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555" }}>
           Se você não encontrou o que procurava, envie-nos uma mensagem. Estamos aqui para ajudar.

@@ -22,7 +22,7 @@ export default function ButtonAppBar() {
 
   const toggleModalCadastro = () => {
     setOpenModalCadastro(!openModalCadastro);
-    if (openModalLogin) setOpenModalLogin(false);
+    if (openModalLogin) setOpenModalLogin(false); 
   };
 
   const toggleModalLogin = () => {

@@ -14,7 +14,7 @@ import { FaLightbulb, FaCheckCircle, FaSyncAlt } from "react-icons/fa";
 const PaginaAbout = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555" }}>
+      <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555",textAlign: "justify"   }}>
         A My Office é uma plataforma inovadora que oferece soluções flexíveis para reservas de espaços de trabalho,
         salas de reunião e eventos corporativos. Nossa missão é transformar a maneira como profissionais e empresas
         encontram e utilizam espaços para suas necessidades, proporcionando conveniência, eficiência e qualidade.
@@ -24,9 +24,9 @@ const PaginaAbout = () => {
 
       <Box component="section" sx={{ mb: 4 }}>
         <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
-          Missão
+          MISSÃO
         </Typography>
-        <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555" }}>
+        <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555",textAlign: "justify"   }}>
           Nossa missão é proporcionar aos nossos clientes um ambiente profissional de alto padrão, com facilidade de
           acesso e recursos modernos para otimizar suas reuniões, eventos e atividades corporativas. Estamos
           comprometidos em oferecer um serviço de excelência, garantindo que cada experiência com a My Office seja
@@ -36,9 +36,9 @@ const PaginaAbout = () => {
 
       <Box component="section" sx={{ mb: 4 }}>
         <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
-          Visão
+          VISÃO
         </Typography>
-        <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555" }}>
+        <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555", textAlign: "justify" }}>
           Nossa visão é ser reconhecida como a plataforma líder em soluções de espaços de trabalho flexíveis e
           serviços corporativos, sendo a escolha preferencial de profissionais e empresas ao redor do mundo, por
           meio da inovação e da qualidade em nossos serviços.
@@ -47,7 +47,7 @@ const PaginaAbout = () => {
 
       <Box component="section" sx={{ mb: 4 }}>
         <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
-          Valores
+          VALORES
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
@@ -57,7 +57,7 @@ const PaginaAbout = () => {
               </Avatar>
               <ListItemText
                 primary="Inovação"
-                secondary="Buscamos sempre a inovação para oferecer soluções que atendam às necessidades do mercado."
+                secondary="Buscamos sempre a inovação para oferecer soluções que atendam às necessidades do mercado com agilidade, precisão e alto desempenho."
               />
             </Paper>
           </Grid>
@@ -87,10 +87,10 @@ const PaginaAbout = () => {
       </Box>
 
       <Box component="section" sx={{ mb: 4 }}>
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
-          Equipe
+        <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2"}}>
+          EQUIPE
         </Typography>
-        <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555" }}>
+        <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555", textAlign: "justify"   }}>
           Nossa equipe é formada por profissionais experientes e dedicados, que trabalham com paixão para entregar a
           melhor experiência para nossos usuários. Desde a gestão da plataforma até o atendimento ao cliente, cada
           membro da My Office está focado em proporcionar soluções eficazes e de alta qualidade.
@@ -98,9 +98,9 @@ const PaginaAbout = () => {
       </Box>
 
       <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
-        Por que escolher a My Office?
+        POR QUE ESCOLHER A MY OFFICE?
       </Typography>
-      <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555" }}>
+      <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem", color: "#555", textAlign: "justify"   }}>
         Se você está buscando flexibilidade, qualidade e inovação, a My Office é a escolha certa para o seu negócio.
         Nossa plataforma oferece uma gama de opções que se adaptam às necessidades de profissionais e empresas de
         diferentes portes e setores, com um foco constante em excelência e eficiência.

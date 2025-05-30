@@ -22,7 +22,7 @@ export default function ModalCadastro({ open, onClose, toggleModalLogin }) {
     setForm((prev) => ({ ...prev, [target.name]: target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const erros = ValidarCadastro.validarTodos(form);
 
@@ -30,13 +30,26 @@ export default function ModalCadastro({ open, onClose, toggleModalLogin }) {
       Object.values(erros).forEach(msg => toast.error(msg));
       return;
     }
+    try {
+      const response = await fetch('http://localhost:3000/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({...form}),
+      });
 
-    toast.success('Cadastro realizado com sucesso!');
+      if (!response.ok) throw new Error('Erro ao cadastrar usuário.');
 
-    setTimeout(() => {
-      setForm(Object.fromEntries(campos.map(({ name }) => [name, ''])));
-      onClose();
-    }, 1000);
+      toast.success('Usuário cadastrado com sucesso!');
+      setTimeout(() => {
+        setForm(Object.fromEntries(campos.map(({ name }) => [name, ''])));
+        onClose();
+      }, 1000);
+    } catch (error) {
+      toast.error('Erro ao cadastrar usuário.');
+      console.error(error);
+    }
+
+    
   };
 
   return (

@@ -2,7 +2,7 @@ import db from "../database/ConexaoMySql.js";
 
 class UsuariosController {
     cadastrar (req, res) {
-        const { nome, email, senha } = req.body;
+        const { nome, email, senha, telefone } = req.body;
       
         if (!nome || !email || !senha) {
           return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
@@ -10,7 +10,7 @@ class UsuariosController {
       
         const query = `INSERT INTO usuarios (nome, email, senha, telefone) VALUES (?, ?, md5(?), ?)`;
       
-        db.query(query, [nome, email, senha], (err, results) => {
+        db.query(query, [nome, email, senha, telefone], (err, results) => {
           if (err) {
             console.error('Erro ao cadastrar usuário:', err);
             if (err.code === 'ER_DUP_ENTRY') {

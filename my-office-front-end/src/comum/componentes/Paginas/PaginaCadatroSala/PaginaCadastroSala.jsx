@@ -6,9 +6,8 @@ import {
 } from '@mui/material';
 import { UploadFile } from '@mui/icons-material';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import ValidarCadastroSala from '../../../../classes/ValidarInputsSala/validarCadastroSala';
-
+import axios from 'axios';
 export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
   const [tipoSala, setTipoSala] = useState('');

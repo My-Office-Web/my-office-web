@@ -10,12 +10,9 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-export default function FiltroImoveis() {
-  const [local, setLocal] = React.useState('');
-  const [tipo, setTipo] = React.useState('Todos as salas');
-
+export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar }) {
   const tiposImovel = [
-    'Todos as salas',
+    'Todas as salas',
     'Comercial',
     'Corporativo',
     'Educacional',
@@ -23,14 +20,13 @@ export default function FiltroImoveis() {
   ];
 
   return (
-   <Box
-  sx={{
-    display: 'flex',
-    minHeight: 400,
-    backgroundColor: '#fff7f5',
-    overflow: 'hidden',
-  }}
-
+    <Box
+      sx={{
+        display: 'flex',
+        minHeight: 400,
+        backgroundColor: '#fff7f5',
+        overflow: 'hidden',
+      }}
     >
       {/* Lado esquerdo com imagem */}
       <Box
@@ -40,7 +36,6 @@ export default function FiltroImoveis() {
           backgroundSize: 'cover',
           borderRadius: '0 0 60px 0',
           backgroundPosition: 'center',
-          
         }}
       />
 
@@ -117,6 +112,7 @@ export default function FiltroImoveis() {
                 backgroundColor: '#e64a00',
               },
             }}
+            onClick={onBuscar}
           >
             Buscar
           </Button>

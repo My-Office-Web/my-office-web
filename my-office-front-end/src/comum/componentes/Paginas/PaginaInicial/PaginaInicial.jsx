@@ -1,23 +1,27 @@
-import { Container, ThemeProvider, CssBaseline, Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Container, ThemeProvider, CssBaseline } from "@mui/material";
+
 import ButtonAppBar from "../../Paginas/PaginaInicial/AppBar";
 import FiltroImoveis from "../../Paginas/PaginaInicial/BarraDeBuscaSuperior";
 import CustomCarousel from "../../../Componentes/Paginas/CarrousselInicial/CarrousselInicial";
 import DarkMode from "../../DarkMode/DarkMode";
 import Footer from "../Footer/Footer";
 
-import React, { useEffect, useState } from "react";
 import { lightTheme, darkTheme } from "../../../Theme/theme";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import AppBarLogado from "../PaginaLogado/AppBarLogado";
-import CardSala from "../../CardSala/CardSala";
 import SalasLista from "../../CardSala/SalasLista";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
 const PaginaInicial = () => {
   const [usuarioAutenticado, setUsuarioAutenticado] = useState(false);
-
   const [isDark, setIsDark] = useState(false);
+
+  // Filtro controlado
+  const [local, setLocal] = useState('');
+  const [tipo, setTipo] = useState('Todas as salas');
+  const [filtros, setFiltros] = useState({ local: '', tipo: 'Todas as salas' });
 
   const toggleTheme = (checked) => {
     setIsDark(checked);
@@ -28,6 +32,10 @@ const PaginaInicial = () => {
     setUsuarioAutenticado(usuarioLogado);
   }, []);
 
+  const onBuscar = () => {
+    setFiltros({ local, tipo });
+  };
+
   return (
     <>
       <DarkMode isDark={isDark} toggleTheme={toggleTheme} />
@@ -36,17 +44,18 @@ const PaginaInicial = () => {
         {usuarioAutenticado ? <AppBarLogado /> : <ButtonAppBar />}
 
         <Container sx={{ py: 4 }} maxWidth="">
-          <FiltroImoveis />
+          <FiltroImoveis
+            local={local}
+            tipo={tipo}
+            setLocal={setLocal}
+            setTipo={setTipo}
+            onBuscar={onBuscar}
+          />
         </Container>
-        <Container
-  sx={{
-    py: 4,
-  }}
-  maxWidth={false}
->
 
-  <SalasLista />
-</Container>
+        <Container sx={{ py: 4 }} maxWidth={false}>
+          <SalasLista filtros={filtros} />
+        </Container>
 
         <Container sx={{ py: 4 }} maxWidth="">
           <CustomCarousel />
@@ -61,3 +70,4 @@ const PaginaInicial = () => {
 };
 
 export default PaginaInicial;
+  

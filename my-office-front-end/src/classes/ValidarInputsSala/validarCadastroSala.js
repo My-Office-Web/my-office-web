@@ -1,53 +1,55 @@
 export default class ValidarCadastroSala {
+  static camposObrigatorios = [
+    'cep', 'estado', 'cidade', 'bairro', 'rua', 'numero', 
+    'preco', 'capacidade', 'descricao', 'tipo', 'imagem'
+  ];
+
   static camposPreenchidos(campos) {
-    return Object.values(campos).every(valor => valor.toString().trim() !== '');
+    return this.camposObrigatorios.every(campo => {
+      const valor = campos[campo];
+      return valor !== undefined && valor !== null && valor.toString().trim() !== '';
+    });
   }
 
   static isCEPValido(cep) {
-    // Exemplo simples: 8 dígitos numéricos (formato brasileiro)
     return /^\d{5}-?\d{3}$/.test(cep);
   }
 
   static isPrecoValido(preco) {
-    // Aceita números com vírgula ou ponto decimal
     return /^(\d+)([.,]\d{1,2})?$/.test(preco);
   }
 
   static isCapacidadeValida(capacidade) {
-    // Deve ser um número inteiro positivo
     return /^\d+$/.test(capacidade) && parseInt(capacidade, 10) > 0;
   }
 
-  static validarTodos(campos) {
-    const erros = {};
+  static validarImagem(imagem) {
+    return imagem && imagem.toString().trim() !== '';
+  }
 
+  static validarTodos(campos) {
+    
     if (!this.camposPreenchidos(campos)) {
-      erros.geral = 'Preencha todos os campos.';
-      return erros;
+      return { geral: 'Preencha todos os campos.' };
     }
 
+   
     if (!this.isCEPValido(campos.cep)) {
-      erros.cep = 'CEP inválido.';
-      return erros;
+      return { cep: 'CEP inválido.' };
     }
 
     if (!this.isPrecoValido(campos.preco)) {
-      erros.preco = 'Preço inválido.';
-      return erros;
+      return { preco: 'Preço inválido.' };
     }
 
     if (!this.isCapacidadeValida(campos.capacidade)) {
-      erros.capacidade = 'Capacidade inválida.';
-      return erros;
+      return { capacidade: 'Capacidade inválida.' };
     }
 
-    if (!campos.tipo || campos.tipo.trim() === '') {
-      erros.tipo = 'Selecione o tipo da sala.';
-      return erros;
+    if (!this.validarImagem(campos.imagem)) {
+      return { imagem: 'Por favor, envie uma imagem da sala.' };
     }
 
-    // Pode adicionar mais validações específicas aqui (ex: número, estado, etc)
-
-    return erros; // Objeto vazio = tudo ok
+    return {};
   }
 }

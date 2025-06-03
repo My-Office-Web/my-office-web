@@ -24,7 +24,7 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
       sx={{
         display: 'flex',
         minHeight: 400,
-        backgroundColor: '#fff7f5',
+        backgroundColor: 'inherit',
         overflow: 'hidden',
       }}
     >
@@ -51,7 +51,7 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
           textAlign: 'center',
         }}
       >
-        <Typography variant="h4" fontWeight="bold" color="#2d2d2d" mb={2}>
+        <Typography variant="h4" fontWeight="bold" color="inherit" mb={2}>
           O espaço ideal para você está aqui. <br />
           Só na MyOffice você encontra os melhores lugares para seus encontros.
         </Typography>

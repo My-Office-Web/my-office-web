@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Typography, CircularProgress, Box } from '@mui/material';
+import { Grid, Typography, Box } from '@mui/material';
 import CardSala from './CardSala';
+import SkeletonCardSala from './SkeletonCardSala'; // Certifique-se do caminho
 
-// Função para normalizar texto (remover acentos, deixar minúsculo)
 const normalizarTexto = (texto) =>
   texto
-    .normalize("NFD") // separa acentos
-    .replace(/[\u0300-\u036f]/g, "") // remove acentos
-    .toLowerCase(); // minúsculo
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
 
 export default function SalasLista({ filtros }) {
   const [salas, setSalas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filtrando, setFiltrando] = useState(false);
   const [salasFiltradas, setSalasFiltradas] = useState([]);
 
+  // Carregamento inicial das salas
   useEffect(() => {
     const fetchSalas = async () => {
       try {
@@ -30,48 +32,65 @@ export default function SalasLista({ filtros }) {
     fetchSalas();
   }, []);
 
+  // Filtro com carregamento simulado (Skeleton)
   useEffect(() => {
     if (!salas || salas.length === 0) {
       setSalasFiltradas([]);
       return;
     }
 
-    const { local, tipo } = filtros;
-    const buscaNormalizada = normalizarTexto(local || '');
+    setFiltrando(true);
 
-    const resultado = salas.filter((sala) => {
-      const bairro = normalizarTexto(sala.bairro);
-      const cidade = normalizarTexto(sala.cidade);
-      const estado = normalizarTexto(sala.estado);
-      const rua = normalizarTexto(sala.rua);
-      const tipoSala = normalizarTexto(sala.tipo);
+    const timeout = setTimeout(() => {
+      const { local, tipo } = filtros;
+      const buscaNormalizada = normalizarTexto(local || '');
 
-      // Busca em campos separados
-      const localValido =
-        !buscaNormalizada ||
-        bairro.includes(buscaNormalizada) ||
-        cidade.includes(buscaNormalizada) ||
-        estado.includes(buscaNormalizada) ||
-        rua.includes(buscaNormalizada);
+      const resultado = salas.filter((sala) => {
+        const bairro = normalizarTexto(sala.bairro);
+        const cidade = normalizarTexto(sala.cidade);
+        const estado = normalizarTexto(sala.estado);
+        const rua = normalizarTexto(sala.rua);
+        const tipoSala = normalizarTexto(sala.tipo);
 
-      // Filtro por tipo
-      const tipoFiltroValido =
-        normalizarTexto(tipo) === 'todas as salas' || tipoSala === normalizarTexto(tipo);
+        const localValido =
+          !buscaNormalizada ||
+          bairro.includes(buscaNormalizada) ||
+          cidade.includes(buscaNormalizada) ||
+          estado.includes(buscaNormalizada) ||
+          rua.includes(buscaNormalizada);
 
-      return localValido && tipoFiltroValido;
-    });
+        const tipoFiltroValido =
+          normalizarTexto(tipo) === 'todas as salas' || tipoSala === normalizarTexto(tipo);
 
-    setSalasFiltradas(resultado);
+        return localValido && tipoFiltroValido;
+      });
+
+      setSalasFiltradas(resultado);
+      setFiltrando(false);
+    }, 800); // tempo do skeleton ao filtrar
+
+    return () => clearTimeout(timeout);
   }, [filtros, salas]);
 
-  if (loading) {
+  // Mostra Skeletons durante carregamento inicial ou filtragem
+  if (loading || filtrando) {
     return (
-      <Box display="flex" justifyContent="center" mt={5}>
-        <CircularProgress />
+      <Box sx={{ width: '100%', mt: 5 }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Carregando Salas...
+        </Typography>
+        <Grid container spacing={10} justifyContent="center">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+            <Grid item xs={12} sm={6} md={4} key={item}>
+              <SkeletonCardSala />
+            </Grid>
+          ))}
+        </Grid>
       </Box>
     );
   }
 
+  // Nenhuma sala encontrada
   if (salasFiltradas.length === 0) {
     return (
       <Typography variant="h6" align="center">
@@ -80,6 +99,7 @@ export default function SalasLista({ filtros }) {
     );
   }
 
+  // Resultado final
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Typography variant="h4" gutterBottom>

@@ -1,29 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Button, Typography, Box, Grid,
-  FormControl, InputLabel, Select, MenuItem,
-} from '@mui/material';
-import { UploadFile } from '@mui/icons-material';
-import { toast } from 'react-toastify';
-import ValidarCadastroSala from '../../../../classes/ValidarInputsSala/validarCadastroSala';
-import axios from 'axios';
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import { UploadFile } from "@mui/icons-material";
+import { toast } from "react-toastify";
+import ValidarCadastroSala from "../../../../classes/ValidarInputsSala/validarCadastroSala";
+import axios from "axios";
 export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
-  const [tipoSala, setTipoSala] = useState('');
+  const [tipoSala, setTipoSala] = useState("");
   const [form, setForm] = useState({
-    cep: '',
-    estado: '',
-    cidade: '',
-    bairro: '',
-    rua: '',
-    numero: '',
-    preco: '',
-    capacidade: '',
-    descricao: '',
-    imagem: '',
-    latitude: '',
-    longitude: '',
+    cep: "",
+    estado: "",
+    cidade: "",
+    bairro: "",
+    rua: "",
+    numero: "",
+    preco: "",
+    capacidade: "",
+    descricao: "",
+    imagem: "",
+    latitude: "",
+    longitude: "",
   });
 
   // Função para converter imagem para base64
@@ -38,27 +48,29 @@ export default function ModalCadastroSala({ open, onClose }) {
   // Função para buscar o CEP na API e preencher os campos
   const buscarCep = async () => {
     if (!form.cep || form.cep.length < 8) {
-      toast.error('Informe um CEP válido.');
+      toast.error("Informe um CEP válido.");
       return;
     }
 
     try {
-      const cepSemMascara = form.cep.replace(/\D/g, '');
-      const resp = await axios.get(`https://brasilapi.com.br/api/cep/v2/${cepSemMascara}`);
+      const cepSemMascara = form.cep.replace(/\D/g, "");
+      const resp = await axios.get(
+        `https://brasilapi.com.br/api/cep/v2/${cepSemMascara}`
+      );
 
       setForm((prev) => ({
         ...prev,
-        rua: resp.data.street || '',
-        bairro: resp.data.neighborhood || '',
-        cidade: resp.data.city || '',
-        estado: resp.data.state || '',
-        latitude: resp.data.location?.coordinates?.latitude || '',
-        longitude: resp.data.location?.coordinates?.longitude || '',
+        rua: resp.data.street || "",
+        bairro: resp.data.neighborhood || "",
+        cidade: resp.data.city || "",
+        estado: resp.data.state || "",
+        latitude: resp.data.location?.coordinates?.latitude || "",
+        longitude: resp.data.location?.coordinates?.longitude || "",
       }));
 
-      toast.success('Endereço preenchido com sucesso!');
+      toast.success("Endereço preenchido com sucesso!");
     } catch (error) {
-      toast.error('CEP não encontrado ou erro na consulta.');
+      toast.error("CEP não encontrado ou erro na consulta.");
       console.error(error);
     }
   };
@@ -79,20 +91,20 @@ export default function ModalCadastroSala({ open, onClose }) {
 
   const handleCancelar = () => {
     setForm({
-      cep: '',
-      estado: '',
-      cidade: '',
-      bairro: '',
-      rua: '',
-      numero: '',
-      preco: '',
-      capacidade: '',
-      descricao: '',
-      imagem: '',
-      latitude: '',
-      longitude: '',
+      cep: "",
+      estado: "",
+      cidade: "",
+      bairro: "",
+      rua: "",
+      numero: "",
+      preco: "",
+      capacidade: "",
+      descricao: "",
+      imagem: "",
+      latitude: "",
+      longitude: "",
     });
-    setTipoSala('');
+    setTipoSala("");
     setPreview(null);
     onClose();
   };
@@ -107,9 +119,9 @@ export default function ModalCadastroSala({ open, onClose }) {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/salas', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("http://localhost:3000/salas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
           tipo: tipoSala,
@@ -118,27 +130,40 @@ export default function ModalCadastroSala({ open, onClose }) {
         }),
       });
 
-      if (!response.ok) throw new Error('Erro ao cadastrar sala.');
+      if (!response.ok) throw new Error("Erro ao cadastrar sala.");
 
-      toast.success('Sala cadastrada com sucesso!');
+      toast.success("Sala cadastrada com sucesso!");
+      setTimeout(() => {
+        onClose();
+        window.location.reload();
+      }, 1000);
       handleCancelar();
+     
     } catch (error) {
-      toast.error('Erro ao cadastrar sala.');
+      toast.error("Erro ao cadastrar sala.");
       console.error(error);
     }
   };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.5rem' }}>
+      <DialogTitle
+        sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}
+      >
         Cadastro de Sala
       </DialogTitle>
 
       <DialogContent dividers>
         <Grid container spacing={2}>
           {[
-            ['cep', 'CEP'], ['estado', 'Estado'], ['cidade', 'Cidade'], ['bairro', 'Bairro'],
-            ['rua', 'Rua'], ['numero', 'Número'], ['preco', 'Preço (Diária)'], ['capacidade', 'Capacidade']
+            ["cep", "CEP"],
+            ["estado", "Estado"],
+            ["cidade", "Cidade"],
+            ["bairro", "Bairro"],
+            ["rua", "Rua"],
+            ["numero", "Número"],
+            ["preco", "Preço (Diária)"],
+            ["capacidade", "Capacidade"],
           ].map(([name, label], i) => (
             <Grid item xs={12} sm={6} key={i}>
               <TextField
@@ -149,7 +174,7 @@ export default function ModalCadastroSala({ open, onClose }) {
                 size="medium"
                 value={form[name]}
                 onChange={handleChange}
-                onBlur={name === 'cep' ? buscarCep : undefined} 
+                onBlur={name === "cep" ? buscarCep : undefined}
               />
             </Grid>
           ))}
@@ -196,7 +221,12 @@ export default function ModalCadastroSala({ open, onClose }) {
               fullWidth
             >
               Importar Imagem
-              <input hidden accept="image/*" type="file" onChange={handleImageChange} />
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                onChange={handleImageChange}
+              />
             </Button>
           </Grid>
 
@@ -209,7 +239,12 @@ export default function ModalCadastroSala({ open, onClose }) {
                 <img
                   src={preview}
                   alt="Preview"
-                  style={{ width: '100%', height: 200, objectFit: 'cover', borderRadius: 12 }}
+                  style={{
+                    width: "100%",
+                    height: 200,
+                    objectFit: "cover",
+                    borderRadius: 12,
+                  }}
                 />
               </Box>
             )}
@@ -217,11 +252,16 @@ export default function ModalCadastroSala({ open, onClose }) {
         </Grid>
       </DialogContent>
 
-      <DialogActions sx={{ justifyContent: 'space-between', px: 3, py: 2 }}>
+      <DialogActions sx={{ justifyContent: "space-between", px: 3, py: 2 }}>
         <Button onClick={handleCancelar} color="secondary" variant="outlined">
           Cancelar
         </Button>
-        <Button onClick={handleSubmit} variant="contained" color="primary" sx={{ fontWeight: 'bold' }}>
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          color="primary"
+          sx={{ fontWeight: "bold" }}
+        >
           Cadastrar
         </Button>
       </DialogActions>

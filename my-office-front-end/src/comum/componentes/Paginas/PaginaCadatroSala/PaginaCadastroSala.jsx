@@ -18,6 +18,7 @@ import { UploadFile } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import ValidarCadastroSala from "../../../../classes/ValidarInputsSala/validarCadastroSala";
 import axios from "axios";
+
 export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
   const [tipoSala, setTipoSala] = useState("");
@@ -28,6 +29,7 @@ export default function ModalCadastroSala({ open, onClose }) {
     bairro: "",
     rua: "",
     numero: "",
+    telefone: "",
     preco: "",
     capacidade: "",
     descricao: "",
@@ -36,7 +38,6 @@ export default function ModalCadastroSala({ open, onClose }) {
     longitude: "",
   });
 
-  // Função para converter imagem para base64
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -45,7 +46,6 @@ export default function ModalCadastroSala({ open, onClose }) {
       reader.onerror = (error) => reject(error);
     });
 
-  // Função para buscar o CEP na API e preencher os campos
   const buscarCep = async () => {
     if (!form.cep || form.cep.length < 8) {
       toast.error("Informe um CEP válido.");
@@ -75,8 +75,12 @@ export default function ModalCadastroSala({ open, onClose }) {
     }
   };
 
-  // Handle mudança dos campos
   const handleChange = (e) => {
+    if (e.target.name === "telefone") {
+      const numeroLimpo = e.target.value.replace(/\D/g, "");
+      setForm({ ...form, telefone: numeroLimpo });
+      return;
+    }
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -97,6 +101,7 @@ export default function ModalCadastroSala({ open, onClose }) {
       bairro: "",
       rua: "",
       numero: "",
+      telefone: "",
       preco: "",
       capacidade: "",
       descricao: "",
@@ -138,7 +143,6 @@ export default function ModalCadastroSala({ open, onClose }) {
         window.location.reload();
       }, 1000);
       handleCancelar();
-     
     } catch (error) {
       toast.error("Erro ao cadastrar sala.");
       console.error(error);
@@ -147,12 +151,9 @@ export default function ModalCadastroSala({ open, onClose }) {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle
-        sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}
-      >
+      <DialogTitle sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}>
         Cadastro de Sala
       </DialogTitle>
-
       <DialogContent dividers>
         <Grid container spacing={2}>
           {[
@@ -162,6 +163,7 @@ export default function ModalCadastroSala({ open, onClose }) {
             ["bairro", "Bairro"],
             ["rua", "Rua"],
             ["numero", "Número"],
+            ["telefone", "Telefone"],
             ["preco", "Preço (Diária)"],
             ["capacidade", "Capacidade"],
           ].map(([name, label], i) => (
@@ -178,7 +180,6 @@ export default function ModalCadastroSala({ open, onClose }) {
               />
             </Grid>
           ))}
-
           <Grid item xs={12}>
             <FormControl fullWidth>
               <InputLabel id="tipo-label">Tipo de Sala</InputLabel>
@@ -196,7 +197,6 @@ export default function ModalCadastroSala({ open, onClose }) {
               </Select>
             </FormControl>
           </Grid>
-
           <Grid item xs={12}>
             <TextField
               name="descricao"
@@ -209,7 +209,6 @@ export default function ModalCadastroSala({ open, onClose }) {
               onChange={handleChange}
             />
           </Grid>
-
           <Grid item xs={12} sm={6}>
             <Typography variant="body1" fontWeight={500} gutterBottom>
               Imagem da Sala
@@ -229,7 +228,6 @@ export default function ModalCadastroSala({ open, onClose }) {
               />
             </Button>
           </Grid>
-
           <Grid item xs={12} sm={6}>
             {preview && (
               <Box>
@@ -251,7 +249,6 @@ export default function ModalCadastroSala({ open, onClose }) {
           </Grid>
         </Grid>
       </DialogContent>
-
       <DialogActions sx={{ justifyContent: "space-between", px: 3, py: 2 }}>
         <Button onClick={handleCancelar} color="secondary" variant="outlined">
           Cancelar

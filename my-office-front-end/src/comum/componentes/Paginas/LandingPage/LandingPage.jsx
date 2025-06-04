@@ -96,7 +96,7 @@ export default function LandingPage() {
             variant="contained"
             size="large"
             component={RouterLink}
-            to="/cadastro"
+            to="/"
             sx={{
               px: 6,
               py: 1.8,
@@ -209,7 +209,7 @@ export default function LandingPage() {
               },
               {
                 title: 'Valores',
-                desc: 'Inovação, qualidade e flexibilidade para atender as necessidades do mercado corporativo.',
+                desc: 'Inovação, qualidade e flexibilidade para atender todas  as possíveis necessidades do mercado corporativo, educacional e comercial.',
               },
             ].map((item, idx) => (
               <Grid item xs={12} md={4} key={idx}>
@@ -414,7 +414,7 @@ export default function LandingPage() {
           variant="contained"
           size="large"
           component={RouterLink}
-          to="/cadastro"
+          to="/"
           sx={{
             bgcolor: 'white',
             color: '#FF5A00',

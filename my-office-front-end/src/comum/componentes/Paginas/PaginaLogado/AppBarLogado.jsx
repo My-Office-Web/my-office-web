@@ -17,6 +17,7 @@ import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import ModalCadastroSala from "../PaginaCadatroSala/PaginaCadastroSala";
+import { useNavigate } from "react-router-dom";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
@@ -24,6 +25,8 @@ export default function AppBarLogado() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [openModalCadastroSala, setOpenModalCadastroSala] = useState(false); // modal de cadastro
+
+  const navigate = useNavigate()
 
   const toggleDrawer = (open) => () => {
     setOpenDrawer(open);
@@ -72,7 +75,7 @@ export default function AppBarLogado() {
 
           {/* Central Items */}
           <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1, justifyContent: "center" }}>
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={()=> navigate("/novo")}>
               <HomeIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Início</Typography>
             </IconButton>

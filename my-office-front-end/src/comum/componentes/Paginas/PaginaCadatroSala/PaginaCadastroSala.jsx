@@ -163,7 +163,6 @@ export default function ModalCadastroSala({ open, onClose }) {
             ["bairro", "Bairro"],
             ["rua", "Rua"],
             ["numero", "Número"],
-            ["telefone", "Telefone"],
             ["preco", "Preço (Diária)"],
             ["capacidade", "Capacidade"],
           ].map(([name, label], i) => (

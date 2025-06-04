@@ -2,8 +2,8 @@ import mysql from 'mysql2';
 
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root',          // Altere se necessário
-    password: 'senai',     // Altere se necessário
+    user: 'root',        
+    password: 'senai',     
     database: 'salasdb',
   });
   

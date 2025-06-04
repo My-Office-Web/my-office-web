@@ -86,10 +86,10 @@ export default function AppBarLogado() {
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Cadastrar Sala</Typography>
             </IconButton>
 
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
+            {/* <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <HomeIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Alugar</Typography>
-            </IconButton>
+            </IconButton> */}
 
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <MeetingRoomIcon />

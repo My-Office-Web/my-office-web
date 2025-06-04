@@ -13,7 +13,8 @@ import {
   Tooltip,
   Modal,
   Divider,
-  Icon,
+  Button,
+  TextField,
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -23,18 +24,21 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import InputMask from 'react-input-mask';
 
 const ExpandMore = styled(({ expand, ...other }) => {
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   marginLeft: 'auto',
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)', // seta gira de 0 para 180
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)', 
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
   }),
 }));
 
 export default function CardSala({
+  usuarioId,       // ID do usuário logado (obrigatório para reservar)
+  salaId,          // ID da sala (obrigatório para reservar)
   titulo = 'Sala Corporativa Premium',
   endereco = 'Av. Paulista, 1000 - São Paulo, SP',
   imagemBase64,
@@ -45,7 +49,7 @@ export default function CardSala({
   const [expanded, setExpanded] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [agendamentoOpen, setAgendamentoOpen] = React.useState(false);
-
+  const [loadingReserva, setLoadingReserva] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded((prev) => !prev);
@@ -72,6 +76,47 @@ export default function CardSala({
       }
     } else {
       alert('O compartilhamento não é suportado neste navegador.');
+    }
+  };
+
+  // Função para enviar reserva para a API
+  const handleAgendamentoSubmit = async (e) => {
+    e.preventDefault();
+    const dataForm = new FormData(e.currentTarget);
+
+    const reserva = {
+      usuario_id: usuarioId,
+      sala_id: salaId,
+      data: dataForm.get('data'),
+    };
+
+    if (!reserva.data) {
+      alert('Por favor, selecione uma data para a reserva.');
+      return;
+    }
+
+    setLoadingReserva(true);
+
+    try {
+      const response = await fetch('http://localhost:3000/reservas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reserva),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('Reserva criada com sucesso! ID: ' + result.reservaId);
+        setAgendamentoOpen(false);
+      } else {
+        alert('Erro: ' + (result.error || 'Não foi possível criar a reserva.'));
+      }
+    } catch (error) {
+      alert('Erro ao conectar com o servidor.');
+      console.error(error);
+    } finally {
+      setLoadingReserva(false);
     }
   };
 
@@ -167,15 +212,11 @@ export default function CardSala({
           <IconButton aria-label="favoritar">
             <FavoriteIcon />
           </IconButton>
-          <IconButton
-            aria-label="compartilhar"
-            color="primary"
-            onClick={handleCompartilhar}
-          >
+          <IconButton aria-label="compartilhar" color="primary" onClick={handleCompartilhar}>
             <ShareIcon />
           </IconButton>
           <IconButton aria-label="whatsapp">
-            <WhatsAppIcon/>
+            <WhatsAppIcon />
           </IconButton>
           <ExpandMore
             expand={expanded}
@@ -261,32 +302,36 @@ export default function CardSala({
           <Typography id="modal-descricao" variant="body1" color="text.secondary" paragraph>
             {descricao}
             <Box textAlign="right" mt={3}>
-              <IconButton
+              <Button
                 variant="contained"
-                color="primary"
                 onClick={() => setAgendamentoOpen(true)}
                 sx={{
-                  bgcolor: 'primary.main',
+                  bgcolor: '#FF5A00',
                   color: 'white',
-                  '&:hover': { bgcolor: 'primary.dark' },
-                  px: 2,
-                  py: 1,
-                  borderRadius: 2,
+                  '&:hover': { bgcolor: '#e64a00' },
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: '999px',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
                 }}
               >
-                <Typography variant="button">Agendar</Typography>
-              </IconButton>
+                Agendar
+              </Button>
             </Box>
-
           </Typography>
         </Box>
       </Modal>
+
+      {/* Modal Agendamento */}
       <Modal
         open={agendamentoOpen}
         onClose={() => setAgendamentoOpen(false)}
         aria-labelledby="agendar-titulo"
       >
         <Box
+          component="form"
+          onSubmit={handleAgendamentoSubmit}
           sx={{
             position: 'absolute',
             top: '50%',
@@ -297,34 +342,54 @@ export default function CardSala({
             boxShadow: 24,
             p: 3,
             borderRadius: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
           }}
         >
           <Typography id="agendar-titulo" variant="h6" mb={2}>
             Agendar Sala
           </Typography>
-          <Box component="form" onSubmit={(e) => {
-            e.preventDefault();
-            // Lógica de envio ou integração com API
-            console.log('Agendamento enviado');
-            setAgendamentoOpen(false);
-          }} display="flex" flexDirection="column" gap={2}>
-            <input type="text" placeholder="Seu nome" required style={{ padding: '8px', borderRadius: 4 }} />
-            <input type="date" required style={{ padding: '8px', borderRadius: 4 }} />
-            <input type="time" required style={{ padding: '8px', borderRadius: 4 }} />
-            <button type="submit" style={{
-              padding: '10px',
-              backgroundColor: '#1976d2',
+
+          <TextField
+            label="Nome completo"
+            name="nome"
+            fullWidth
+            required
+            variant="outlined"
+            disabled
+            value={`Usuário ID: ${usuarioId}`} // Apenas para mostrar quem está agendando
+            aria-readonly="true"
+          />
+
+          <TextField
+            label="Data do agendamento"
+            name="data"
+            type="date"
+            fullWidth
+            required
+            InputLabelProps={{ shrink: true }}
+            inputProps={{ min: new Date().toISOString().split('T')[0] }}
+            aria-required="true"
+          />
+
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={loadingReserva}
+            sx={{
+              bgcolor: '#FF5A00',
               color: 'white',
-              border: 'none',
-              borderRadius: 4,
-              cursor: 'pointer'
-            }}>
-              Confirmar Agendamento
-            </button>
-          </Box>
+              '&:hover': { bgcolor: '#e64a00' },
+              py: 1.5,
+              fontWeight: 'bold',
+            }}
+            aria-busy={loadingReserva}
+          >
+            {loadingReserva ? 'Enviando...' : 'Confirmar'}
+          </Button>
         </Box>
       </Modal>
-
     </>
   );
 }

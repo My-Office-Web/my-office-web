@@ -5,9 +5,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import AlugarlSala from './comum/Componentes/Paginas/AlugarSala/AlugarSala';
 import Anunciar from './comum/Componentes/Paginas/AnunciarSala/Anunciar';
 import PaginaInicial from './comum/Componentes/Paginas/PaginaInicial/PaginaInicial';
+import LandingPage from './comum/componentes/Paginas/LandingPage/LandingPage';
 
 // Apenas páginas reais no roteador
 const router = createBrowserRouter([
+  {
+    path: '/novo',
+    element: <LandingPage/>,
+  },
   {
     path: '/',
     element: <PaginaInicial/>,

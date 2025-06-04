@@ -25,10 +25,6 @@ export default function SkeletonCardSala() {
         display: 'flex',
         flexDirection: 'column',
         transition: 'transform 0.3s ease',
-        '&:hover': {
-          transform: 'scale(5.03)',
-          boxShadow: 6,
-        },
       }}
     >
       {/* Header com avatar e texto */}

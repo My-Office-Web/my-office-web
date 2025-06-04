@@ -55,4 +55,4 @@ class ReservaSalas {
   }
 }
 
-export default new ReservaSalas();
+export default ReservaSalas;

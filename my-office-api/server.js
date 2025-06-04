@@ -19,7 +19,7 @@ app.post('/usuarios', instanciaUsuarios.cadastrar);
 app.post('/salas', instanciaSalas.cadastrar);
 app.post('/login', instanciaUsuarios.login);
 
-// Rotas para reservas
+// // Rotas para reservas
 app.post('/reservas', instanciaReservaSalas.criarReserva.bind(instanciaReservaSalas));
 app.get('/reservas', (req, res) => instanciaReservaSalas.listarReservas(req, res)); 
 

@@ -20,7 +20,7 @@ const Footer = () => {
   return (
     <Box
       component="footer"
-      sx={{ bgcolor: "#0d1b2a", color: "#ffffff", pt: 3, pb: 3 }}
+      sx={{ pt: 3, pb: 3 }}
     >
       <Container maxWidth="xl" >
         <Grid container spacing={22} alignItems="flex-start">
@@ -103,17 +103,16 @@ const Footer = () => {
                 <Typography variant="h6" fontWeight={700} gutterBottom>
                   Novidades
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 2, color: "#b0bec5" }}>
+                <Typography variant="body2" sx={{ mb: 2 }}>
                   Receba atualizações sobre nossos produtos e eventos:
                 </Typography>
                 <Stack direction="row" spacing={1}>
                   <TextField
-                    variant="filled"
+                    variant="outlined"
                     placeholder="Seu e-mail"
                     size="small"
                     fullWidth
                     sx={{
-                      bgcolor: "white",
                       borderRadius: 1,
                     }}
                   />
@@ -124,7 +123,7 @@ const Footer = () => {
               </Box>
 
               <Box>
-                <Typography variant="body2" sx={{ mb: 1, color: "#b0bec5" }}>
+                <Typography variant="body2" sx={{ mb: 1 }}>
                   Siga nossas redes sociais:
                 </Typography>
                 <Stack direction="row" spacing={1}>
@@ -135,11 +134,6 @@ const Footer = () => {
                     rel="noopener"
                     aria-label="Facebook"
                     sx={{
-                      bgcolor: "#1e2a38",
-                      "&:hover": {
-                        bgcolor: "#007bff",
-                        color: "white",
-                      },
                       transition: "0.3s",
                     }}
                   >
@@ -152,11 +146,6 @@ const Footer = () => {
                     rel="noopener"
                     aria-label="Twitter"
                     sx={{
-                      bgcolor: "#1e2a38",
-                      "&:hover": {
-                        bgcolor: "#007bff",
-                        color: "white",
-                      },
                       transition: "0.3s",
                     }}
                   >
@@ -169,11 +158,6 @@ const Footer = () => {
                     rel="noopener"
                     aria-label="LinkedIn"
                     sx={{
-                      bgcolor: "#1e2a38",
-                      "&:hover": {
-                        bgcolor: "#007bff",
-                        color: "white",
-                      },
                       transition: "0.3s",
                     }}
                   >
@@ -186,11 +170,6 @@ const Footer = () => {
                     rel="noopener"
                     aria-label="Instagram"
                     sx={{
-                      bgcolor: "#1e2a38",
-                      "&:hover": {
-                        bgcolor: "#007bff",
-                        color: "white",
-                      },
                       transition: "0.3s",
                     }}
                   >
@@ -202,10 +181,10 @@ const Footer = () => {
           </Grid>
         </Grid>
 
-        <Divider sx={{ my: 2, borderColor: "#1e2a38" }} />
+        <Divider sx={{ my: 2 }} />
 
         <Box textAlign="center">
-          <Typography variant="body2" sx={{ color: "#90a4ae" }}>
+          <Typography variant="body2" >
             © {new Date().getFullYear()} MyOffice. Todos os direitos reservados.
           </Typography>
         </Box>

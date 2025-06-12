@@ -124,7 +124,7 @@ export default function ModalCadastroSala({ open, onClose }) {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/salas", {
+      const response = await fetch("https://my-office-web.onrender.com/salas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -132,6 +132,7 @@ export default function ModalCadastroSala({ open, onClose }) {
           tipo: tipoSala,
           preco: parseFloat(form.preco),
           capacidade: parseInt(form.capacidade),
+          usuario_id: 1,
         }),
       });
 

@@ -16,19 +16,20 @@ class SalasController {
           descricao,
           imagem,
           latitude,
-          longitude
+          longitude,
+          usuario_id
         } = req.body;
 
         if(!(latitude&&longitude)){     
         const query = `
           INSERT INTO salas 
-          (cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          (cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem, usuario_id)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
       
         db.query(
           query,
-          [cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem],
+          [cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem, usuario_id],
           (err, results) => {
             if (err) {
               console.error(err);
@@ -41,12 +42,12 @@ class SalasController {
 
         const query = `
         INSERT INTO salas 
-        (cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem, latitude, longitude)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        (cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem, latitude, longitude, usuario_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
         db.query(
           query,
-          [cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem, latitude, longitude],
+          [cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem, latitude, longitude, usuario_id],
           (err, results) => {
             if (err) {
               console.error(err);

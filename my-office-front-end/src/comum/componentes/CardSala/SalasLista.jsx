@@ -19,7 +19,7 @@ export default function SalasLista({ filtros }) {
   useEffect(() => {
     const fetchSalas = async () => {
       try {
-        const response = await fetch('http://localhost:3000/salas');
+        const response = await fetch('https://my-office-web.onrender.com/salas');
         const data = await response.json();
         setSalas(data);
       } catch (error) {

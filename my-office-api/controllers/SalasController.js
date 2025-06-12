@@ -15,8 +15,11 @@ class SalasController {
           tipo,
           descricao,
           imagem,
+          latitude,
+          longitude
         } = req.body;
-      
+
+        if(!(latitude&&longitude)){     
         const query = `
           INSERT INTO salas 
           (cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem)
@@ -26,6 +29,24 @@ class SalasController {
         db.query(
           query,
           [cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem],
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ error: 'Erro ao salvar a sala' });
+              }
+            res.status(201).json({ id: results.insertId });
+            }
+          );
+        }
+
+        const query = `
+        INSERT INTO salas 
+        (cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem, latitude, longitude)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+        db.query(
+          query,
+          [cep, estado, cidade, bairro, rua, numero, preco, capacidade, tipo, descricao, imagem, latitude, longitude],
           (err, results) => {
             if (err) {
               console.error(err);

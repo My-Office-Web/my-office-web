@@ -1,34 +1,48 @@
+DROP DATABASE salasdb;
 CREATE DATABASE salasdb;
 USE salasdb;
 
-CREATE TABLE salas (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  cep VARCHAR(20),
-  estado VARCHAR(50),
-  cidade VARCHAR(100),
-  bairro VARCHAR(100),
-  rua VARCHAR(150),
-  numero VARCHAR(20),
-  preco DECIMAL(10,2),
-  capacidade INT,
-  tipo VARCHAR(50),
-  descricao TEXT,
+CREATE TABLE usuarios (
+  id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  telefone VARCHAR(15) NOT NULL,
+  senha VARCHAR(255) NOT NULL,
   imagem LONGTEXT
+  );
+
+CREATE TABLE salas (
+  id_sala INT AUTO_INCREMENT PRIMARY KEY,
+  cep VARCHAR(20) NOT NULL,
+  estado VARCHAR(50) NOT NULL,
+  cidade VARCHAR(100) NOT NULL,
+  bairro VARCHAR(100) NOT NULL,
+  rua VARCHAR(150) NOT NULL,
+  numero VARCHAR(20) NOT NULL,
+  preco DECIMAL(10,2) NOT NULL,
+  capacidade INT NOT NULL,
+  tipo VARCHAR(50) NOT NULL,
+  descricao TEXT NOT NULL,
+  imagem LONGTEXT NOT NULL,
+  latitude VARCHAR(100),
+  longitude VARCHAR(100),
+  usuario_id INT NOT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
 
-CREATE TABLE usuarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(100),
-  email VARCHAR(100)UNIQUE,
-  telefone VARCHAR(15),
-  senha VARCHAR(255)
+CREATE TABLE favoritos (
+  id_favorito INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL,
+  sala_id INT NOT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  FOREIGN KEY (sala_id) REFERENCES salas(id_sala) ON DELETE CASCADE
 );
 
 CREATE TABLE reservas (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_reserva INT AUTO_INCREMENT PRIMARY KEY,
   usuario_id INT NOT NULL,
   sala_id INT NOT NULL,
   data DATE NOT NULL,
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-  FOREIGN KEY (sala_id) REFERENCES salas(id) ON DELETE CASCADE
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  FOREIGN KEY (sala_id) REFERENCES salas(id_sala) ON DELETE CASCADE
 );

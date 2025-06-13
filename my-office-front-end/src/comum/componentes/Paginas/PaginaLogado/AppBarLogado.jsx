@@ -18,6 +18,7 @@ import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import ModalCadastroSala from "../PaginaCadatroSala/PaginaCadastroSala";
 import { useNavigate } from "react-router-dom";
+import ModalMinhasSalas from "../PaginaMinhasSalas/PaginaMinhasSalas";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
@@ -44,6 +45,9 @@ export default function AppBarLogado() {
     instanciaAutenticacao.logout();
     window.location.reload();
   };
+
+  const [openModalMinhasSalas, setOpenModalMinhasSalas] = useState(false);
+
 
   const userName = "João Silva";
   const initials = userName
@@ -75,7 +79,7 @@ export default function AppBarLogado() {
 
           {/* Central Items */}
           <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1, justifyContent: "center" }}>
-            <IconButton color="inherit" onClick={()=> navigate("/novo")}>
+            <IconButton color="inherit" onClick={() => navigate("/novo")}>
               <HomeIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Início</Typography>
             </IconButton>
@@ -94,10 +98,15 @@ export default function AppBarLogado() {
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Alugar</Typography>
             </IconButton> */}
 
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
+            <IconButton
+              color="inherit"
+              sx={{ marginLeft: 2 }}
+              onClick={() => setOpenModalMinhasSalas(true)}
+            >
               <MeetingRoomIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Minhas Salas</Typography>
             </IconButton>
+
 
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <FavoriteIcon />
@@ -145,6 +154,11 @@ export default function AppBarLogado() {
       <ModalCadastroSala
         open={openModalCadastroSala}
         onClose={() => setOpenModalCadastroSala(false)}
+      />
+       {/* Modal de Minhas Salas*/}     
+      <ModalMinhasSalas
+        open={openModalMinhasSalas}
+        onClose={() => setOpenModalMinhasSalas(false)}
       />
     </Box>
   );

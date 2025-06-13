@@ -1,50 +1,41 @@
 import React, { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import TemporaryDrawer from "../PaginaInicial/MenuLateral";
-import HomeIcon from "@mui/icons-material/Home";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import HelpIcon from "@mui/icons-material/Help";
-import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
-import AddBusinessIcon from "@mui/icons-material/AddBusiness";
-import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
-import ModalCadastroSala from "../PaginaCadatroSala/PaginaCadastroSala";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Avatar,
+  Tooltip,
+  Menu,
+  MenuItem,
+  Modal,
+  Box,
+  Typography
+} from "@mui/material";
+import {
+  Menu as MenuIcon,
+  Home as HomeIcon,
+  Favorite as FavoriteIcon,
+  Help as HelpIcon,
+  MeetingRoom as MeetingRoomIcon,
+  AddBusiness as AddBusinessIcon,
+  Search as SearchIcon,
+  Email as EmailIcon
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+
+import TemporaryDrawer from "../PaginaInicial/MenuLateral";
+import ModalCadastroSala from "../PaginaCadatroSala/PaginaCadastroSala";
+import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
 export default function AppBarLogado() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [openModalCadastroSala, setOpenModalCadastroSala] = useState(false); // modal de cadastro
+  const [openModalCadastroSala, setOpenModalCadastroSala] = useState(false);
+  const [openAjuda, setOpenAjuda] = useState(false);
 
-  const navigate = useNavigate()
-
-  const toggleDrawer = (open) => () => {
-    setOpenDrawer(open);
-  };
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const handleLogout = () => {
-    instanciaAutenticacao.logout();
-    window.location.reload();
-  };
-
+  const navigate = useNavigate();
   const userName = "João Silva";
   const initials = userName
     .split(" ")
@@ -52,20 +43,57 @@ export default function AppBarLogado() {
     .join("")
     .toUpperCase();
 
+  // Handlers
+  const toggleDrawer = (open) => () => setOpenDrawer(open);
+  const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
+  const handleCloseUserMenu = () => setAnchorElUser(null);
+  const handleLogout = () => {
+    instanciaAutenticacao.logout();
+    window.location.reload();
+  };
+
+  const handleOpenAjuda = () => setOpenAjuda(true);
+  const handleCloseAjuda = () => setOpenAjuda(false);
+
+  // Dados de ajuda
+  const ajudaItens = [
+    {
+      icon: <HomeIcon sx={{ color: "#1976d2", mr: 1 }} />,
+      title: "Cadastrar uma sala",
+      description: 'Clique em "Cadastrar Sala" para adicionar uma nova.',
+    },
+    {
+      icon: <SearchIcon sx={{ color: "#1976d2", mr: 1 }} />,
+      title: "Buscar salas",
+      description: "Use a busca para encontrar salas por cidade.",
+    },
+    {
+      icon: <FavoriteIcon sx={{ color: "#1976d2", mr: 1 }} />,
+      title: "Favoritar salas",
+      description: "Clique no ícone ❤️ para salvar suas salas favoritas.",
+    },
+    {
+      icon: <EmailIcon sx={{ color: "#1976d2", mr: 1 }} />,
+      title: "Suporte",
+      description: (
+        <>
+          Se precisar de ajuda, envie um e-mail para{" "}
+          <a href="mailto:suporte@myoffice.com" style={{ color: "#1976d2" }}>
+            suporte@myoffice.com
+          </a>.
+        </>
+      ),
+    },
+  ];
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: "" }}>
+      {/* AppBar */}
+      <AppBar position="static" sx={{ backgroundColor: "#1976d2" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          {/* Menu Lateral */}
+          {/* Logo e Menu */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={toggleDrawer(true)}
-            >
+            <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div">
@@ -73,63 +101,29 @@ export default function AppBarLogado() {
             </Typography>
           </Box>
 
-          {/* Central Items */}
+          {/* Ícones centrais */}
           <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1, justifyContent: "center" }}>
-            <IconButton color="inherit" onClick={()=> navigate("/novo")}>
-              <HomeIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Início</Typography>
-            </IconButton>
-
-            <IconButton
-              color="inherit"
-              sx={{ marginLeft: 2 }}
-              onClick={() => setOpenModalCadastroSala(true)}
-            >
-              <AddBusinessIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Cadastrar Sala</Typography>
-            </IconButton>
-
-            {/* <IconButton color="inherit" sx={{ marginLeft: 2 }}>
-              <HomeIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Alugar</Typography>
-            </IconButton> */}
-
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
-              <MeetingRoomIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Minhas Salas</Typography>
-            </IconButton>
-
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
-              <FavoriteIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Favoritos</Typography>
-            </IconButton>
-
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
-              <HelpIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Ajuda</Typography>
-            </IconButton>
+            <IconeNav icone={<HomeIcon />} texto="Início" onClick={() => navigate("/novo")} />
+            <IconeNav icone={<AddBusinessIcon />} texto="Cadastrar Sala" onClick={() => setOpenModalCadastroSala(true)} />
+            <IconeNav icone={<MeetingRoomIcon />} texto="Minhas Salas" />
+            <IconeNav icone={<FavoriteIcon />} texto="Favoritos" />
+            <IconeNav icone={<HelpIcon />} texto="Ajuda" onClick={handleOpenAjuda} />
           </Box>
 
-          {/* Avatar do usuário */}
-          <Box sx={{ flexGrow: 0 }}>
+          {/* Avatar */}
+          <Box>
             <Tooltip title="Abrir menu do usuário">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar sx={{ bgcolor: "silver" }}>{initials}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px" }}
               anchorEl={anchorElUser}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
+              sx={{ mt: "45px" }}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
               <MenuItem onClick={handleCloseUserMenu}>Perfil</MenuItem>
               <MenuItem onClick={handleLogout}>Sair</MenuItem>
@@ -138,14 +132,75 @@ export default function AppBarLogado() {
         </Toolbar>
       </AppBar>
 
-      {/* Menu lateral */}
+      {/* Drawer lateral */}
       <TemporaryDrawer open={openDrawer} toggleDrawer={toggleDrawer} />
 
-      {/* Modal de Cadastro de Sala */}
+      {/* Modal Cadastro */}
       <ModalCadastroSala
         open={openModalCadastroSala}
         onClose={() => setOpenModalCadastroSala(false)}
       />
+
+      {/* Modal de Ajuda */}
+      <Modal open={openAjuda} onClose={handleCloseAjuda}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "#fff",
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+            width: 600,
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}
+        >
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "#1976d2", mb: 2 }}>
+            COMO PODEMOS AJUDAR VOCÊ?
+          </Typography>
+
+          <Typography variant="body1" sx={{ mb: 3 }}>
+            Encontre abaixo informações rápidas para navegar pela nossa plataforma:
+          </Typography>
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {ajudaItens.map(({ icon, title, description }, index) => (
+              <Box
+                key={index}
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  bgcolor: "#f9f9f9",
+                  borderRadius: 2,
+                  p: 2,
+                  boxShadow: 1,
+                }}
+              >
+                {icon}
+                <Box>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                    {title}
+                  </Typography>
+                  <Typography variant="body2">{description}</Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 }
+
+// Componente de ícone com texto
+const IconeNav = ({ icone, texto, onClick }) => (
+  <IconButton color="inherit" sx={{ mx: 1 }} onClick={onClick}>
+    {icone}
+    <Typography variant="body2" sx={{ ml: 1 }}>
+      {texto}
+    </Typography>
+  </IconButton>
+);

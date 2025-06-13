@@ -66,6 +66,19 @@ class SalasController {
           res.json(results);
         });
       }
+
+    listarMinhasSalas (req, res) {
+        const id = 1
+        const query = `SELECT * FROM salas WHERE usuario_id = ?`
+        
+        db.query(query, [id], (err, results) => {
+          if (err) {
+            return res.status(500).json({ error: 'Erro ao buscar salas' });
+          }
+          res.json(results);
+        });
     }
+
+  }
 
 export default SalasController

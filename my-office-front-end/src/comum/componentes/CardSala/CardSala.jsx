@@ -30,15 +30,15 @@ const ExpandMore = styled(({ expand, ...other }) => {
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   marginLeft: 'auto',
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)', 
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
   }),
 }));
 
 export default function CardSala({
-  usuarioId,       // ID do usuário logado (obrigatório para reservar)
-  salaId,          // ID da sala (obrigatório para reservar)
+  usuarioId,
+  salaId,
   titulo = 'Sala Corporativa Premium',
   endereco = 'Av. Paulista, 1000 - São Paulo, SP',
   imagemBase64,
@@ -50,6 +50,7 @@ export default function CardSala({
   const [modalOpen, setModalOpen] = React.useState(false);
   const [agendamentoOpen, setAgendamentoOpen] = React.useState(false);
   const [loadingReserva, setLoadingReserva] = React.useState(false);
+  const [favorito, setFavorito] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded((prev) => !prev);
@@ -79,7 +80,21 @@ export default function CardSala({
     }
   };
 
-  // Função para enviar reserva para a API
+  const handleWhatsAppClick = () => {
+    if (!telefoneUsuario) {
+      alert('Número de telefone não disponível.');
+      return;
+    }
+
+    const numeroLimpo = telefoneUsuario.replace(/\D/g, '');
+    const numeroComDDI = numeroLimpo.startsWith('55') ? numeroLimpo : `55${numeroLimpo}`;
+    const mensagem = encodeURIComponent(`Olá! Gostaria de reservar a sala "${titulo}".`);
+    const url = `https://wa.me/${numeroComDDI}?text=${mensagem}`;
+
+    window.open(url, '_blank');
+  };
+
+
   const handleAgendamentoSubmit = async (e) => {
     e.preventDefault();
     const dataForm = new FormData(e.currentTarget);
@@ -209,13 +224,17 @@ export default function CardSala({
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="favoritar">
+          <IconButton
+            aria-label="favoritar"
+            onClick={() => setFavorito(!favorito)}
+            color={favorito ? 'error' : 'default'}
+          >
             <FavoriteIcon />
           </IconButton>
           <IconButton aria-label="compartilhar" color="primary" onClick={handleCompartilhar}>
             <ShareIcon />
           </IconButton>
-          <IconButton aria-label="whatsapp">
+          <IconButton aria-label="whatsapp" onClick={handleWhatsAppClick}>
             <WhatsAppIcon />
           </IconButton>
           <ExpandMore
@@ -229,7 +248,6 @@ export default function CardSala({
         </CardActions>
       </Card>
 
-      {/* Modal detalhado */}
       <Modal
         open={modalOpen}
         onClose={handleModalClose}
@@ -323,7 +341,6 @@ export default function CardSala({
         </Box>
       </Modal>
 
-      {/* Modal Agendamento */}
       <Modal
         open={agendamentoOpen}
         onClose={() => setAgendamentoOpen(false)}
@@ -358,7 +375,7 @@ export default function CardSala({
             required
             variant="outlined"
             disabled
-            value={`Usuário ID: ${usuarioId}`} // Apenas para mostrar quem está agendando
+            value={`Usuário ID: ${usuarioId}`}
             aria-readonly="true"
           />
 

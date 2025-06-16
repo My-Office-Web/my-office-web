@@ -11,12 +11,19 @@ import {
   Autocomplete,
   Divider,
   useMediaQuery,
+  Button,
+  Modal,
+  CircularProgress,
+  Drawer,
+  IconButton,
 } from '@mui/material';
+import { FaFilter } from "react-icons/fa";
 import CardSala from '../../CardSala/CardSala';
 import SkeletonCardSala from '../../CardSala/SkeletonCardSala';
 import AppBarLogado from '../PaginaLogado/AppBarLogado';
 
-// Função para normalizar texto para comparação (remove acentos e coloca em minúsculo)
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+
 const normalizarTexto = (texto) =>
   texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
@@ -39,7 +46,11 @@ export default function PaginaDeBuscaComFiltros() {
   const [buscaLocal, setBuscaLocal] = useState('');
   const [opcoesAutoComplete, setOpcoesAutoComplete] = useState([]);
 
-  // Carrega salas do backend e configura autocomplete
+  const [modalMapaAberto, setModalMapaAberto] = useState(false);
+
+  // Novo estado: drawer do filtro aberto ou fechado
+  const [drawerFiltroAberto, setDrawerFiltroAberto] = useState(false);
+
   useEffect(() => {
     const fetchSalas = async () => {
       try {
@@ -47,7 +58,6 @@ export default function PaginaDeBuscaComFiltros() {
         const data = await response.json();
         setSalas(data);
 
-        // Monta opções para autocomplete baseado em rua, bairro, cidade e estado
         const locais = new Set();
         data.forEach((sala) => {
           [sala.rua, sala.bairro, sala.cidade, sala.estado].forEach((loc) => {
@@ -64,7 +74,6 @@ export default function PaginaDeBuscaComFiltros() {
     fetchSalas();
   }, []);
 
-  // Aplica filtros e busca com debounce
   useEffect(() => {
     if (!salas.length) return;
 
@@ -100,130 +109,198 @@ export default function PaginaDeBuscaComFiltros() {
     return () => clearTimeout(delay);
   }, [filtros, valorMinimo, valorMaximo, buscaLocal, salas]);
 
-  // Atualiza filtros de tipo
   const handleFiltroChange = (e) => {
     setFiltros({ ...filtros, [e.target.name]: e.target.checked });
+  };
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyDjT2WABBTtCsB6n_yKSO3iLH1v5woOh6U',
+  });
+
+  const calcularCentro = () => {
+    if (!salasFiltradas.length) return { lat: -27.5945, lng: -46.633308 };
+
+    const latSum = salasFiltradas.reduce((acc, sala) => acc + parseFloat(sala.latitude), 0);
+    const lngSum = salasFiltradas.reduce((acc, sala) => acc + parseFloat(sala.longitude), 0);
+
+    return {
+      lat: latSum / salasFiltradas.length,
+      lng: lngSum / salasFiltradas.length,
+    };
   };
 
   return (
     <>
       <AppBarLogado />
 
-      <Box
-        sx={{
-          display: 'flex',
-          p: 2,
-          flexDirection: isMobile ? 'column' : 'row',
-          gap: 3,
-        }}
-      >
-        {/* Filtros */}
-        <Paper
-          elevation={3}
-          sx={{
-            minWidth: 250,
-            p: 3,
-            borderRadius: 3,
-            position: isMobile ? 'static' : 'sticky',
-            top: 20,
-          }}
-        >
-          <Typography variant="h6">Filtros</Typography>
-          <Divider sx={{ my: 2 }} />
-
-          <Typography variant="subtitle2">Tipo</Typography>
-          <FormGroup>
-            {Object.keys(filtros).map((tipo) => (
-              <FormControlLabel
-                key={tipo}
-                control={
-                  <Checkbox name={tipo} checked={filtros[tipo]} onChange={handleFiltroChange} />
-                }
-                label={tipo.charAt(0).toUpperCase() + tipo.slice(1)}
-              />
-            ))}
-          </FormGroup>
-
-          <Divider sx={{ my: 2 }} />
-
-          <Typography variant="subtitle2">Valor mínimo</Typography>
-          <TextField
-            size="small"
-            fullWidth
-            type="number"
-            value={valorMinimo}
-            onChange={(e) => setValorMinimo(e.target.value)}
-          />
-
-          <Typography variant="subtitle2" sx={{ mt: 2 }}>
-            Valor máximo
-          </Typography>
-          <TextField
-            size="small"
-            fullWidth
-            type="number"
-            value={valorMaximo}
-            onChange={(e) => setValorMaximo(e.target.value)}
-          />
-        </Paper>
-
-        {/* Resultados e busca */}
-        <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {/* Barra de busca + botão abrir filtro */}
+        
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <IconButton
+            color="primary"
+            onClick={() => setDrawerFiltroAberto(true)}
+            aria-label="Abrir filtros"
+            sx={{ ml: 1 }}
+          >
+            <FaFilter />
+          </IconButton>
           <Autocomplete
             freeSolo
             options={buscaLocal.trim() === '' ? [] : opcoesAutoComplete}
             inputValue={buscaLocal}
             onInputChange={(e, val) => setBuscaLocal(val)}
+            sx={{ flexGrow: 1 }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 placeholder="Digite rua, bairro, cidade ou estado"
                 fullWidth
-                sx={{ mb: 3 }}
+                size="small"
               />
             )}
           />
+          <Button variant="outlined" onClick={() => setModalMapaAberto(true)} disabled={salasFiltradas.length === 0}>
+            Ver todas no mapa
+          </Button>
+        </Box>
 
-          <Typography variant="h5" mb={2}>
-            Resultados
+        {/* Resultados */}
+        <Typography variant="h5" mb={2}>
+          Resultados
+        </Typography>
+
+        {(loading || filtrando) && (
+          <Grid container spacing={3}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Grid item xs={12} sm={6} md={4} key={i}>
+                <SkeletonCardSala />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+
+        {!loading && !filtrando && salasFiltradas.length === 0 && (
+          <Typography align="center" variant="h6">
+            Nenhuma sala encontrada.
           </Typography>
+        )}
 
-          {(loading || filtrando) && (
-            <Grid container spacing={3}>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Grid item xs={12} sm={6} md={4} key={i}>
-                  <SkeletonCardSala />
-                </Grid>
-              ))}
-            </Grid>
-          )}
+        {!loading && !filtrando && salasFiltradas.length > 0 && (
+          <Grid container spacing={3}>
+            {salasFiltradas.map((sala) => (
+              <Grid item xs={12} sm={6} md={4} key={sala.id}>
+                <CardSala
+                  usuarioId="1"
+                  salaId={sala.id}
+                  titulo={`Sala ${sala.tipo}`}
+                  endereco={`${sala.rua}, ${sala.numero} - ${sala.bairro}, ${sala.cidade} - ${sala.estado}`}
+                  preco={sala.preco}
+                  capacidade={sala.capacidade}
+                  descricao={sala.descricao}
+                  imagemBase64={sala.imagem}
+                  latitude={sala.latitude}
+                  longitude={sala.longitude}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
 
-          {!loading && !filtrando && salasFiltradas.length === 0 && (
-            <Typography align="center" variant="h6">
-              Nenhuma sala encontrada.
-            </Typography>
-          )}
+      {/* Drawer lateral dos filtros */}
+      <Drawer
+        anchor="left"
+        open={drawerFiltroAberto}
+        onClose={() => setDrawerFiltroAberto(false)}
+        PaperProps={{ sx: { width: isMobile ? '80vw' : 300, p: 3 } }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Filtros
+        </Typography>
+        <Divider sx={{ my: 2 }} />
 
-          {!loading && !filtrando && salasFiltradas.length > 0 && (
-            <Grid container spacing={3}>
+        <Typography variant="subtitle2">Tipo</Typography>
+        <FormGroup>
+          {Object.keys(filtros).map((tipo) => (
+            <FormControlLabel
+              key={tipo}
+              control={<Checkbox name={tipo} checked={filtros[tipo]} onChange={handleFiltroChange} />}
+              label={tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+            />
+          ))}
+        </FormGroup>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Typography variant="subtitle2">Valor mínimo</Typography>
+        <TextField
+          size="small"
+          fullWidth
+          type="number"
+          value={valorMinimo}
+          onChange={(e) => setValorMinimo(e.target.value)}
+        />
+
+        <Typography variant="subtitle2" sx={{ mt: 2 }}>
+          Valor máximo
+        </Typography>
+        <TextField
+          size="small"
+          fullWidth
+          type="number"
+          value={valorMaximo}
+          onChange={(e) => setValorMaximo(e.target.value)}
+        />
+
+        <Box sx={{ mt: 3 }}>
+          <Button variant="contained" fullWidth onClick={() => setDrawerFiltroAberto(false)}>
+            Aplicar e Fechar
+          </Button>
+        </Box>
+      </Drawer>
+
+      {/* Modal mapa geral */}
+      <Modal open={modalMapaAberto} onClose={() => setModalMapaAberto(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: { xs: '95vw', sm: '80vw', md: '70vw' },
+            height: { xs: '70vh', sm: '70vh', md: '75vh' },
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            borderRadius: 2,
+            overflow: 'hidden',
+          }}
+        >
+          {isLoaded ? (
+            <GoogleMap
+              mapContainerStyle={{ width: '100%', height: '100%' }}
+              center={calcularCentro()}
+              zoom={13}
+            >
               {salasFiltradas.map((sala) => (
-                <Grid item xs={12} sm={6} md={4} key={sala.id}>
-                  <CardSala
-                    usuarioId="1"
-                    salaId={sala.id}
-                    titulo={`Sala ${sala.tipo}`}
-                    endereco={`${sala.rua}, ${sala.numero} - ${sala.bairro}, ${sala.cidade} - ${sala.estado}`}
-                    preco={sala.preco}
-                    capacidade={sala.capacidade}
-                    descricao={sala.descricao}
-                    imagemBase64={sala.imagem}
-                  />
-                </Grid>
+                <Marker
+                  key={sala.id}
+                  position={{
+                    lat: parseFloat(sala.latitude),
+                    lng: parseFloat(sala.longitude),
+                  }}
+                  title={`Sala ${sala.tipo} - R$${sala.preco}`}
+                />
               ))}
-            </Grid>
+            </GoogleMap>
+          ) : (
+            <Box display="flex" alignItems="center" justifyContent="center" height="100%">
+              <CircularProgress />
+            </Box>
           )}
         </Box>
-      </Box>
+      </Modal>
     </>
   );
 }

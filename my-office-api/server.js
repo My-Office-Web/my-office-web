@@ -25,6 +25,7 @@ app.get('/reservas', (req, res) => instanciaReservaSalas.listarReservas(req, res
 
 // Endpoint para listar salas
 app.get('/salas', instanciaSalas.listar);
+app.get('/minhas-salas', instanciaSalas.listarMinhasSalas)
 
 // Inicia o servidor
 app.listen(port, () => {

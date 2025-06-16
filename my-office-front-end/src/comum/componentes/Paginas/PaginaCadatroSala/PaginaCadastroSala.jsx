@@ -76,11 +76,6 @@ export default function ModalCadastroSala({ open, onClose }) {
   };
 
   const handleChange = (e) => {
-    if (e.target.name === "telefone") {
-      const numeroLimpo = e.target.value.replace(/\D/g, "");
-      setForm({ ...form, telefone: numeroLimpo });
-      return;
-    }
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 

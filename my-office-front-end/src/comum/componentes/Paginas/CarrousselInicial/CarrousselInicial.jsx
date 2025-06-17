@@ -7,7 +7,7 @@ const CustomCarousel = ({ width = '100%', height = 320, borderRadius = 6 }) => {
       title: 'As melhores salas de reuniões estão aqui',
       subtitle: 'Só na MyOffice você encontra',
       buttonText: 'Eu quero',
-      image: '/sala.jpeg',
+      image: '/reuniao.jpg',
       bgColor: '#0057ff',
       buttonColor: '#FF5A00',
     },

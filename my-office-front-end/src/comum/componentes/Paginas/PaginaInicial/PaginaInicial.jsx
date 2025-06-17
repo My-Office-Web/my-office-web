@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, ThemeProvider, CssBaseline } from "@mui/material";
+import { Container, ThemeProvider, CssBaseline, GlobalStyles } from "@mui/material";
 
 import ButtonAppBar from "../../Paginas/PaginaInicial/AppBar";
 import FiltroImoveis from "../../Paginas/PaginaInicial/BarraDeBuscaSuperior";
@@ -11,8 +11,24 @@ import { lightTheme, darkTheme } from "../../../Theme/theme";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import AppBarLogado from "../PaginaLogado/AppBarLogado";
 import SalasLista from "../../CardSala/SalasLista";
+import AgeoBold from '../../../../assets/fonts/Ageo-Bold.otf';
+
 
 const instanciaAutenticacao = new ServicoAutenticacao();
+
+const FonteGlobal = () => (
+  <GlobalStyles
+    styles={{
+      '@font-face': {
+        fontFamily: "'Ageo Bold', Arial, sans-serif",
+        src: `url(${AgeoBold}) format('opentype')`,
+
+        fontStyle: 'normal',
+      },
+    }}
+  />
+);
+
 
 const PaginaInicial = () => {
   const [usuarioAutenticado, setUsuarioAutenticado] = useState(false);
@@ -41,6 +57,8 @@ const PaginaInicial = () => {
       <DarkMode isDark={isDark} toggleTheme={toggleTheme} />
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <CssBaseline />
+        <FonteGlobal />
+
         {usuarioAutenticado ? <AppBarLogado /> : <ButtonAppBar />}
 
         <Container sx={{ py: 4 }} maxWidth="">
@@ -70,4 +88,3 @@ const PaginaInicial = () => {
 };
 
 export default PaginaInicial;
-  

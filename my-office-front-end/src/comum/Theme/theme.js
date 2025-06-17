@@ -1,6 +1,13 @@
-// src/Theme/theme.js
 import { createTheme } from '@mui/material/styles';
 
+// Tipografia compartilhada
+const commonTypography = {
+  typography: {
+    fontFamily: 'Ageo Bold, sans-serif',
+  },
+};
+
+// Tema claro
 export const lightTheme = createTheme({
   palette: {
     mode: 'light',
@@ -12,8 +19,10 @@ export const lightTheme = createTheme({
       primary: '#000000',
     },
   },
+  ...commonTypography,
 });
 
+// Tema escuro
 export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -25,4 +34,12 @@ export const darkTheme = createTheme({
       primary: '#ffffff',
     },
   },
+  ...commonTypography,
 });
+
+// Tema padrão (caso necessário)
+const theme = createTheme({
+  ...commonTypography,
+});
+
+export default theme;

@@ -188,7 +188,12 @@ export default function PaginaDeBuscaComFiltros() {
         )}
 
         {!loading && !filtrando && salasFiltradas.length > 0 && (
-          <Grid container spacing={3}>
+          <Box display="flex" justifyContent="center">
+          <Grid
+            container
+            spacing={3}
+            sx={{ maxWidth: '1600px' }} // opcional: para não ocupar largura total em telas grandes
+          >
             {salasFiltradas.map((sala) => (
               <Grid item xs={12} sm={6} md={4} key={sala.id}>
                 <CardSala
@@ -206,6 +211,8 @@ export default function PaginaDeBuscaComFiltros() {
               </Grid>
             ))}
           </Grid>
+        </Box>
+        
         )}
       </Box>
 

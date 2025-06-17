@@ -23,23 +23,25 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
     <Box
       sx={{
         display: 'flex',
+        flexDirection: 'column', // agora o layout é vertical
         minHeight: 400,
         backgroundColor: 'inherit',
         overflow: 'hidden',
       }}
     >
-      {/* Lado esquerdo com imagem */}
+      {/* Imagem ocupando 100% da largura */}
       <Box
         sx={{
-          width: '25%',
+          width: '100%',
+          height: 300, // altura da imagem, você pode ajustar
           backgroundImage: `url('/sala.jpeg')`,
           backgroundSize: 'cover',
-          borderRadius: '0 0 60px 0',
           backgroundPosition: 'center',
+
         }}
       />
 
-      {/* Lado direito com conteúdo */}
+      {/* Conteúdo abaixo da imagem */}
       <Box
         sx={{
           width: '100%',
@@ -51,9 +53,9 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
           textAlign: 'center',
         }}
       >
-        <Typography variant="h4" fontWeight="bold" color="inherit" mb={2}>
-          O espaço ideal para você está aqui. <br />
-          Só na MyOffice você encontra os melhores lugares para seus encontros.
+        <Typography variant="h4" fontWeight="bold" color="#3d4351" mb={2}>
+          O espaço ideal para você está aqui! <br />
+
         </Typography>
 
         <Divider sx={{ maxWidth: 600, mx: 'auto', mb: 3, borderColor: '#dcdcdc' }} />

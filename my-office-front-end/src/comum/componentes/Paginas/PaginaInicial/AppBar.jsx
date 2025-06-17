@@ -11,6 +11,7 @@ import { TbLogin2 } from "react-icons/tb";
 import ModalCadastro from "../PaginaCadastro/PaginaCadastro";
 import ModalLogin from "../PaginaLogin/PaginaLogin";
 
+
 export default function ButtonAppBar() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openModalCadastro, setOpenModalCadastro] = useState(false);
@@ -45,9 +46,10 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="h6" component="div" sx={{ flexGrow: 15 }}>
-            MyOffice
-          </Typography>
+          <Box sx={{ flexGrow: 15 }}>
+          <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
+          </Box>
+
 
           {/* BOTÃO CRIAR CONTA abre modal */}
           <Button

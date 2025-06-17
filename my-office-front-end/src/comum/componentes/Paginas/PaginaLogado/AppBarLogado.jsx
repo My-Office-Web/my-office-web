@@ -72,9 +72,10 @@ export default function AppBarLogado() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" component="div">
-              MyOffice
-            </Typography>
+
+            <Box sx={{ flexGrow: 15 }}>
+          <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
+          </Box>
           </Box>
 
           {/* Central Items */}

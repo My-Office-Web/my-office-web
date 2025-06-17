@@ -19,6 +19,7 @@ import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import ModalCadastroSala from "../PaginaCadatroSala/PaginaCadastroSala";
 import { useNavigate } from "react-router-dom";
 import ModalMinhasSalas from "../PaginaMinhasSalas/PaginaMinhasSalas";
+import EventIcon from '@mui/icons-material/Event';
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
@@ -94,10 +95,12 @@ export default function AppBarLogado() {
               <Typography variant="body2" sx={{ marginLeft: 1 }}>Cadastrar Sala</Typography>
             </IconButton>
 
-            {/* <IconButton color="inherit" sx={{ marginLeft: 2 }}>
-              <HomeIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Alugar</Typography>
-            </IconButton> */}
+            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
+              <EventIcon />
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                Reservas
+              </Typography>
+              </IconButton> 
 
             <IconButton
               color="inherit"

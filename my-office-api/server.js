@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import SalasController from './controllers/SalasController.js';
 import UsuariosController from './controllers/UsuariosController.js';
 import ReservaSalas from './controllers/ReservaSalas.js';
+import authenticateToken from './middlewares/auth.js'; // <--- Novo middleware
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,17 +16,22 @@ const instanciaSalas = new SalasController();
 const instanciaUsuarios = new UsuariosController();
 const instanciaReservaSalas = new ReservaSalas(); 
 
+// Cadastro e login de usuários (público)
 app.post('/usuarios', instanciaUsuarios.cadastrar);
-app.post('/salas', instanciaSalas.cadastrar);
 app.post('/login', instanciaUsuarios.login);
 
-// // Rotas para reservas
-app.post('/reservas', instanciaReservaSalas.criarReserva.bind(instanciaReservaSalas));
-app.get('/reservas', (req, res) => instanciaReservaSalas.listarReservas(req, res)); 
+// Cadastro de salas (protegido)
+app.post('/salas', authenticateToken, instanciaSalas.cadastrar);
 
-// Endpoint para listar salas
+// Reservas (protegidas)
+app.post('/reservas', authenticateToken, instanciaReservaSalas.criarReserva.bind(instanciaReservaSalas));
+app.get('/reservas', authenticateToken, (req, res) => instanciaReservaSalas.listarReservas(req, res)); 
+
+// Listagem de salas (público)
 app.get('/salas', instanciaSalas.listar);
-app.get('/minhas-salas', instanciaSalas.listarMinhasSalas)
+
+// Listagem de salas do usuário logado (protegido)
+app.get('/minhas-salas', authenticateToken, instanciaSalas.listarMinhasSalas);
 
 // Inicia o servidor
 app.listen(port, () => {

@@ -115,7 +115,10 @@ export default function CardSala({
     try {
       const response = await fetch('http://localhost:3000/reservas', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer `
+        },
         body: JSON.stringify(reserva),
       });
 

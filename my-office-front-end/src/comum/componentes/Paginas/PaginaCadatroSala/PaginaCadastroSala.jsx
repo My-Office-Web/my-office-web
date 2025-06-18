@@ -18,6 +18,7 @@ import { UploadFile } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import ValidarCadastroSala from "../../../../classes/ValidarInputsSala/validarCadastroSala";
 import axios from "axios";
+import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";// ✅ NOVO: importação do serviço de autenticação
 
 export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
@@ -119,19 +120,28 @@ export default function ModalCadastroSala({ open, onClose }) {
     }
 
     try {
-      const response = await fetch("https://my-office-web.onrender.com/salas", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const instanciaAutenticacao = new ServicoAutenticacao()
+      const token = instanciaAutenticacao.obterToken(); // ✅ NOVO: pega o token do localStorage
+      const USUARIO =  instanciaAutenticacao.obterUsuario()
+    console.log(USUARIO);
+    
+      const response = await axios.post(
+        "http://localhost:3000/salas",
+        {
           ...form,
           tipo: tipoSala,
           preco: parseFloat(form.preco),
           capacidade: parseInt(form.capacidade),
-          usuario_id: 1,
-        }),
-      });
+          usuario_id: USUARIO.id,
 
-      if (!response.ok) throw new Error("Erro ao cadastrar sala.");
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // ✅ NOVO: passa o token no header
+          },
+        }
+      );
 
       toast.success("Sala cadastrada com sucesso!");
       setTimeout(() => {
@@ -152,16 +162,7 @@ export default function ModalCadastroSala({ open, onClose }) {
       </DialogTitle>
       <DialogContent dividers>
         <Grid container spacing={2}>
-          {[
-            ["cep", "CEP"],
-            ["estado", "Estado"],
-            ["cidade", "Cidade"],
-            ["bairro", "Bairro"],
-            ["rua", "Rua"],
-            ["numero", "Número"],
-            ["preco", "Preço (Diária)"],
-            ["capacidade", "Capacidade"],
-          ].map(([name, label], i) => (
+          {[["cep", "CEP"], ["estado", "Estado"], ["cidade", "Cidade"], ["bairro", "Bairro"], ["rua", "Rua"], ["numero", "Número"], ["preco", "Preço (Diária)"], ["capacidade", "Capacidade"]].map(([name, label], i) => (
             <Grid item xs={12} sm={6} key={i}>
               <TextField
                 name={name}

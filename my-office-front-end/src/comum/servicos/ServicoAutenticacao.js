@@ -1,20 +1,26 @@
 class ServicoAutenticacao {
-    login(email, senha) {
-      localStorage.setItem("usuario-logado", JSON.stringify({email,senha}));
-    }
-  
-    usuarioEstaLogado() {
-      const usuarioLogado = localStorage.getItem("usuario-logado");
-      if (usuarioLogado) {
-        return true;
-      }
-  
-      return false;
-    }
-  
-    logout() {
-      localStorage.removeItem("usuario-logado");
-    }
-}  
+  login(token, usuario) {
+    localStorage.setItem("auth-token", token);
+    localStorage.setItem("usuario-logado", JSON.stringify(usuario));
+  }
+
+  usuarioEstaLogado() {
+    return !!localStorage.getItem("auth-token");
+  }
+
+  obterToken() {
+    return localStorage.getItem("auth-token");
+  }
+
+  obterUsuario() {
+    const usuario = localStorage.getItem("usuario-logado");
+    return usuario ? JSON.parse(usuario) : null;
+  }
+
+  logout() {
+    localStorage.removeItem("auth-token");
+    localStorage.removeItem("usuario-logado");
+  }
+}
 
 export default ServicoAutenticacao;

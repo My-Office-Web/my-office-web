@@ -4,11 +4,12 @@ import {
   TextField, Button, Typography, Box, Link,
 } from '@mui/material';
 import { toast } from 'react-toastify';
+import axios from 'axios';
+
 import ValidarLogin from '../../../../classes/ValidarInputsUsuario/validarLogin';
 import ServicoAutenticacao from '../../../servicos/ServicoAutenticacao';
 
-
-const instanciaAutenticacao = new ServicoAutenticacao()
+const instanciaAutenticacao = new ServicoAutenticacao();
 
 export default function ModalLogin({ open, onClose, toggleModalCadastro }) {
   const [form, setForm] = useState({ email: '', senha: '' });
@@ -17,7 +18,7 @@ export default function ModalLogin({ open, onClose, toggleModalCadastro }) {
     setForm((prev) => ({ ...prev, [target.name]: target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const erros = ValidarLogin.validarTodos(form);
 
@@ -25,13 +26,32 @@ export default function ModalLogin({ open, onClose, toggleModalCadastro }) {
       Object.values(erros).forEach((msg) => toast.error(msg));
       return;
     }
-    const { email, senha } = form
-    instanciaAutenticacao.login(email,senha)
-    toast.success('Login realizado com sucesso!');
-    window.location.reload()
-    setTimeout(() => {
-      onClose();
-    }, 500);
+
+    try {
+      const { email, senha } = form;
+
+      const response = await axios.post('http://localhost:3000/login', {
+        email,
+        senha,
+      });
+      
+      const { token, usuario } = response.data;
+      console.log(usuario);
+
+      instanciaAutenticacao.login(token, usuario);
+      toast.success('Login realizado com sucesso!');
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+
+      setTimeout(() => {
+        onClose();
+      }, 500);
+    } catch (error) {
+      const mensagem = error?.response?.data?.error || 'Erro ao fazer login.';
+      toast.error(mensagem);
+    }
   };
 
   return (
@@ -92,8 +112,8 @@ export default function ModalLogin({ open, onClose, toggleModalCadastro }) {
           <Link
             href="#"
             onClick={() => {
-              onClose(); // Fecha login
-              setTimeout(toggleModalCadastro, 100); // Abre cadastro
+              onClose();
+              setTimeout(toggleModalCadastro, 100);
             }}
             underline="hover"
             sx={{ color: '#FF5A00', fontWeight: 500 }}

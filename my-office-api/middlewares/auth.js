@@ -16,13 +16,4 @@ function authenticateToken(req, res, next) {
   });
 }
 
-//como usar  uma rota protegida
-
-// import authenticateToken from './middlewares/auth.js';
-
-// app.get('/rota-protegida', authenticateToken, (req, res) => {
-//   res.json({ mensagem: `Olá, ${req.user.nome}! Acesso autorizado.` });
-// });
-
-
 export default authenticateToken;

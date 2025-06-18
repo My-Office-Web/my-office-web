@@ -120,8 +120,11 @@ export default function ModalCadastroSala({ open, onClose }) {
     }
 
     try {
-      const token = ServicoAutenticacao.obterToken(); // ✅ NOVO: pega o token do localStorage
-
+      const instanciaAutenticacao = new ServicoAutenticacao()
+      const token = instanciaAutenticacao.obterToken(); // ✅ NOVO: pega o token do localStorage
+      const USUARIO =  instanciaAutenticacao.obterUsuario()
+    console.log(USUARIO);
+    
       const response = await axios.post(
         "http://localhost:3000/salas",
         {
@@ -129,6 +132,8 @@ export default function ModalCadastroSala({ open, onClose }) {
           tipo: tipoSala,
           preco: parseFloat(form.preco),
           capacidade: parseInt(form.capacidade),
+          usuario_id: USUARIO.id,
+
         },
         {
           headers: {

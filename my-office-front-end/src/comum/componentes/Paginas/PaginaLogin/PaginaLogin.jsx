@@ -34,8 +34,9 @@ export default function ModalLogin({ open, onClose, toggleModalCadastro }) {
         email,
         senha,
       });
-
+      
       const { token, usuario } = response.data;
+      console.log(usuario);
 
       instanciaAutenticacao.login(token, usuario);
       toast.success('Login realizado com sucesso!');

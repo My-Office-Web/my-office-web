@@ -15,7 +15,7 @@ class UsuariosController {
 
     try {
       // Verifica se o email já existe
-      const [result] = await db.promise().query(`SELECT id FROM usuarios WHERE email = ?`, [email]);
+      const [result] = await db.promise().query(`SELECT * FROM usuarios WHERE email = ?`, [email]);
       if (result.length > 0) {
         return res.status(400).json({ error: 'E-mail já cadastrado' });
       }
@@ -51,7 +51,7 @@ class UsuariosController {
       }
 
       const token = jwt.sign(
-        { id: usuario.id, nome: usuario.nome, email: usuario.email },
+        { id: usuario.id_usuario, nome: usuario.nome, email: usuario.email },
         JWT_SECRET,
         { expiresIn: '1h' }
       );
@@ -60,7 +60,7 @@ class UsuariosController {
         mensagem: 'Login realizado com sucesso',
         token,
         usuario: {
-          id: usuario.id,
+          id: usuario.id_usuario,
           nome: usuario.nome,
           email: usuario.email
         }

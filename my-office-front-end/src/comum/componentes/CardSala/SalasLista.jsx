@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Typography, Box } from '@mui/material';
 import CardSala from './CardSala';
-import SkeletonCardSala from './SkeletonCardSala'; // Certifique-se do caminho
+import SkeletonCardSala from './SkeletonCardSala'; 
 
 const normalizarTexto = (texto) =>
   texto

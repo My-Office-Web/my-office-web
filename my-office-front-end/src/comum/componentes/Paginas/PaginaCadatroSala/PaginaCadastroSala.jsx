@@ -126,7 +126,7 @@ export default function ModalCadastroSala({ open, onClose }) {
     console.log(USUARIO);
     
       const response = await axios.post(
-        "http://localhost:3000/salas",
+        "https://my-office-web.onrender.com/salas",
         {
           ...form,
           tipo: tipoSala,

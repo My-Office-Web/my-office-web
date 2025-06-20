@@ -24,7 +24,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import InputMask from 'react-input-mask';
 
 const ExpandMore = styled(({ expand, ...other }) => {
   return <IconButton {...other} />;
@@ -81,19 +80,49 @@ export default function CardSala({
   };
 
   const handleWhatsAppClick = () => {
-    if (!telefoneUsuario) {
-      alert('Número de telefone não disponível.');
-      return;
-    }
-
-    const numeroLimpo = telefoneUsuario.replace(/\D/g, '');
-    const numeroComDDI = numeroLimpo.startsWith('55') ? numeroLimpo : `55${numeroLimpo}`;
     const mensagem = encodeURIComponent(`Olá! Gostaria de reservar a sala "${titulo}".`);
-    const url = `https://wa.me/${numeroComDDI}?text=${mensagem}`;
-
+    const url = `https://wa.me/?text=${mensagem}`;
     window.open(url, '_blank');
   };
 
+  const handleToggleFavorito = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/favoritos', {
+        method: favorito ? 'DELETE' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
+        },
+        body: JSON.stringify({ sala_id: salaId }), // só sala_id
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar favorito');
+      }
+
+      setFavorito(!favorito);
+    } catch (error) {
+      console.error('Erro ao favoritar/desfavoritar:', error);
+      alert('Não foi possível atualizar o favorito.');
+    }
+  };
+
+  React.useEffect(() => {
+    const verificarFavorito = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/favoritos/${salaId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
+          },
+        });
+        const data = await response.json();
+        if (response.ok) setFavorito(data.favoritado);
+      } catch (error) {
+        console.error('Erro ao verificar favorito:', error);
+      }
+    };
+    if (salaId) verificarFavorito();
+  }, [salaId]);
 
   const handleAgendamentoSubmit = async (e) => {
     e.preventDefault();
@@ -113,11 +142,11 @@ export default function CardSala({
     setLoadingReserva(true);
 
     try {
-      const response = await fetch('http://localhost:3000/reservas', {
+      const response = await fetch('https://my-office-web.onrender.com/reservas', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer `
+          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
         },
         body: JSON.stringify(reserva),
       });
@@ -139,132 +168,85 @@ export default function CardSala({
   };
 
   return (
-    <>
-      <Card
-        sx={{
-          maxWidth: 360,
-          borderRadius: 3,
-          boxShadow: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          transition: 'transform 0.3s ease',
-          '&:hover': {
-            transform: 'scale(1.03)',
-            boxShadow: 6,
-          },
-        }}
-        elevation={4}
-        aria-label={`Card da ${titulo}`}
-      >
-        <CardHeader
-          avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="sala">
-              S
-            </Avatar>
-          }
-          title={
-            <Typography variant="h6" component="h2" noWrap>
-              {titulo}
-            </Typography>
-          }
-          subheader={
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <LocationOnIcon fontSize="small" color="action" />
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                title={endereco}
-              >
-                {endereco}
-              </Typography>
-            </Box>
-          }
-        />
-        <CardMedia
-          component="img"
-          height="180"
-          image={imagemBase64}
-          alt={`Imagem da ${titulo}`}
-          onClick={handleModalOpen}
-          sx={{ cursor: 'pointer', objectFit: 'cover' }}
-          aria-describedby="imagem-ampliada"
-        />
-        <CardContent sx={{ flexGrow: 1 }}>
-          <Box display="flex" justifyContent="space-between" mb={1}>
-            <Tooltip title="Preço por diária" arrow>
-              <Box display="flex" alignItems="center" gap={0.5}>
-                <AttachMoneyIcon sx={{ color: 'success.main' }} />
-                <Typography variant="subtitle1" fontWeight={600}>
-                  {preco}
-                </Typography>
-              </Box>
-            </Tooltip>
-            <Tooltip title="Capacidade" arrow>
-              <Box display="flex" alignItems="center" gap={0.5}>
-                <PeopleAltIcon sx={{ color: 'text.secondary' }} />
-                <Typography variant="subtitle1" fontWeight={600}>
-                  {capacidade} pessoas
-                </Typography>
-              </Box>
-            </Tooltip>
+    <Card
+      sx={{
+        maxWidth: 360,
+        borderRadius: 3,
+        boxShadow: 4,
+        transition: 'transform 0.3s',
+        '&:hover': { transform: 'scale(1.03)', boxShadow: 6 },
+      }}
+    >
+      <CardHeader
+        avatar={<Avatar sx={{ bgcolor: red[500] }}>S</Avatar>}
+        title={<Typography variant="h6" noWrap>{titulo}</Typography>}
+        subheader={
+          <Box display="flex" alignItems="center" gap={0.5}>
+            <LocationOnIcon fontSize="small" color="action" />
+            <Typography variant="body2" color="text.secondary" title={endereco}>{endereco}</Typography>
           </Box>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{
-              display: expanded ? 'block' : '-webkit-box',
-              WebkitLineClamp: expanded ? 'none' : 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              cursor: 'default',
-              userSelect: 'text',
-            }}
-            aria-expanded={expanded}
-          >
-            {descricao}
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton
-            aria-label="favoritar"
-            onClick={() => setFavorito(!favorito)}
-            color={favorito ? 'error' : 'default'}
-          >
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="compartilhar" color="primary" onClick={handleCompartilhar}>
-            <ShareIcon />
-          </IconButton>
-          <IconButton aria-label="whatsapp" onClick={handleWhatsAppClick}>
-            <WhatsAppIcon />
-          </IconButton>
-          <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label={expanded ? 'mostrar menos' : 'mostrar mais'}
-          >
-            <ExpandMoreIcon />
-          </ExpandMore>
-        </CardActions>
-      </Card>
+        }
+      />
+      <CardMedia
+        component="img"
+        height="180"
+        image={imagemBase64}
+        alt={titulo}
+        sx={{ cursor: 'pointer', objectFit: 'cover' }}
+        onClick={handleModalOpen}
+      />
+      <CardContent>
+        <Box display="flex" justifyContent="space-between" mb={1}>
+          <Tooltip title="Preço por diária">
+            <Box display="flex" alignItems="center" gap={0.5}>
+              <AttachMoneyIcon sx={{ color: 'success.main' }} />
+              <Typography fontWeight={600}>{preco}</Typography>
+            </Box>
+          </Tooltip>
+          <Tooltip title="Capacidade">
+            <Box display="flex" alignItems="center" gap={0.5}>
+              <PeopleAltIcon />
+              <Typography fontWeight={600}>{capacidade} pessoas</Typography>
+            </Box>
+          </Tooltip>
+        </Box>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            display: expanded ? 'block' : '-webkit-box',
+            WebkitLineClamp: expanded ? 'none' : 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {descricao}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="favoritar" onClick={handleToggleFavorito} color={favorito ? 'error' : 'default'}>
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="compartilhar" onClick={handleCompartilhar}>
+          <ShareIcon />
+        </IconButton>
+        <IconButton aria-label="whatsapp" onClick={handleWhatsAppClick}>
+          <WhatsAppIcon />
+        </IconButton>
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label={expanded ? 'mostrar menos' : 'mostrar mais'}
+        >
+          <ExpandMoreIcon />
+        </ExpandMore>
+      </CardActions>
 
-      <Modal
-        open={modalOpen}
-        onClose={handleModalClose}
-        aria-labelledby="modal-titulo"
-        aria-describedby="modal-descricao"
-        closeAfterTransition
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
+      {/* Modal com detalhes da sala */}
+      <Modal open={modalOpen} onClose={handleModalClose}>
         <Box
-          tabIndex={-1}
           sx={{
             position: 'absolute',
             top: '50%',
@@ -279,76 +261,53 @@ export default function CardSala({
             overflowY: 'auto',
             outline: 'none',
           }}
+          tabIndex={-1}
         >
-          <Typography id="modal-titulo" variant="h5" component="h2" mb={2}>
-            {titulo}
-          </Typography>
-
+          <Typography variant="h5" mb={2}>{titulo}</Typography>
           <Box
             component="img"
             src={imagemBase64}
             alt={`Imagem detalhada da ${titulo}`}
-            sx={{
-              width: '100%',
-              maxHeight: 300,
-              objectFit: 'cover',
-              borderRadius: 2,
-              mb: 2,
-              userSelect: 'none',
-            }}
+            sx={{ width: '100%', maxHeight: 300, objectFit: 'cover', borderRadius: 2, mb: 2 }}
           />
-
           <Box display="flex" alignItems="center" gap={1} mb={1}>
             <LocationOnIcon color="action" />
-            <Typography variant="body1">{endereco}</Typography>
+            <Typography>{endereco}</Typography>
           </Box>
-
           <Divider sx={{ mb: 2 }} />
-
           <Box display="flex" justifyContent="space-between" mb={2}>
             <Box display="flex" alignItems="center" gap={0.5}>
               <AttachMoneyIcon color="success" />
-              <Typography variant="subtitle1" fontWeight={600}>
-                Preço: R$ {preco}
-              </Typography>
+              <Typography fontWeight={600}>Preço: R$ {preco}</Typography>
             </Box>
             <Box display="flex" alignItems="center" gap={0.5}>
               <PeopleAltIcon color="action" />
-              <Typography variant="subtitle1" fontWeight={600}>
-                Capacidade: {capacidade} pessoas
-              </Typography>
+              <Typography fontWeight={600}>Capacidade: {capacidade} pessoas</Typography>
             </Box>
           </Box>
-
-          <Typography id="modal-descricao" variant="body1" color="text.secondary" paragraph>
-            {descricao}
-            <Box textAlign="right" mt={3}>
-              <Button
-                variant="contained"
-                onClick={() => setAgendamentoOpen(true)}
-                sx={{
-                  bgcolor: '#FF5A00',
-                  color: 'white',
-                  '&:hover': { bgcolor: '#e64a00' },
-                  px: 3,
-                  py: 1.5,
-                  borderRadius: '999px',
-                  fontWeight: 'bold',
-                  fontSize: '1rem',
-                }}
-              >
-                Agendar
-              </Button>
-            </Box>
-          </Typography>
+          <Typography color="text.secondary" paragraph>{descricao}</Typography>
+          <Box textAlign="right">
+            <Button
+              variant="contained"
+              onClick={() => setAgendamentoOpen(true)}
+              sx={{
+                bgcolor: '#FF5A00',
+                color: 'white',
+                '&:hover': { bgcolor: '#e64a00' },
+                px: 3,
+                py: 1.5,
+                borderRadius: '999px',
+                fontWeight: 'bold',
+              }}
+            >
+              Agendar
+            </Button>
+          </Box>
         </Box>
       </Modal>
 
-      <Modal
-        open={agendamentoOpen}
-        onClose={() => setAgendamentoOpen(false)}
-        aria-labelledby="agendar-titulo"
-      >
+      {/* Modal para agendamento */}
+      <Modal open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)}>
         <Box
           component="form"
           onSubmit={handleAgendamentoSubmit}
@@ -367,21 +326,10 @@ export default function CardSala({
             gap: 2,
           }}
         >
-          <Typography id="agendar-titulo" variant="h6" mb={2}>
+          <Typography variant="h6" mb={2}>
             Agendar Sala
           </Typography>
-
-          <TextField
-            label="Nome completo"
-            name="nome"
-            fullWidth
-            required
-            variant="outlined"
-            disabled
-            value={`Usuário ID: ${usuarioId}`}
-            aria-readonly="true"
-          />
-
+          <TextField label="Usuário ID" value={`Usuário ID: ${usuarioId}`} disabled fullWidth />
           <TextField
             label="Data do agendamento"
             name="data"
@@ -390,9 +338,7 @@ export default function CardSala({
             required
             InputLabelProps={{ shrink: true }}
             inputProps={{ min: new Date().toISOString().split('T')[0] }}
-            aria-required="true"
           />
-
           <Button
             type="submit"
             variant="contained"
@@ -410,6 +356,6 @@ export default function CardSala({
           </Button>
         </Box>
       </Modal>
-    </>
+    </Card>
   );
 }

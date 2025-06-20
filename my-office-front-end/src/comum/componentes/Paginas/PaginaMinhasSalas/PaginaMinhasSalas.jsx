@@ -39,7 +39,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
 
   const fetchSalasDoUsuario = async () => {
     try {
-      const response = await axios.get("https://my-office-web.onrender.com/salas");
+      const response = await axios.get("http://localhost:3000/salas");
 
       const minhasSalas = response.data.filter(
         (sala) => sala.usuario_id === usuarioLogado?.id
@@ -79,7 +79,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
       const token = autenticacao.obterToken();
 
       await axios.delete(
-        `https://my-office-web.onrender.com/salas/${salaExcluir.id_sala}`,
+        `http://localhost:3000/salas/${salaExcluir.id_sala}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -88,6 +88,10 @@ export default function ModalMinhasSalas({ open, onClose }) {
       toast.success("Sala excluída com sucesso!");
       await fetchSalasDoUsuario();
       handleFecharModalExcluir();
+      setTimeout(() => {
+        onClose();
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error("Erro ao excluir sala:", error);
       toast.error("Não foi possível excluir a sala. Tente novamente.");

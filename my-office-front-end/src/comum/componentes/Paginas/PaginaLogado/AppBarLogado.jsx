@@ -22,6 +22,7 @@ import TemporaryDrawer from "../PaginaInicial/MenuLateral";
 import ModalCadastroSala from "../PaginaCadatroSala/PaginaCadastroSala";
 import ModalMinhasSalas from "../PaginaMinhasSalas/PaginaMinhasSalas";
 import PaginaPerfilUsuario from "../../Perfil/Perfil";
+import ModalFavoritos from "../../Favoritos/Favoritos";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import { useNavigate } from "react-router-dom";
 
@@ -33,6 +34,7 @@ export default function AppBarLogado() {
   const [openModalCadastroSala, setOpenModalCadastroSala] = useState(false);
   const [openModalMinhasSalas, setOpenModalMinhasSalas] = useState(false);
   const [openModalPerfil, setOpenModalPerfil] = useState(false);
+  const [openFavoritos, setOpenFavoritos] = useState(false);
 
   const navigate = useNavigate();
 
@@ -53,7 +55,6 @@ export default function AppBarLogado() {
     window.location.reload();
   };
 
-  // Correto: buscar o usuário salvo no localStorage
   const usuarioLogado = JSON.parse(localStorage.getItem("usuario-logado")) || {};
 
   const getInitials = (nome) => {
@@ -133,7 +134,11 @@ export default function AppBarLogado() {
               </Typography>
             </IconButton>
 
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
+            <IconButton
+              color="inherit"
+              sx={{ marginLeft: 2 }}
+              onClick={() => setOpenFavoritos(true)}
+            >
               <FavoriteIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
                 Favoritos
@@ -160,14 +165,8 @@ export default function AppBarLogado() {
               anchorEl={anchorElUser}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
               <MenuItem
                 onClick={() => {
@@ -203,6 +202,12 @@ export default function AppBarLogado() {
         open={openModalPerfil}
         onClose={() => setOpenModalPerfil(false)}
         usuario={usuarioLogado}
+      />
+
+      {/* Modal de Favoritos */}
+      <ModalFavoritos
+        open={openFavoritos}
+        onClose={() => setOpenFavoritos(false)}
       />
     </Box>
   );

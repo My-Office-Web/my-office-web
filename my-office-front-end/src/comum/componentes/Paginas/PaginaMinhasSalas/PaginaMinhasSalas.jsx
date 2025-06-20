@@ -15,12 +15,18 @@ import {
 import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ModalEdicaoSala from "../PaginaCadatroSala/ModalEdicaoSala";
+import ModalConfirmacaoExclusao from "../PaginaCadatroSala/ModalConfirmacaoExclusao/ModalConfirmacaoExclusao";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ModalMinhasSalas({ open, onClose }) {
   const [salas, setSalas] = useState([]);
   const [modalEditarAberto, setModalEditarAberto] = useState(false);
   const [salaSelecionada, setSalaSelecionada] = useState(null);
+  const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
+  const [salaExcluir, setSalaExcluir] = useState(null);
+  const [loadingExcluir, setLoadingExcluir] = useState(false);
 
   const autenticacao = new ServicoAutenticacao();
   const usuarioLogado = autenticacao.obterUsuario();
@@ -35,7 +41,6 @@ export default function ModalMinhasSalas({ open, onClose }) {
     try {
       const response = await axios.get("https://my-office-web.onrender.com/salas");
 
-      // Filtra somente as salas que pertencem ao usuário logado
       const minhasSalas = response.data.filter(
         (sala) => sala.usuario_id === usuarioLogado?.id
       );
@@ -43,6 +48,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
       setSalas(minhasSalas);
     } catch (error) {
       console.error("Erro ao buscar salas:", error);
+      toast.error("Erro ao buscar suas salas.");
     }
   };
 
@@ -54,6 +60,40 @@ export default function ModalMinhasSalas({ open, onClose }) {
   const handleFecharModalEdicao = () => {
     setModalEditarAberto(false);
     setSalaSelecionada(null);
+  };
+
+  const handleAbrirModalExcluir = (sala) => {
+    setSalaExcluir(sala);
+    setModalExcluirAberto(true);
+  };
+
+  const handleFecharModalExcluir = () => {
+    if (loadingExcluir) return;
+    setModalExcluirAberto(false);
+    setSalaExcluir(null);
+  };
+
+  const handleConfirmarExclusao = async () => {
+    setLoadingExcluir(true);
+    try {
+      const token = autenticacao.obterToken();
+
+      await axios.delete(
+        `https://my-office-web.onrender.com/salas/${salaExcluir.id_sala}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      toast.success("Sala excluída com sucesso!");
+      await fetchSalasDoUsuario();
+      handleFecharModalExcluir();
+    } catch (error) {
+      console.error("Erro ao excluir sala:", error);
+      toast.error("Não foi possível excluir a sala. Tente novamente.");
+    } finally {
+      setLoadingExcluir(false);
+    }
   };
 
   return (
@@ -100,7 +140,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
                     />
                     <CardContent sx={{ textAlign: "center" }}>
                       <Typography variant="h6" fontWeight="bold" color="grey">
-                        Sala {sala.id}
+                        Sala {sala.id_sala}
                       </Typography>
 
                       <Box
@@ -122,7 +162,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
 
                         <Box
                           sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-                          // onClick={() => handleExcluirSala(sala.id)} // Você pode implementar depois
+                          onClick={() => handleAbrirModalExcluir(sala)}
                         >
                           <FaTrash style={{ marginRight: 4, color: "red" }} />
                           <Typography variant="body2">Excluir Sala</Typography>
@@ -150,6 +190,19 @@ export default function ModalMinhasSalas({ open, onClose }) {
           sala={salaSelecionada}
         />
       )}
+
+      {/* Modal de Confirmação de Exclusão */}
+      {salaExcluir && (
+        <ModalConfirmacaoExclusao
+          open={modalExcluirAberto}
+          onClose={handleFecharModalExcluir}
+          onConfirm={handleConfirmarExclusao}
+          salaId={salaExcluir.id_sala}
+          loading={loadingExcluir}
+        />
+      )}
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 }

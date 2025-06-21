@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography, Fade } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const CustomCarousel = ({ width = '100%', height = 320, borderRadius = 6 }) => {
+  const navigate = useNavigate();
+
   const banners = [
     {
       title: 'As melhores salas de reuniões estão aqui',
@@ -90,6 +93,7 @@ const CustomCarousel = ({ width = '100%', height = 320, borderRadius = 6 }) => {
             </Typography>
             <Button
               variant="contained"
+              onClick={() => navigate('/busca')}
               sx={{
                 backgroundColor: banner.buttonColor,
                 textTransform: 'none',
@@ -107,7 +111,7 @@ const CustomCarousel = ({ width = '100%', height = 320, borderRadius = 6 }) => {
             </Button>
           </Box>
 
-          {/* Imagem à direita ocupando toda altura */}
+          {/* Imagem à direita */}
           <Box
             sx={{
               flex: 1,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Grid,
@@ -6,7 +6,6 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
-  Paper,
   TextField,
   Autocomplete,
   Divider,
@@ -16,19 +15,27 @@ import {
   CircularProgress,
   Drawer,
   IconButton,
-} from '@mui/material';
+  Container,
+} from "@mui/material";
 import { FaFilter } from "react-icons/fa";
-import CardSala from '../../CardSala/CardSala';
-import SkeletonCardSala from '../../CardSala/SkeletonCardSala';
-import AppBarLogado from '../PaginaLogado/AppBarLogado';
+import CardSala from "../../CardSala/CardSala";
+import SkeletonCardSala from "../../CardSala/SkeletonCardSala";
+import AppBarLogado from "../PaginaLogado/AppBarLogado";
 
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import Footer from "../Footer/Footer";
+import CustomCarousel from "../CarrousselInicial/CarrousselInicial";
 
 const normalizarTexto = (texto) =>
-  texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  texto
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+// (Imports mantidos)
 
 export default function PaginaDeBuscaComFiltros() {
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const [filtros, setFiltros] = useState({
     comercial: false,
@@ -37,24 +44,22 @@ export default function PaginaDeBuscaComFiltros() {
     residencial: false,
   });
 
-  const [valorMinimo, setValorMinimo] = useState('');
-  const [valorMaximo, setValorMaximo] = useState('');
+  const [valorMinimo, setValorMinimo] = useState("");
+  const [valorMaximo, setValorMaximo] = useState("");
   const [salas, setSalas] = useState([]);
   const [salasFiltradas, setSalasFiltradas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtrando, setFiltrando] = useState(false);
-  const [buscaLocal, setBuscaLocal] = useState('');
+  const [buscaLocal, setBuscaLocal] = useState("");
   const [opcoesAutoComplete, setOpcoesAutoComplete] = useState([]);
 
   const [modalMapaAberto, setModalMapaAberto] = useState(false);
-
-  // Novo estado: drawer do filtro aberto ou fechado
   const [drawerFiltroAberto, setDrawerFiltroAberto] = useState(false);
 
   useEffect(() => {
     const fetchSalas = async () => {
       try {
-        const response = await fetch('https://my-office-web.onrender.com/salas');
+        const response = await fetch("https://my-office-web.onrender.com/salas");
         const data = await response.json();
         setSalas(data);
 
@@ -66,7 +71,7 @@ export default function PaginaDeBuscaComFiltros() {
         });
         setOpcoesAutoComplete([...locais]);
       } catch (error) {
-        console.error('Erro ao buscar salas:', error);
+        console.error("Erro ao buscar salas:", error);
       } finally {
         setLoading(false);
       }
@@ -79,7 +84,9 @@ export default function PaginaDeBuscaComFiltros() {
 
     setFiltrando(true);
     const delay = setTimeout(() => {
-      const tiposSelecionados = Object.keys(filtros).filter((tipo) => filtros[tipo]);
+      const tiposSelecionados = Object.keys(filtros).filter(
+        (tipo) => filtros[tipo]
+      );
 
       const resultado = salas.filter((sala) => {
         const preco = parseFloat(sala.preco);
@@ -94,7 +101,7 @@ export default function PaginaDeBuscaComFiltros() {
         const precoValido = preco >= min && preco <= max;
 
         const localValido =
-          buscaLocal.trim() === '' ||
+          buscaLocal.trim() === "" ||
           [sala.rua, sala.bairro, sala.cidade, sala.estado]
             .map(normalizarTexto)
             .some((loc) => loc.includes(normalizarTexto(buscaLocal)));
@@ -114,15 +121,21 @@ export default function PaginaDeBuscaComFiltros() {
   };
 
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyDjT2WABBTtCsB6n_yKSO3iLH1v5woOh6U',
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyDjT2WABBTtCsB6n_yKSO3iLH1v5woOh6U",
   });
 
   const calcularCentro = () => {
     if (!salasFiltradas.length) return { lat: -27.5945, lng: -46.633308 };
 
-    const latSum = salasFiltradas.reduce((acc, sala) => acc + parseFloat(sala.latitude), 0);
-    const lngSum = salasFiltradas.reduce((acc, sala) => acc + parseFloat(sala.longitude), 0);
+    const latSum = salasFiltradas.reduce(
+      (acc, sala) => acc + parseFloat(sala.latitude),
+      0
+    );
+    const lngSum = salasFiltradas.reduce(
+      (acc, sala) => acc + parseFloat(sala.longitude),
+      0
+    );
 
     return {
       lat: latSum / salasFiltradas.length,
@@ -133,22 +146,18 @@ export default function PaginaDeBuscaComFiltros() {
   return (
     <>
       <AppBarLogado />
-
-      <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {/* Barra de busca + botão abrir filtro */}
-        
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+      <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <IconButton
             color="primary"
             onClick={() => setDrawerFiltroAberto(true)}
-            aria-label="Abrir filtros"
             sx={{ ml: 1 }}
           >
             <FaFilter />
           </IconButton>
           <Autocomplete
             freeSolo
-            options={buscaLocal.trim() === '' ? [] : opcoesAutoComplete}
+            options={buscaLocal.trim() === "" ? [] : opcoesAutoComplete}
             inputValue={buscaLocal}
             onInputChange={(e, val) => setBuscaLocal(val)}
             sx={{ flexGrow: 1 }}
@@ -161,20 +170,37 @@ export default function PaginaDeBuscaComFiltros() {
               />
             )}
           />
-          <Button variant="outlined" onClick={() => setModalMapaAberto(true)} disabled={salasFiltradas.length === 0}>
+          <Button
+            variant="outlined"
+            onClick={() => setModalMapaAberto(true)}
+            disabled={salasFiltradas.length === 0}
+          >
             Ver todas no mapa
           </Button>
         </Box>
-
-        {/* Resultados */}
-        <Typography variant="h5" mb={2}>
+        <Container sx={{ py: 1, textAlign: 'center' }} maxWidth="">
+        <Typography variant="h4" mb={2}>
           Resultados
         </Typography>
+        </Container>
 
         {(loading || filtrando) && (
-          <Grid container spacing={3}>
+          <Grid
+            container
+            spacing={3}
+            justifyContent="center"
+            sx={{ maxWidth: "1600px", mx: "auto" }}
+          >
             {Array.from({ length: 6 }).map((_, i) => (
-              <Grid item xs={12} sm={6} md={4} key={i}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                key={i}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
                 <SkeletonCardSala />
               </Grid>
             ))}
@@ -188,14 +214,22 @@ export default function PaginaDeBuscaComFiltros() {
         )}
 
         {!loading && !filtrando && salasFiltradas.length > 0 && (
-          <Box display="flex" justifyContent="center">
           <Grid
             container
             spacing={3}
-            sx={{ maxWidth: '1600px' }} // opcional: para não ocupar largura total em telas grandes
+            justifyContent="center"
+            sx={{ maxWidth: "1600px", mx: "auto" }}
           >
             {salasFiltradas.map((sala) => (
-              <Grid item xs={12} sm={6} md={4} key={sala.id}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                key={sala.id}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
                 <CardSala
                   usuarioId="1"
                   salaId={sala.id}
@@ -211,36 +245,43 @@ export default function PaginaDeBuscaComFiltros() {
               </Grid>
             ))}
           </Grid>
-        </Box>
-        
         )}
+
+        <Container sx={{ py: 6 }} maxWidth="">
+          <CustomCarousel />
+        </Container>
+        <Container maxWidth={false} disableGutters sx={{ py: 0 }}>
+          <Footer />
+        </Container>
       </Box>
 
-      {/* Drawer lateral dos filtros */}
       <Drawer
         anchor="left"
         open={drawerFiltroAberto}
         onClose={() => setDrawerFiltroAberto(false)}
-        PaperProps={{ sx: { width: isMobile ? '80vw' : 300, p: 3 } }}
+        PaperProps={{ sx: { width: isMobile ? "80vw" : 300, p: 3 } }}
       >
         <Typography variant="h6" gutterBottom>
           Filtros
         </Typography>
         <Divider sx={{ my: 2 }} />
-
         <Typography variant="subtitle2">Tipo</Typography>
         <FormGroup>
           {Object.keys(filtros).map((tipo) => (
             <FormControlLabel
               key={tipo}
-              control={<Checkbox name={tipo} checked={filtros[tipo]} onChange={handleFiltroChange} />}
+              control={
+                <Checkbox
+                  name={tipo}
+                  checked={filtros[tipo]}
+                  onChange={handleFiltroChange}
+                />
+              }
               label={tipo.charAt(0).toUpperCase() + tipo.slice(1)}
             />
           ))}
         </FormGroup>
-
         <Divider sx={{ my: 2 }} />
-
         <Typography variant="subtitle2">Valor mínimo</Typography>
         <TextField
           size="small"
@@ -249,7 +290,6 @@ export default function PaginaDeBuscaComFiltros() {
           value={valorMinimo}
           onChange={(e) => setValorMinimo(e.target.value)}
         />
-
         <Typography variant="subtitle2" sx={{ mt: 2 }}>
           Valor máximo
         </Typography>
@@ -260,33 +300,35 @@ export default function PaginaDeBuscaComFiltros() {
           value={valorMaximo}
           onChange={(e) => setValorMaximo(e.target.value)}
         />
-
         <Box sx={{ mt: 3 }}>
-          <Button variant="contained" fullWidth onClick={() => setDrawerFiltroAberto(false)}>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={() => setDrawerFiltroAberto(false)}
+          >
             Aplicar e Fechar
           </Button>
         </Box>
       </Drawer>
 
-      {/* Modal mapa geral */}
       <Modal open={modalMapaAberto} onClose={() => setModalMapaAberto(false)}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: { xs: '95vw', sm: '80vw', md: '70vw' },
-            height: { xs: '70vh', sm: '70vh', md: '75vh' },
-            bgcolor: 'background.paper',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: { xs: "95vw", sm: "80vw", md: "70vw" },
+            height: { xs: "70vh", sm: "70vh", md: "75vh" },
+            bgcolor: "background.paper",
             boxShadow: 24,
             borderRadius: 2,
-            overflow: 'hidden',
+            overflow: "hidden",
           }}
         >
           {isLoaded ? (
             <GoogleMap
-              mapContainerStyle={{ width: '100%', height: '100%' }}
+              mapContainerStyle={{ width: "100%", height: "100%" }}
               center={calcularCentro()}
               zoom={13}
             >
@@ -302,7 +344,12 @@ export default function PaginaDeBuscaComFiltros() {
               ))}
             </GoogleMap>
           ) : (
-            <Box display="flex" alignItems="center" justifyContent="center" height="100%">
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              height="100%"
+            >
               <CircularProgress />
             </Box>
           )}

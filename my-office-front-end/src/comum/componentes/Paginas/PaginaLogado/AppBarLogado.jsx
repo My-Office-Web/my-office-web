@@ -1,34 +1,42 @@
 import React, { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  IconButton,
+  Avatar,
+  Tooltip,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import TemporaryDrawer from "../PaginaInicial/MenuLateral";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import HelpIcon from "@mui/icons-material/Help";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
-import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+import EventIcon from "@mui/icons-material/Event";
+
+import TemporaryDrawer from "../PaginaInicial/MenuLateral";
 import ModalCadastroSala from "../PaginaCadatroSala/PaginaCadastroSala";
-import { useNavigate } from "react-router-dom";
 import ModalMinhasSalas from "../PaginaMinhasSalas/PaginaMinhasSalas";
-import EventIcon from '@mui/icons-material/Event';
+import PaginaPerfilUsuario from "../../Perfil/Perfil";
+import ModalFavoritos from "../../Favoritos/Favoritos";
+import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+import { useNavigate } from "react-router-dom";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
 export default function AppBarLogado() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [openModalCadastroSala, setOpenModalCadastroSala] = useState(false); // modal de cadastro
+  const [openModalCadastroSala, setOpenModalCadastroSala] = useState(false);
+  const [openModalMinhasSalas, setOpenModalMinhasSalas] = useState(false);
+  const [openModalPerfil, setOpenModalPerfil] = useState(false);
+  const [openFavoritos, setOpenFavoritos] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const toggleDrawer = (open) => () => {
     setOpenDrawer(open);
@@ -47,15 +55,17 @@ export default function AppBarLogado() {
     window.location.reload();
   };
 
-  const [openModalMinhasSalas, setOpenModalMinhasSalas] = useState(false);
+  const usuarioLogado = JSON.parse(localStorage.getItem("usuario-logado")) || {};
 
+  const getInitials = (nome) => {
+    if (!nome) return "U";
+    const partes = nome.trim().split(" ");
+    return partes.length === 1
+      ? partes[0][0].toUpperCase()
+      : (partes[0][0] + partes[1][0]).toUpperCase();
+  };
 
-  const userName = "João Silva";
-  const initials = userName
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  const initials = getInitials(usuarioLogado.nome);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -75,15 +85,24 @@ export default function AppBarLogado() {
             </IconButton>
 
             <Box sx={{ flexGrow: 15 }}>
-          <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
-          </Box>
+              <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
+            </Box>
           </Box>
 
           {/* Central Items */}
-          <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1, justifyContent: "center" }}>
-            <IconButton color="inherit" onClick={() => navigate("/novo")}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              flexGrow: 1,
+              justifyContent: "center",
+            }}
+          >
+            <IconButton color="inherit" onClick={() => navigate("/")}>
               <HomeIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Início</Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                Início
+              </Typography>
             </IconButton>
 
             <IconButton
@@ -92,7 +111,9 @@ export default function AppBarLogado() {
               onClick={() => setOpenModalCadastroSala(true)}
             >
               <AddBusinessIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Cadastrar Sala</Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                Cadastrar Sala
+              </Typography>
             </IconButton>
 
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
@@ -100,7 +121,7 @@ export default function AppBarLogado() {
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
                 Reservas
               </Typography>
-              </IconButton> 
+            </IconButton>
 
             <IconButton
               color="inherit"
@@ -108,18 +129,27 @@ export default function AppBarLogado() {
               onClick={() => setOpenModalMinhasSalas(true)}
             >
               <MeetingRoomIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Minhas Salas</Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                Minhas Salas
+              </Typography>
             </IconButton>
 
-
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
+            <IconButton
+              color="inherit"
+              sx={{ marginLeft: 2 }}
+              onClick={() => setOpenFavoritos(true)}
+            >
               <FavoriteIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Favoritos</Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                Favoritos
+              </Typography>
             </IconButton>
 
             <IconButton color="inherit" sx={{ marginLeft: 2 }}>
               <HelpIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>Ajuda</Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                Ajuda
+              </Typography>
             </IconButton>
           </Box>
 
@@ -135,16 +165,17 @@ export default function AppBarLogado() {
               anchorEl={anchorElUser}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
-              <MenuItem onClick={handleCloseUserMenu}>Perfil</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleCloseUserMenu();
+                  setOpenModalPerfil(true);
+                }}
+              >
+                Perfil
+              </MenuItem>
               <MenuItem onClick={handleLogout}>Sair</MenuItem>
             </Menu>
           </Box>
@@ -159,10 +190,24 @@ export default function AppBarLogado() {
         open={openModalCadastroSala}
         onClose={() => setOpenModalCadastroSala(false)}
       />
-       {/* Modal de Minhas Salas*/}     
+
+      {/* Modal de Minhas Salas */}
       <ModalMinhasSalas
         open={openModalMinhasSalas}
         onClose={() => setOpenModalMinhasSalas(false)}
+      />
+
+      {/* Modal de Perfil do Usuário */}
+      <PaginaPerfilUsuario
+        open={openModalPerfil}
+        onClose={() => setOpenModalPerfil(false)}
+        usuario={usuarioLogado}
+      />
+
+      {/* Modal de Favoritos */}
+      <ModalFavoritos
+        open={openFavoritos}
+        onClose={() => setOpenFavoritos(false)}
       />
     </Box>
   );

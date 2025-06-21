@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Typography, Box } from '@mui/material';
+import { Grid, Typography, Box, Container } from '@mui/material';
 import CardSala from './CardSala';
 import SkeletonCardSala from './SkeletonCardSala'; 
 
@@ -102,9 +102,11 @@ export default function SalasLista({ filtros }) {
   // Resultado final
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Typography variant="h4" gutterBottom>
-        Lista de Salas
-      </Typography>
+      <Container sx={{ py: 4, textAlign: 'center' }} maxWidth="">
+  <Typography variant="h4" gutterBottom>
+    Lista de Salas
+  </Typography> 
+</Container>
 
       <Grid container spacing={10} justifyContent="center">
         {salasFiltradas.map((sala) => (

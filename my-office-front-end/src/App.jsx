@@ -2,23 +2,27 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import PaginaInicial from './comum/componentes/Paginas/PaginaInicial/PaginaInicial';
-import LandingPage from './comum/componentes/Paginas/LandingPage/LandingPage';
-import PaginaDeBuscaComFiltros from './comum/componentes/Paginas/PaginaDeBuscaComFiltros/PaginaDeBuscaComFiltros';
 
-// Apenas páginas reais no roteador
+import PaginaInicial from './comum/componentes/Paginas/PaginaInicial/PaginaInicial';
+import PaginaDeBuscaComFiltros from './comum/componentes/Paginas/PaginaDeBuscaComFiltros/PaginaDeBuscaComFiltros';
+import ScrollToTopWrapper from './comum/componentes/ScrollToTop/ScrollToTop';
 const router = createBrowserRouter([
   {
-    path: '/novo',
-    element: <LandingPage/>,
+    path: '/',
+    element: (
+      <ScrollToTopWrapper>
+        <PaginaInicial />
+      </ScrollToTopWrapper>
+    ),
   },
+  
   {
     path: '/busca',
-    element: <PaginaDeBuscaComFiltros/>,
-  },
-  {
-    path: '/',
-    element: <PaginaInicial/>,
+    element: (
+      <ScrollToTopWrapper>
+        <PaginaDeBuscaComFiltros />
+      </ScrollToTopWrapper>
+    ),
   },
 ]);
 

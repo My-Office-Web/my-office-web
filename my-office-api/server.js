@@ -1,10 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+
 import SalasController from './controllers/SalasController.js';
 import UsuariosController from './controllers/UsuariosController.js';
 import ReservaSalas from './controllers/ReservaSalas.js';
-import authenticateToken from './middlewares/auth.js'; // <--- Novo middleware
+import authenticateToken from './middlewares/auth.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,24 +15,21 @@ app.use(bodyParser.json({ limit: '10mb' }));
 
 const instanciaSalas = new SalasController();
 const instanciaUsuarios = new UsuariosController();
-const instanciaReservaSalas = new ReservaSalas(); 
+const instanciaReservaSalas = new ReservaSalas();
 
-// Cadastro e login de usuários (público)
-app.post('/usuarios', instanciaUsuarios.cadastrar);
-app.post('/login', instanciaUsuarios.login);
+// Rotas públicas
+app.post('/usuarios', instanciaUsuarios.cadastrar.bind(instanciaUsuarios));
+app.post('/login', instanciaUsuarios.login.bind(instanciaUsuarios));
+app.get('/salas', instanciaSalas.listar.bind(instanciaSalas));
 
-// Cadastro de salas (protegido)
-app.post('/salas', authenticateToken, instanciaSalas.cadastrar);
+// Rotas protegidas (com JWT)
+app.post('/salas', authenticateToken, instanciaSalas.cadastrar.bind(instanciaSalas));
+app.put('/salas/:id', authenticateToken, instanciaSalas.editar.bind(instanciaSalas));
+app.delete('/salas/:id', authenticateToken, instanciaSalas.excluir.bind(instanciaSalas));
+app.get('/minhas-salas', authenticateToken, instanciaSalas.listarMinhasSalas.bind(instanciaSalas));
 
-// Reservas (protegidas)
 app.post('/reservas', authenticateToken, instanciaReservaSalas.criarReserva.bind(instanciaReservaSalas));
-app.get('/reservas', authenticateToken, (req, res) => instanciaReservaSalas.listarReservas(req, res)); 
-
-// Listagem de salas (público)
-app.get('/salas', instanciaSalas.listar);
-
-// Listagem de salas do usuário logado (protegido)
-app.get('/minhas-salas', authenticateToken, instanciaSalas.listarMinhasSalas);
+app.get('/reservas', authenticateToken, instanciaReservaSalas.listarReservas.bind(instanciaReservaSalas));
 
 // Inicia o servidor
 app.listen(port, () => {

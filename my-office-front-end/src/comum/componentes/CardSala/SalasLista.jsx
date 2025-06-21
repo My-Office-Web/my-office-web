@@ -15,7 +15,6 @@ export default function SalasLista({ filtros }) {
   const [filtrando, setFiltrando] = useState(false);
   const [salasFiltradas, setSalasFiltradas] = useState([]);
 
-  // Carregamento inicial das salas
   useEffect(() => {
     const fetchSalas = async () => {
       try {
@@ -32,7 +31,6 @@ export default function SalasLista({ filtros }) {
     fetchSalas();
   }, []);
 
-  // Filtro com carregamento simulado (Skeleton)
   useEffect(() => {
     if (!salas || salas.length === 0) {
       setSalasFiltradas([]);
@@ -67,21 +65,20 @@ export default function SalasLista({ filtros }) {
 
       setSalasFiltradas(resultado);
       setFiltrando(false);
-    }, 800); // tempo do skeleton ao filtrar
+    }, 800);
 
     return () => clearTimeout(timeout);
   }, [filtros, salas]);
 
-  // Mostra Skeletons durante carregamento inicial ou filtragem
   if (loading || filtrando) {
     return (
       <Box sx={{ width: '100%', mt: 5 }}>
         <Typography variant="h4" gutterBottom align="center">
           Carregando Salas...
         </Typography>
-        <Grid container spacing={10} justifyContent="center">
+        <Grid container spacing={4}>
           {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-            <Grid item xs={12} sm={6} md={4} key={item}>
+            <Grid item xs={12} sm={6} md={3} key={item}>
               <SkeletonCardSala />
             </Grid>
           ))}
@@ -90,7 +87,6 @@ export default function SalasLista({ filtros }) {
     );
   }
 
-  // Nenhuma sala encontrada
   if (salasFiltradas.length === 0) {
     return (
       <Typography variant="h6" align="center">
@@ -99,25 +95,25 @@ export default function SalasLista({ filtros }) {
     );
   }
 
-  // Resultado final
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', px: 2 }}>
       <Container sx={{ py: 4, textAlign: 'center' }} maxWidth="">
-  <Typography variant="h4" gutterBottom>
-    Lista de Salas
-  </Typography> 
-</Container>
+        <Typography variant="h4" gutterBottom />
+      </Container>
 
-      <Grid container spacing={10} justifyContent="center">
+      <Grid container spacing={4} justifyContent="center">
         {salasFiltradas.map((sala) => (
-          <Grid item xs={12} sm={6} md={4} key={sala.id}>
+          <Grid item xs={12} sm={6} md={3} key={sala.id}>
             <CardSala
-              titulo={`Sala ${sala.tipo}`}
-              endereco={`${sala.rua}, ${sala.numero} - ${sala.bairro}, ${sala.cidade} - ${sala.estado}`}
+              titulo={`Sala em ${sala.bairro}`}
+              endereco={`${sala.rua}, ${sala.numero} `}
+              cidade={`${sala.cidade} / ${sala.estado}`}
               preco={sala.preco}
               capacidade={sala.capacidade}
               descricao={sala.descricao}
               imagemBase64={sala.imagem}
+              salaId={sala.id_sala}
+              usuarioId={sala.usuario_id}
             />
           </Grid>
         ))}

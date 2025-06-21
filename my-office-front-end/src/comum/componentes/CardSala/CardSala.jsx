@@ -8,7 +8,6 @@ import {
   Avatar,
   IconButton,
   Typography,
-  styled,
   Box,
   Tooltip,
   Modal,
@@ -20,20 +19,9 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-
-const ExpandMore = styled(({ expand, ...other }) => {
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  marginLeft: 'auto',
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 export default function CardSala({
   usuarioId,
@@ -44,24 +32,32 @@ export default function CardSala({
   descricao = 'Espaço moderno e equipado para reuniões, treinamentos e workshops.',
   preco = '250',
   capacidade = '20',
+  cidade,
 }) {
-  const [expanded, setExpanded] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [agendamentoOpen, setAgendamentoOpen] = React.useState(false);
   const [loadingReserva, setLoadingReserva] = React.useState(false);
   const [favorito, setFavorito] = React.useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded((prev) => !prev);
-  };
+  React.useEffect(() => {
+    const verificarFavorito = async () => {
+      try {
+        const response = await fetch(`https://my-office-web.onrender.com/favoritos/${salaId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
+          },
+        });
+        const data = await response.json();
+        if (response.ok) setFavorito(data.favoritado);
+      } catch (error) {
+        console.error('Erro ao verificar favorito:', error);
+      }
+    };
+    if (salaId) verificarFavorito();
+  }, [salaId]);
 
-  const handleModalOpen = () => {
-    setModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
+  const handleModalOpen = () => setModalOpen(true);
+  const handleModalClose = () => setModalOpen(false);
 
   const handleCompartilhar = async () => {
     if (navigator.share) {
@@ -93,13 +89,10 @@ export default function CardSala({
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
         },
-        body: JSON.stringify({ sala_id: salaId }), // só sala_id
+        body: JSON.stringify({ sala_id: salaId }),
       });
 
-      if (!response.ok) {
-        throw new Error('Erro ao atualizar favorito');
-      }
-
+      if (!response.ok) throw new Error('Erro ao atualizar favorito');
       setFavorito(!favorito);
     } catch (error) {
       console.error('Erro ao favoritar/desfavoritar:', error);
@@ -107,27 +100,9 @@ export default function CardSala({
     }
   };
 
-  React.useEffect(() => {
-    const verificarFavorito = async () => {
-      try {
-        const response = await fetch(`https://my-office-web.onrender.com/favoritos/${salaId}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
-          },
-        });
-        const data = await response.json();
-        if (response.ok) setFavorito(data.favoritado);
-      } catch (error) {
-        console.error('Erro ao verificar favorito:', error);
-      }
-    };
-    if (salaId) verificarFavorito();
-  }, [salaId]);
-
   const handleAgendamentoSubmit = async (e) => {
     e.preventDefault();
     const dataForm = new FormData(e.currentTarget);
-
     const reserva = {
       usuario_id: usuarioId,
       sala_id: salaId,
@@ -168,34 +143,34 @@ export default function CardSala({
   };
 
   return (
-    <Card
-      sx={{
-        maxWidth: 360,
-        borderRadius: 3,
-        boxShadow: 4,
-        transition: 'transform 0.3s',
-        '&:hover': { transform: 'scale(1.03)', boxShadow: 6 },
-      }}
-    >
+    <Card sx={{ width: 400, height: 440, borderRadius: 3, boxShadow: 4 }}>
       <CardHeader
         avatar={<Avatar sx={{ bgcolor: red[500] }}>S</Avatar>}
         title={<Typography variant="h6" noWrap>{titulo}</Typography>}
-        subheader={
-          <Box display="flex" alignItems="center" gap={0.5}>
-            <LocationOnIcon fontSize="small" color="action" />
-            <Typography variant="body2" color="text.secondary" title={endereco}>{endereco}</Typography>
-          </Box>
-        }
-      />
+ subheader={
+    <Box display="flex" flexDirection="column">
+      <Box display="flex" alignItems="center" gap={0.5}>
+        <LocationOnIcon fontSize="small" color="action" />
+        <Typography variant="body2" color="text.secondary" title={endereco}>
+          {endereco}
+        </Typography>
+      </Box>
+      <Typography variant="body2" color="text.secondary" sx={{ pl: 3 }}>
+        {cidade}
+      </Typography>
+    </Box>
+  }
+/>
+
       <CardMedia
         component="img"
-        height="180"
+        height="200"
         image={imagemBase64}
         alt={titulo}
-        sx={{ cursor: 'pointer', objectFit: 'cover' }}
+        sx={{ objectFit: 'cover', cursor: 'pointer' }}
         onClick={handleModalOpen}
       />
-      <CardContent>
+      <CardContent sx={{ height: 110, overflow: 'hidden' }}>
         <Box display="flex" justifyContent="space-between" mb={1}>
           <Tooltip title="Preço por diária">
             <Box display="flex" alignItems="center" gap={0.5}>
@@ -214,8 +189,8 @@ export default function CardSala({
           variant="body2"
           color="text.secondary"
           sx={{
-            display: expanded ? 'block' : '-webkit-box',
-            WebkitLineClamp: expanded ? 'none' : 2,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -224,7 +199,7 @@ export default function CardSala({
           {descricao}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
+      <CardActions sx={{ height: 3, px: 1, justifyContent: 'space-around' }}>
         <IconButton aria-label="favoritar" onClick={handleToggleFavorito} color={favorito ? 'error' : 'default'}>
           <FavoriteIcon />
         </IconButton>
@@ -234,17 +209,9 @@ export default function CardSala({
         <IconButton aria-label="whatsapp" onClick={handleWhatsAppClick}>
           <WhatsAppIcon />
         </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label={expanded ? 'mostrar menos' : 'mostrar mais'}
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
       </CardActions>
 
-      {/* Modal com detalhes da sala */}
+      {/* Modal de detalhes da sala */}
       <Modal open={modalOpen} onClose={handleModalClose}>
         <Box
           sx={{
@@ -253,15 +220,12 @@ export default function CardSala({
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: { xs: '90vw', sm: 600 },
-            maxHeight: '90vh',
             bgcolor: 'background.paper',
             boxShadow: 24,
             borderRadius: 2,
             p: 3,
-            overflowY: 'auto',
             outline: 'none',
           }}
-          tabIndex={-1}
         >
           <Typography variant="h5" mb={2}>{titulo}</Typography>
           <Box
@@ -272,7 +236,7 @@ export default function CardSala({
           />
           <Box display="flex" alignItems="center" gap={1} mb={1}>
             <LocationOnIcon color="action" />
-            <Typography>{endereco}</Typography>
+            <Typography>{endereco} - {cidade}</Typography>
           </Box>
           <Divider sx={{ mb: 2 }} />
           <Box display="flex" justifyContent="space-between" mb={2}>
@@ -306,7 +270,7 @@ export default function CardSala({
         </Box>
       </Modal>
 
-      {/* Modal para agendamento */}
+      {/* Modal de agendamento */}
       <Modal open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)}>
         <Box
           component="form"
@@ -326,9 +290,7 @@ export default function CardSala({
             gap: 2,
           }}
         >
-          <Typography variant="h6" mb={2}>
-            Agendar Sala
-          </Typography>
+          <Typography variant="h6" mb={2}>Agendar Sala</Typography>
           <TextField label="Usuário ID" value={`Usuário ID: ${usuarioId}`} disabled fullWidth />
           <TextField
             label="Data do agendamento"

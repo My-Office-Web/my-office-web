@@ -46,10 +46,9 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
 
-          <Box sx={{ flexGrow: 15 }}>
-          <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+            <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
           </Box>
-
 
           {/* BOTÃO CRIAR CONTA abre modal */}
           <Button

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -7,6 +7,7 @@ import {
   Button,
   Typography,
   Divider,
+  Autocomplete,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -19,11 +20,35 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
     'Residencial',
   ];
 
+  const [opcoesAutoComplete, setOpcoesAutoComplete] = useState([]);
+
+  useEffect(() => {
+    const fetchLocais = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/salas');
+        const data = await response.json();
+
+        const locais = new Set();
+        data.forEach((sala) => {
+          [sala.rua, sala.bairro, sala.cidade, sala.estado].forEach((loc) => {
+            if (loc) locais.add(loc);
+          });
+        });
+
+        setOpcoesAutoComplete([...locais]);
+      } catch (error) {
+        console.error('Erro ao buscar locais:', error);
+      }
+    };
+
+    fetchLocais();
+  }, []);
+
   return (
     <Box
       sx={{
         display: 'flex',
-        flexDirection: 'column', // agora o layout é vertical
+        flexDirection: 'column', // layout vertical
         minHeight: 400,
         backgroundColor: 'inherit',
         overflow: 'hidden',
@@ -33,11 +58,10 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
       <Box
         sx={{
           width: '100%',
-          height: 300, // altura da imagem, você pode ajustar
+          height: 300,
           backgroundImage: `url('/sala.jpeg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-
         }}
       />
 
@@ -55,7 +79,6 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
       >
         <Typography variant="h4" fontWeight="bold" color="#3d4351" mb={2}>
           O espaço ideal para você está aqui! <br />
-
         </Typography>
 
         <Divider sx={{ maxWidth: 600, mx: 'auto', mb: 3, borderColor: '#dcdcdc' }} />
@@ -70,20 +93,29 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
             mx: 'auto',
           }}
         >
-          <TextField
-            variant="outlined"
-            placeholder="Digite o nome da rua, bairro ou cidade"
-            value={local}
-            onChange={(e) => setLocal(e.target.value)}
-            fullWidth
+          <Autocomplete
+            freeSolo
+            options={local.trim() === '' ? [] : opcoesAutoComplete}
+            inputValue={local}
+            onInputChange={(e, val) => setLocal(val)}
             sx={{ flex: 1, minWidth: 600 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon color="action" />
-                </InputAdornment>
-              ),
-            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Digite o nome da rua, bairro ou cidade"
+                variant="outlined"
+                InputProps={{
+                  ...params.InputProps,
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color="primary" />
+                    </InputAdornment>
+                  ),
+                }}
+                fullWidth
+                size="medium"
+              />
+            )}
           />
 
           <TextField

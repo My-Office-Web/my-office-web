@@ -74,7 +74,7 @@ const PaginaPerfilUsuario = ({ open, onClose }) => {
               value={user.nome}
               disabled
               InputProps={{
-                sx: { color: "text.disabled", backgroundColor: "#f5f5f5" },
+                sx: { color: "text.disabled"},
               }}
             />
           </Grid>
@@ -87,7 +87,7 @@ const PaginaPerfilUsuario = ({ open, onClose }) => {
               disabled
               sx={{ width: 600 }}
               InputProps={{
-                sx: { color: "text.disabled", backgroundColor: "#f5f5f5" },
+                sx: { color: "text.disabled" },
               }}
             />
           </Grid>

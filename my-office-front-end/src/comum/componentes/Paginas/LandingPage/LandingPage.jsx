@@ -12,125 +12,97 @@ import {
   AccordionDetails,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SecurityIcon from '@mui/icons-material/Security';
 import { Link as RouterLink } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const logos = ['Google', 'Amazon', 'Nubank', 'iFood', 'TOTVS'];
 const steps = [
-  { title: '1. Cadastre seu espaço', desc: 'Informe os detalhes e fotos do seu espaço.' },
-  { title: '2. Alcance milhares de pessoas', desc: 'Apareça para profissionais e empresas que buscam locações.' },
-  { title: '3. Feche negócios com segurança', desc: 'Negocie, receba e gerencie tudo pela plataforma.' },
+  { title: 'Cadastre seu espaço', desc: 'Descreva e carregue fotos profissionais do seu espaço.' },
+  { title: 'Alcance milhares de clientes', desc: 'Seja encontrado por empresas e profissionais qualificados.' },
+  { title: 'Gerencie reservas com confiança', desc: 'Contratos digitais e pagamentos protegidos, tudo fácil e seguro.' },
 ];
 const benefits = [
-  { icon: '📢', title: 'Divulgação inteligente', desc: 'Alcance clientes em todo o Brasil com anúncios segmentados.' },
-  { icon: '💰', title: 'Receita extra garantida', desc: 'Transforme espaços ociosos em lucro todos os meses.' },
-  { icon: '🛡️', title: 'Segurança em cada etapa', desc: 'Pagamentos protegidos, suporte ativo e contratos digitais.' },
+  {
+    icon: <WorkspacePremiumIcon sx={{ fontSize: 60, color: '#FF5A00', mb: 2 }} />,
+    title: 'Divulgação Premium',
+    desc: 'Anúncios segmentados que atingem o público certo em todo o Brasil.',
+  },
+  {
+    icon: <AttachMoneyIcon sx={{ fontSize: 60, color: '#FF5A00', mb: 2 }} />,
+    title: 'Receita Extra Garantida',
+    desc: 'Transforme seu espaço ocioso em uma fonte de renda mensal consistente.',
+  },
+  {
+    icon: <SecurityIcon sx={{ fontSize: 60, color: '#FF5A00', mb: 2 }} />,
+    title: 'Segurança Total',
+    desc: 'Suporte ativo, contratos digitais e pagamentos 100% seguros na plataforma.',
+  },
 ];
 const testimonials = [
   {
     name: 'Marina Costa',
-    text: 'Já no primeiro mês tive 4 reservas. A plataforma é incrível!',
+    text: 'Consegui 4 reservas já no primeiro mês. A plataforma é fácil, rápida e segura!',
     avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
   },
   {
     name: 'João Mendes',
-    text: 'Consegui alugar uma sala para minha startup em poucos cliques.',
+    text: 'Aluguei uma sala para minha startup com poucos cliques. Recomendo muito!',
     avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
   },
   {
     name: 'Ana Lúcia',
-    text: 'A plataforma é intuitiva, e o suporte me ajudou em todo o processo.',
+    text: 'Plataforma intuitiva e suporte sempre pronto para ajudar. Excelente experiência.',
     avatar: 'https://randomuser.me/api/portraits/women/65.jpg',
   },
 ];
 const faqs = [
   {
-    q: 'Quais tipos de espaços posso anunciar?',
-    a: 'Salas comerciais, escritórios, consultórios, coworkings e muito mais.',
+    q: 'Que tipos de espaços posso anunciar?',
+    a: 'Aceitamos salas comerciais, escritórios, consultórios, coworkings e outros espaços corporativos.',
   },
   {
-    q: 'É seguro anunciar na plataforma?',
-    a: 'Sim! Todo o processo é mediado pela MyOffice com contratos digitais e pagamento garantido.',
+    q: 'Como funciona a segurança na plataforma?',
+    a: 'Todos os contratos são digitais e os pagamentos são protegidos por sistemas avançados de segurança.',
   },
   {
-    q: 'Preciso pagar algo para anunciar?',
-    a: 'Não! Você só paga uma pequena taxa quando o seu espaço for alugado com sucesso.',
+    q: 'Tenho algum custo para anunciar?',
+    a: 'O cadastro é gratuito. Você paga uma pequena taxa somente após o aluguel ser confirmado.',
   },
 ];
 
 export default function LandingPage() {
   return (
-    <Box sx={{ bgcolor: '#f9f9f9', overflowX: 'hidden' }}>
-      {/* HERO */}
-      <Box
-        sx={{
-          py: { xs: 10, md: 14 },
-          px: 3,
-          color: 'white',
-          textAlign: 'center',
-          backgroundImage: `
-            linear-gradient(135deg, rgba(0, 87, 255, 0.8), rgba(255, 90, 0, 0.85)),
-            url('https://images.unsplash.com/photo-1587614203976-365c74645e83?auto=format&fit=crop&w=1400&q=80')
-          `,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          boxShadow: 'inset 0 0 80px rgba(0,0,0,0.8)',
-        }}
-      >
-        <Container maxWidth="md">
-          <Typography
-            variant="h2"
-            fontWeight={900}
-            sx={{ textShadow: '2px 2px 6px rgba(0,0,0,0.7)', mb: 2 }}
-          >
-            Monetize seu espaço ocioso com segurança e agilidade
-          </Typography>
-          <Typography
-            variant="h6"
-            sx={{ opacity: 0.95, mb: 5, fontWeight: 500, textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}
-          >
-            Cadastre salas, escritórios ou coworkings e alcance milhares de empresas e profissionais.
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            component={RouterLink}
-            to="/"
-            sx={{
-              px: 6,
-              py: 1.8,
-              fontWeight: 'bold',
-              borderRadius: 3,
-              bgcolor: '#FF5A00',
-              boxShadow: '0 6px 15px rgba(255,90,0,0.6)',
-              '&:hover': { bgcolor: '#e64a00', boxShadow: '0 8px 20px rgba(230,74,0,0.8)' },
-              transition: 'all 0.3s ease',
-              letterSpacing: 1,
-            }}
-          >
-            Quero anunciar meu espaço
-          </Button>
-        </Container>
-      </Box>
+    <Box sx={{ bgcolor: '#f4f7fb', overflowX: 'hidden' }}>
 
       {/* LOGOS */}
-      <Container sx={{ py: 6 }}>
+      <Container  sx={{ py: 8 }}>
         <Typography
           variant="body1"
           color="text.secondary"
           align="center"
-          sx={{ mb: 3, letterSpacing: 2, fontWeight: 600 }}
+          sx={{ mb: 4, letterSpacing: 3, fontWeight: 700, textTransform: 'uppercase', color: '#555' }}
         >
-          Confiança de grandes marcas
+          Confiança das maiores empresas do Brasil
         </Typography>
-        <Grid container justifyContent="center" spacing={5}>
+        <Grid container justifyContent="center" spacing={6}>
           {logos.map((logo, i) => (
-            <Grid item key={i} sx={{ filter: 'grayscale(70%)', transition: 'filter 0.3s ease', '&:hover': { filter: 'none' } }}>
+            <Grid
+              item
+              key={i}
+              sx={{
+                filter: 'grayscale(80%)',
+                transition: 'filter 0.3s ease',
+                '&:hover': { filter: 'grayscale(0%)' },
+              }}
+            >
               <img
-                src={`https://dummyimage.com/120x45/cccccc/000000&text=${logo}`}
+                src={`https://dummyimage.com/140x50/cccccc/000000&text=${logo}`}
                 alt={`Logo ${logo}`}
-                style={{ maxHeight: 45, borderRadius: 4, boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}
+                style={{ maxHeight: 50, borderRadius: 6, boxShadow: '0 3px 14px rgba(0,0,0,0.12)' }}
               />
             </Grid>
           ))}
@@ -138,37 +110,43 @@ export default function LandingPage() {
       </Container>
 
       {/* BENEFÍCIOS */}
-      <Box sx={{ bgcolor: '#fff', py: 12 }}>
-        <Container>
+      <Box sx={{ bgcolor: '#fff', py: 14 }}>
+        <Container maxWidth="sm" sx={{ textAlign: 'center' }} >
           <Typography
             variant="h4"
             fontWeight="bold"
             align="center"
-            sx={{ mb: 8, letterSpacing: 1, color: '#003c8f' }}
+            sx={{ mb: 10, letterSpacing: 1.3, color: '#003c8f', textTransform: 'uppercase' }}
           >
-            Por que anunciar com a MyOffice?
+            Por que anunciar com a My Office?
           </Typography>
-          <Grid container spacing={6}>
+          <Grid container spacing={8}>
             {benefits.map((b, i) => (
               <Grid item xs={12} md={4} key={i}>
                 <Paper
-                  elevation={6}
+                  elevation={8}
                   sx={{
-                    p: 5,
+                    p: 6,
                     textAlign: 'center',
-                    borderRadius: 4,
-                    transition: 'transform 0.3s ease',
+                    borderRadius: 6,
+                    transition: 'transform 0.35s ease, box-shadow 0.35s ease',
                     cursor: 'default',
-                    '&:hover': { transform: 'translateY(-10px)', boxShadow: '0 12px 30px rgba(255,90,0,0.35)' },
+                    '&:hover': {
+                      transform: 'translateY(-12px)',
+                      boxShadow: '0 18px 40px rgba(255,90,0,0.45)',
+                    },
                   }}
                 >
-                  <Typography fontSize={56} sx={{ mb: 3, userSelect: 'none' }}>
-                    {b.icon}
-                  </Typography>
-                  <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ color: '#FF5A00' }}>
+                  {b.icon}
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    gutterBottom
+                    sx={{ color: '#FF5A00', textTransform: 'uppercase', mb: 2 }}
+                  >
                     {b.title}
                   </Typography>
-                  <Typography color="text.secondary" sx={{ fontSize: '1.05rem' }}>
+                  <Typography color="text.secondary" sx={{ fontSize: '1.1rem', fontWeight: 500 }}>
                     {b.desc}
                   </Typography>
                 </Paper>
@@ -179,128 +157,143 @@ export default function LandingPage() {
       </Box>
 
       {/* QUEM SOMOS */}
-      <Box sx={{ bgcolor: '#f5f7fa', py: 12 }}>
+      <Box sx={{ bgcolor: '#f0f4fb', py: 14 }}>
         <Container maxWidth="md" sx={{ textAlign: 'center' }}>
           <Typography
             variant="h4"
-            fontWeight="bold"
+            fontWeight="900"
             gutterBottom
-            sx={{ mb: 6, letterSpacing: 1 }}
+            sx={{ mb: 7, letterSpacing: 2, color: '#002366', textTransform: 'uppercase' }}
           >
-            Quem Somos
+            Quem somos
           </Typography>
           <Typography
             variant="body1"
             color="text.secondary"
-            sx={{ mb: 8, fontSize: '1.1rem', fontWeight: 500 }}
+            sx={{ mb: 9, fontSize: '1.15rem', fontWeight: 600, lineHeight: 1.7 }}
           >
-            A My Office é a plataforma líder em reservas de espaços corporativos que conecta profissionais e empresas a ambientes flexíveis, modernos e seguros, facilitando negócios e otimizando seu tempo.
+            A My Office é a plataforma líder em reservas de espaços corporativos, conectando profissionais e empresas a ambientes modernos, flexíveis e seguros para otimizar seu tempo e resultados.
           </Typography>
-
-          <Grid container spacing={6}>
+  
+          <Grid container spacing={8}>
             {[
               {
                 title: 'Missão',
-                desc: 'Proporcionar espaços de alto padrão com tecnologia e facilidade para que nossos clientes façam negócios de forma segura e eficiente.',
+                desc: 'Oferecer espaços de alto padrão com tecnologia avançada para negócios seguros e eficientes.',
               },
               {
                 title: 'Visão',
-                desc: 'Ser a escolha número 1 no Brasil para profissionais e empresas que buscam espaços corporativos flexíveis e confiáveis.',
+                desc: 'Ser a plataforma número 1 do Brasil para espaços corporativos flexíveis e confiáveis.',
               },
               {
                 title: 'Valores',
-                desc: 'Inovação, qualidade e flexibilidade para atender todas  as possíveis necessidades do mercado corporativo, educacional e comercial.',
+                desc: 'Inovação, qualidade e flexibilidade para atender a todas as demandas do mercado corporativo.',
               },
             ].map((item, idx) => (
+              <Container maxWidth="sm" sx={{ textAlign: 'center' }} >
               <Grid item xs={12} md={4} key={idx}>
                 <Paper
-                  elevation={4}
+                  elevation={6}
                   sx={{
-                    p: 5,
-                    borderRadius: 4,
+                    p: 6,
+                    borderRadius: 6,
                     color: '#1a1a1a',
-                    boxShadow: '0 4px 18px rgba(0,0,0,0.08)',
-                    transition: 'transform 0.3s ease',
-                    '&:hover': { transform: 'translateY(-8px)', boxShadow: '0 14px 30px rgba(0,87,255,0.25)' },
+                    boxShadow: '0 6px 22px rgba(0,0,0,0.1)',
+                    transition: 'transform 0.35s ease, box-shadow 0.35s ease',
+                    '&:hover': {
+                      transform: 'translateY(-10px)',
+                      boxShadow: '0 20px 42px rgba(0,87,255,0.3)',
+                    },
                   }}
                 >
-                  <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ color: '#0057ff' }}>
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    gutterBottom
+                    sx={{ color: '#0057ff', textTransform: 'uppercase', mb: 3 }}
+                  >
                     {item.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, fontSize: '1rem' }}>
                     {item.desc}
                   </Typography>
                 </Paper>
               </Grid>
+              </Container>
             ))}
           </Grid>
 
-          <Box sx={{ mt: 10 }}>
+          <Box sx={{ mt: 12 }}>
             <Typography
               variant="h5"
               fontWeight="bold"
               gutterBottom
-              sx={{ letterSpacing: 0.7 }}
+              sx={{ letterSpacing: 0.8, textTransform: 'uppercase', color: '#003c8f' }}
             >
               Por que escolher a My Office?
             </Typography>
             <Typography
               variant="body1"
               color="text.secondary"
-              maxWidth={600}
+              maxWidth={620}
               mx="auto"
-              sx={{ fontSize: '1.1rem', fontWeight: 500 }}
+              sx={{ fontSize: '1.15rem', fontWeight: 600, lineHeight: 1.6 }}
             >
-              Se você busca flexibilidade, segurança e tecnologia de ponta, a My Office é a solução para transformar seu espaço em oportunidades reais de negócio.
+              Para quem busca flexibilidade, segurança e tecnologia de ponta, somos a solução definitiva para transformar espaços ociosos em oportunidades reais de negócio.
             </Typography>
           </Box>
         </Container>
       </Box>
 
       {/* COMO FUNCIONA */}
-      <Container sx={{ py: 12 }}>
+      <Container sx={{ py: 14 }}>
         <Typography
           variant="h4"
-          fontWeight="bold"
+          fontWeight="900"
           textAlign="center"
-          sx={{ mb: 8, letterSpacing: 1 }}
+          sx={{ mb: 10, letterSpacing: 1.5, color: '#002366', textTransform: 'uppercase' }}
         >
           Como funciona?
-        </Typography>
-        <Grid container spacing={6}>
+        </Typography> 
+        <Container maxWidth="sm" sx={{ textAlign: 'center' }} >
+        <Grid container spacing={8}>
           {steps.map((step, i) => (
             <Grid item xs={12} md={4} key={i}>
               <Paper
-                elevation={5}
+                elevation={7}
                 sx={{
-                  p: 5,
+                  p: 6,
                   textAlign: 'center',
-                  borderRadius: 4,
+                  borderRadius: 6,
                   color: '#222',
-                  transition: 'transform 0.3s ease',
-                  '&:hover': { transform: 'translateY(-6px)', boxShadow: '0 12px 25px rgba(0,87,255,0.2)' },
+                  transition: 'transform 0.35s ease, box-shadow 0.35s ease',
+                  '&:hover': {
+                    transform: 'translateY(-8px)',
+                    boxShadow: '0 18px 35px rgba(0,87,255,0.25)',
+                  },
                 }}
               >
-                <Typography variant="h6" fontWeight="bold" sx={{ mb: 2, color: '#0057ff' }}>
+                <Typography variant="h6" fontWeight="bold" sx={{ mb: 3, color: '#0057ff', textTransform: 'uppercase' }}>
                   {step.title}
                 </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ fontSize: '1rem' }}>
+                <Typography variant="body1" color="text.secondary" sx={{ fontSize: '1.1rem', fontWeight: 600 }}>
                   {step.desc}
                 </Typography>
               </Paper>
             </Grid>
           ))}
         </Grid>
+        </Container>
       </Container>
 
       {/* DEPOIMENTOS */}
-      <Box sx={{ backgroundColor: '#e7f0ff', py: 12 }}>
+      <Box sx={{ backgroundColor: '#eaf4ff', py: 14 }}>
         <Container>
           <Typography
             variant="h4"
             textAlign="center"
-            fontWeight="bold"
-            sx={{ mb: 8, color: '#003c8f', letterSpacing: 1 }}
+            fontWeight="900"
+            sx={{ mb: 10, color: '#003c8f', letterSpacing: 1.5, textTransform: 'uppercase' }}
           >
             O que nossos clientes dizem
           </Typography>
@@ -309,41 +302,47 @@ export default function LandingPage() {
             infiniteLoop
             showThumbs={false}
             showStatus={false}
-            interval={7000}
+            interval={8000}
             emulateTouch
             swipeable
             stopOnHover
             dynamicHeight={false}
+            showArrows={true}
           >
             {testimonials.map((depo, i) => (
               <Box
                 key={i}
                 sx={{
                   textAlign: 'center',
-                  px: { xs: 3, md: 12 },
-                  py: 6,
-                  maxWidth: 700,
+                  px: { xs: 3, md: 16 },
+                  py: 7,
+                  maxWidth: 720,
                   mx: 'auto',
                   bgcolor: 'white',
-                  borderRadius: 4,
-                  boxShadow: '0 8px 25px rgba(0,87,255,0.15)',
+                  borderRadius: 6,
+                  boxShadow: '0 10px 35px rgba(0,87,255,0.18)',
                   userSelect: 'none',
                 }}
               >
                 <Avatar
                   src={depo.avatar}
                   sx={{
-                    width: 72,
-                    height: 72,
+                    width: 80,
+                    height: 80,
                     mx: 'auto',
-                    mb: 3,
-                    border: '3px solid #FF5A00',
+                    mb: 4,
+                    border: '4px solid #FF5A00',
+                    boxShadow: '0 2px 15px rgba(255,90,0,0.5)',
                   }}
                 />
-                <Typography variant="body1" fontStyle="italic" sx={{ mb: 3, fontSize: '1.1rem' }}>
+                <Typography
+                  variant="body1"
+                  fontStyle="italic"
+                  sx={{ mb: 4, fontSize: '1.2rem', fontWeight: 600, color: '#333' }}
+                >
                   “{depo.text}”
                 </Typography>
-                <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#0057ff' }}>
+                <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#0057ff', fontSize: '1.1rem' }}>
                   {depo.name}
                 </Typography>
               </Box>
@@ -353,12 +352,12 @@ export default function LandingPage() {
       </Box>
 
       {/* FAQ */}
-      <Container sx={{ py: 12 }}>
+      <Container sx={{ py: 14, maxWidth: 'md' }}>
         <Typography
           variant="h4"
           textAlign="center"
-          fontWeight="bold"
-          sx={{ mb: 8, letterSpacing: 1 }}
+          fontWeight="900"
+          sx={{ mb: 10, letterSpacing: 1.5, color: '#002366', textTransform: 'uppercase' }}
         >
           Dúvidas Frequentes
         </Typography>
@@ -366,49 +365,49 @@ export default function LandingPage() {
           <Accordion
             key={i}
             sx={{
-              mb: 3,
-              borderRadius: 3,
-              boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
-              '&:hover': { boxShadow: '0 5px 30px rgba(0,87,255,0.15)' },
+              mb: 4,
+              borderRadius: 5,
+              boxShadow: '0 3px 22px rgba(0,0,0,0.07)',
+              '&:hover': { boxShadow: '0 6px 36px rgba(0,87,255,0.18)' },
             }}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#0057ff' }} />}
               sx={{
-                bgcolor: '#f9faff',
-                borderRadius: 3,
+                bgcolor: '#f0f5ff',
+                borderRadius: 5,
                 fontWeight: 700,
-                letterSpacing: 0.5,
+                fontSize: '1.15rem',
+                color: '#003c8f',
+                textTransform: 'capitalize',
               }}
             >
-              <Typography fontWeight="bold">{faq.q}</Typography>
+              {faq.q}
             </AccordionSummary>
-            <AccordionDetails sx={{ bgcolor: 'white' }}>
-              <Typography>{faq.a}</Typography>
-            </AccordionDetails>
+            <AccordionDetails sx={{ fontSize: '1.1rem', color: '#555' }}>{faq.a}</AccordionDetails>
           </Accordion>
         ))}
       </Container>
 
-      {/* CALL TO ACTION FINAL */}
+      {/* CTA FINAL */}
       <Box
         sx={{
-          py: 14,
-          bgcolor: 'linear-gradient(135deg, #FF5A00, #FF8C00)',
-          background:
-            'linear-gradient(135deg, rgba(255,90,0,0.9), rgba(255,140,0,0.9))',
-          color: 'white',
+          bgcolor: '#0057ff',
+          py: 12,
           textAlign: 'center',
-          boxShadow: 'inset 0 0 100px rgba(255,90,0,0.6)',
+          color: 'white',
+          px: 3,
+          borderTopLeftRadius: 32,
+          borderTopRightRadius: 32,
+          boxShadow: '0 -10px 30px rgba(0,87,255,0.7)',
         }}
       >
         <Typography
           variant="h4"
           fontWeight="bold"
-          gutterBottom
-          sx={{ mb: 3, letterSpacing: 1 }}
+          sx={{ mb: 3, letterSpacing: 2, textTransform: 'uppercase', maxWidth: 620, mx: 'auto' }}
         >
-          Pronto para transformar seu espaço?
+          Está pronto para transformar seu espaço em lucro?
         </Typography>
         <Button
           variant="contained"
@@ -416,19 +415,22 @@ export default function LandingPage() {
           component={RouterLink}
           to="/"
           sx={{
-            bgcolor: 'white',
-            color: '#FF5A00',
-            px: 6,
-            py: 2,
+            bgcolor: '#FF5A00',
+            px: 8,
+            py: 2.5,
             fontWeight: 'bold',
-            borderRadius: 4,
-            boxShadow: '0 6px 20px rgba(255,90,0,0.7)',
-            '&:hover': { bgcolor: '#fff3e0' },
-            letterSpacing: 1,
+            borderRadius: 6,
+            fontSize: '1.15rem',
+            boxShadow: '0 12px 32px rgba(255,90,0,0.8)',
+            '&:hover': {
+              bgcolor: '#e64a00',
+              boxShadow: '0 14px 38px rgba(230,74,0,0.95)',
+            },
             transition: 'all 0.3s ease',
+            textTransform: 'uppercase',
           }}
         >
-          Comece agora mesmo
+          Quero anunciar agora
         </Button>
       </Box>
     </Box>

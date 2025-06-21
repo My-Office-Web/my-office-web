@@ -98,7 +98,7 @@ export default function AppBarLogado() {
               justifyContent: "center",
             }}
           >
-            <IconButton color="inherit" onClick={() => navigate("/novo")}>
+            <IconButton color="inherit" onClick={() => navigate("/")}>
               <HomeIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
                 Início

@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Container, ThemeProvider, CssBaseline, GlobalStyles } from "@mui/material";
+import {
+  Container,
+  ThemeProvider,
+  CssBaseline,
+  GlobalStyles,
+} from "@mui/material";
 
 import ButtonAppBar from "../../Paginas/PaginaInicial/AppBar";
 import FiltroImoveis from "../../Paginas/PaginaInicial/BarraDeBuscaSuperior";
-import CustomCarousel from "../../../Componentes/Paginas/CarrousselInicial/CarrousselInicial";
+import CustomCarousel from "../CarrousselInicial/CarrousselInicial";
 import DarkMode from "../../DarkMode/DarkMode";
 import Footer from "../Footer/Footer";
 
@@ -11,33 +16,32 @@ import { lightTheme, darkTheme } from "../../../Theme/theme";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import AppBarLogado from "../PaginaLogado/AppBarLogado";
 import SalasLista from "../../CardSala/SalasLista";
-import AgeoBold from '../../../../assets/fonts/Ageo-Bold.otf';
-
+import AgeoBold from "../../../../assets/fonts/Ageo-Bold.otf";
+import LandingPage from "../LandingPage/LandingPage";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
 const FonteGlobal = () => (
   <GlobalStyles
     styles={{
-      '@font-face': {
+      "@font-face": {
         fontFamily: "'Ageo Bold', Arial, sans-serif",
         src: `url(${AgeoBold}) format('opentype')`,
 
-        fontStyle: 'normal',
+        fontStyle: "normal",
       },
     }}
   />
 );
-
 
 const PaginaInicial = () => {
   const [usuarioAutenticado, setUsuarioAutenticado] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
   // Filtro controlado
-  const [local, setLocal] = useState('');
-  const [tipo, setTipo] = useState('Todas as salas');
-  const [filtros, setFiltros] = useState({ local: '', tipo: 'Todas as salas' });
+  const [local, setLocal] = useState("");
+  const [tipo, setTipo] = useState("Todas as salas");
+  const [filtros, setFiltros] = useState({ local: "", tipo: "Todas as salas" });
 
   const toggleTheme = (checked) => {
     setIsDark(checked);
@@ -71,14 +75,16 @@ const PaginaInicial = () => {
           />
         </Container>
 
-        <Container sx={{ py: 4 }} maxWidth={false}>
+        <Container sx={{ py: 1 }} maxWidth={false}>
           <SalasLista filtros={filtros} />
         </Container>
 
         <Container sx={{ py: 4 }} maxWidth="">
           <CustomCarousel />
         </Container>
-
+        <Container sx={{ py: 4 }} maxWidth="">
+          <LandingPage />
+        </Container>
         <Container maxWidth={false} disableGutters sx={{ py: 0 }}>
           <Footer />
         </Container>

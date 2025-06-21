@@ -39,7 +39,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
 
   const fetchSalasDoUsuario = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/salas");
+      const response = await axios.get("https://my-office-web.onrender.com/salas");
 
       const minhasSalas = response.data.filter(
         (sala) => sala.usuario_id === usuarioLogado?.id
@@ -79,7 +79,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
       const token = autenticacao.obterToken();
 
       await axios.delete(
-        `http://localhost:3000/salas/${salaExcluir.id_sala}`,
+        `https://my-office-web.onrender.com/salas/${salaExcluir.id_sala}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

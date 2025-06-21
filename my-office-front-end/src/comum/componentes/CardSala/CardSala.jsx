@@ -87,7 +87,7 @@ export default function CardSala({
 
   const handleToggleFavorito = async () => {
     try {
-      const response = await fetch('http://localhost:3000/favoritos', {
+      const response = await fetch('https://my-office-web.onrender.com/favoritos', {
         method: favorito ? 'DELETE' : 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export default function CardSala({
   React.useEffect(() => {
     const verificarFavorito = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/favoritos/${salaId}`, {
+        const response = await fetch(`https://my-office-web.onrender.com/favoritos/${salaId}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
           },

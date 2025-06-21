@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import PaginaInicial from './comum/componentes/Paginas/PaginaInicial/PaginaInicial';
 import PaginaDeBuscaComFiltros from './comum/componentes/Paginas/PaginaDeBuscaComFiltros/PaginaDeBuscaComFiltros';
-import ScrollToTopWrapper from './comum/componentes/components/ScrollToTop';
+import ScrollToTopWrapper from './comum/componentes/ScrollToTop/ScrollToTop';
 const router = createBrowserRouter([
   {
     path: '/',

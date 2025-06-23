@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   Button, Typography, Grid, CircularProgress
@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import ServicoAutenticacao from "../../servicos/ServicoAutenticacao";
 import CardSala from "../CardSala/CardSala";
 
+import { SalasContext } from "../SalasContext/SalasContext";
+
 const servicoAutenticacao = new ServicoAutenticacao();
 
 const ModalFavoritos = ({ open, onClose }) => {
@@ -15,6 +17,9 @@ const ModalFavoritos = ({ open, onClose }) => {
   const [carregando, setCarregando] = useState(false);
 
   const token = servicoAutenticacao.obterToken();
+
+  
+  const { refreshSalas } = useContext(SalasContext);
 
   const carregarFavoritos = () => {
     if (!token) return;
@@ -37,6 +42,12 @@ const ModalFavoritos = ({ open, onClose }) => {
     }
   }, [open]);
 
+  // Função para ser chamada quando o favorito for alterado
+  const handleFavoritoAlterado = () => {
+    carregarFavoritos();
+    refreshSalas();  // atualiza a lista global de salas
+  };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle sx={{ fontWeight: "bold" }}>Salas Favoritas</DialogTitle>
@@ -58,7 +69,7 @@ const ModalFavoritos = ({ open, onClose }) => {
                   descricao={fav.descricao}
                   preco={fav.preco}
                   capacidade={fav.capacidade}
-                  onFavoritoAlterado={carregarFavoritos} // 🔥 Atualiza quando desfavorita
+                  onFavoritoAlterado={handleFavoritoAlterado} // chama a função que atualiza tudo
                 />
               </Grid>
             ))}

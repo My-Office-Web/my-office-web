@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+<<<<<<< HEAD
   Dialog,
   DialogTitle,
   DialogContent,
@@ -16,19 +17,47 @@ import {
 } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 import ServicoAutenticacao from "../../servicos/ServicoAutenticacao";
+=======
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  Button, Typography, Grid, CircularProgress
+} from "@mui/material";
+>>>>>>> Reservas-Salas
 import axios from "axios";
+import { toast } from "react-toastify";
+import ServicoAutenticacao from "../../servicos/ServicoAutenticacao";
+import CardSala from "../CardSala/CardSala";
 
 const ModalFavoritos = ({ open, onClose }) => {
   const [favoritos, setFavoritos] = useState([]);
   const [carregando, setCarregando] = useState(false);
 
+<<<<<<< HEAD
   const autenticacao = new ServicoAutenticacao();
   const token = autenticacao.obterToken();
+=======
+  const token = servicoAutenticacao.obterToken();
+
+  const carregarFavoritos = () => {
+    if (!token) return;
+    setCarregando(true);
+
+    axios.get("https://my-office-web.onrender.com/favoritos", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => setFavoritos(res.data))
+      .catch((err) => {
+        console.error("Erro ao buscar favoritos", err);
+        toast.error("Erro ao carregar favoritos.");
+      })
+      .finally(() => setCarregando(false));
+  };
+>>>>>>> Reservas-Salas
 
   useEffect(() => {
     if (open) carregarFavoritos();
   }, [open]);
 
+<<<<<<< HEAD
   const carregarFavoritos = async () => {
     if (!token) return;
     setCarregando(true);
@@ -70,6 +99,11 @@ const ModalFavoritos = ({ open, onClose }) => {
         Minhas Salas Favoritas
       </DialogTitle>
 
+=======
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+      <DialogTitle sx={{ fontWeight: "bold" }}>Salas Favoritas</DialogTitle>
+>>>>>>> Reservas-Salas
       <DialogContent dividers>
         {carregando ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -80,6 +114,7 @@ const ModalFavoritos = ({ open, onClose }) => {
             Você ainda não tem salas favoritas.
           </Typography>
         ) : (
+<<<<<<< HEAD
           <Grid container spacing={4} justifyContent="center">
             {favoritos.map((fav, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
@@ -119,14 +154,35 @@ const ModalFavoritos = ({ open, onClose }) => {
                     </IconButton>
                   </Box>
                 </Card>
+=======
+          <Grid container spacing={3}>
+            {favoritos.map((fav) => (
+              <Grid item xs={12} sm={6} md={4} key={fav.id}>
+                <CardSala
+                  usuarioId={fav.usuario_id}
+                  salaId={fav.id}
+                  titulo={fav.tipo}
+                  endereco={`${fav.rua}, ${fav.numero} - ${fav.bairro}, ${fav.cidade} - ${fav.estado}`}
+                  imagemBase64={fav.imagem}
+                  descricao={fav.descricao}
+                  preco={fav.preco}
+                  capacidade={fav.capacidade}
+                  onFavoritoAlterado={carregarFavoritos} // 🔥 Atualiza quando desfavorita
+                />
+>>>>>>> Reservas-Salas
               </Grid>
             ))}
           </Grid>
         )}
       </DialogContent>
+<<<<<<< HEAD
 
       <DialogActions sx={{ justifyContent: "center", mt: 2 }}>
         <Button onClick={onClose} variant="contained" color="primary">
+=======
+      <DialogActions>
+        <Button onClick={onClose} variant="contained">
+>>>>>>> Reservas-Salas
           Fechar
         </Button>
       </DialogActions>

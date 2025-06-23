@@ -17,7 +17,11 @@ import { UploadFile } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import ValidarCadastroSala from "../../../../classes/ValidarInputsSala/validarCadastroSala";
 import axios from "axios";
+<<<<<<< HEAD
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+=======
+import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao"; // ✅ NOVO: importação do serviço de autenticação
+>>>>>>> Reservas-Salas
 
 export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
@@ -124,7 +128,11 @@ export default function ModalCadastroSala({ open, onClose }) {
       const USUARIO = instanciaAutenticacao.obterUsuario();
       console.log(USUARIO);
 
+<<<<<<< HEAD
       await axios.post(
+=======
+      const response = await axios.post(
+>>>>>>> Reservas-Salas
         "https://my-office-web.onrender.com/salas",
         {
           ...form,
@@ -154,6 +162,7 @@ export default function ModalCadastroSala({ open, onClose }) {
   };
 
   return (
+<<<<<<< HEAD
     <Dialog
       open={open}
       onClose={onClose}
@@ -179,6 +188,13 @@ export default function ModalCadastroSala({ open, onClose }) {
         }}
       >
         Cadastre sua Sala
+=======
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle
+        sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}
+      >
+        Cadastro de Sala
+>>>>>>> Reservas-Salas
       </DialogTitle>
 
       <DialogContent

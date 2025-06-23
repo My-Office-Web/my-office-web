@@ -48,7 +48,7 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
     <Box
       sx={{
         display: 'flex',
-        flexDirection: 'column', // layout vertical
+        flexDirection: 'column', 
         minHeight: 400,
         backgroundColor: 'inherit',
         overflow: 'hidden',

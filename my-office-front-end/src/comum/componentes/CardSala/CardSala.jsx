@@ -327,11 +327,11 @@ export default function CardSala({
           }}
         >
           <Typography variant="h6" mb={2}>
-            Agendar Sala
+            Reservar Sala
           </Typography>
-          <TextField label="Usuário ID" value={`Usuário ID: ${usuarioId}`} disabled fullWidth />
+          {/* <TextField label="Usuário ID" value={`Usuário ID: ${usuarioId}`} disabled fullWidth /> */}
           <TextField
-            label="Data do agendamento"
+            label="Data da reserva"
             name="data"
             type="date"
             fullWidth

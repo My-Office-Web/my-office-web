@@ -18,7 +18,6 @@ const db = mysql.createConnection({
       console.error('Erro ao conectar no MySQL:', err);
       process.exit(1);
     }
-    db.query("SET time_zone = '-03:00'")  
     console.log('Conectado ao MySQL!');
   });
 

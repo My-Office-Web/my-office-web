@@ -6,17 +6,19 @@ import {
   DialogActions,
   Button,
   Typography,
+  Grid,
   Card,
   CardMedia,
   CardContent,
   CardActions,
   IconButton,
-  Grid,
   CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ServicoAutenticacao from "../../servicos/ServicoAutenticacao";
 import axios from "axios";
+import ServicoAutenticacao from "../../servicos/ServicoAutenticacao";
+
+import { toast } from "react-toastify";
 
 const servicoAutenticacao = new ServicoAutenticacao();
 
@@ -24,14 +26,10 @@ const ModalFavoritos = ({ open, onClose }) => {
   const [favoritos, setFavoritos] = useState([]);
   const [carregando, setCarregando] = useState(false);
 
-  // Pega token e usuário para autenticação
-  const usuario = servicoAutenticacao.obterUsuario();
   const token = servicoAutenticacao.obterToken();
 
-  // Função para buscar favoritos com dados das salas
   const carregarFavoritos = () => {
     if (!token) return;
-
     setCarregando(true);
 
     axios
@@ -39,7 +37,10 @@ const ModalFavoritos = ({ open, onClose }) => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setFavoritos(res.data))
-      .catch((err) => console.error("Erro ao buscar favoritos", err))
+      .catch((err) => {
+        console.error("Erro ao buscar favoritos", err);
+        toast.error("Erro ao carregar favoritos.");
+      })
       .finally(() => setCarregando(false));
   };
 
@@ -49,25 +50,27 @@ const ModalFavoritos = ({ open, onClose }) => {
     }
   }, [open]);
 
-  // Função para remover favorito pelo id da sala
   const removerFavorito = (sala_id) => {
     if (!token) return;
 
     axios
       .delete("http://localhost:3000/favoritos", {
         headers: { Authorization: `Bearer ${token}` },
-        data: { sala_id }, // corpo da requisição DELETE
+        data: { sala_id },
       })
       .then(() => {
         setFavoritos((prev) => prev.filter((fav) => fav.id !== sala_id));
+        toast.success("Sala removida dos favoritos.");
       })
-      .catch((err) => console.error("Erro ao remover favorito", err));
+      .catch((err) => {
+        console.error("Erro ao remover favorito", err);
+        toast.error("Erro ao remover favorito.");
+      });
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle sx={{ fontWeight: "bold" }}>Salas Favoritas</DialogTitle>
-
       <DialogContent dividers>
         {carregando ? (
           <CircularProgress />
@@ -89,10 +92,10 @@ const ModalFavoritos = ({ open, onClose }) => {
                   <CardContent>
                     <Typography variant="h6">{fav.tipo}</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {fav.cidade} - {fav.estado}
+                      {fav.rua}, {fav.numero} - {fav.bairro}, {fav.cidade} - {fav.estado}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      R$ {fav.preco}
+                      R$ {fav.preco} | Capacidade: {fav.capacidade}
                     </Typography>
                   </CardContent>
                   <CardActions>
@@ -110,7 +113,6 @@ const ModalFavoritos = ({ open, onClose }) => {
           </Grid>
         )}
       </DialogContent>
-
       <DialogActions>
         <Button onClick={onClose} variant="contained">
           Fechar

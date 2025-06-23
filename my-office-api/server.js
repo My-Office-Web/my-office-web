@@ -2,10 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
-import SalasController from './controllers/SalasController.js';
-import UsuariosController from './controllers/UsuariosController.js';
-import ReservaSalas from './controllers/ReservaSalas.js';
 import authenticateToken from './middlewares/auth.js';
+import UsuariosController from './controllers/UsuariosController.js';
+import SalasController from './controllers/SalasController.js';
+import ReservaSalas from './controllers/ReservaSalas.js';
+import FavoritosController from './controllers/FavoritosController.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,6 +17,7 @@ app.use(bodyParser.json({ limit: '10mb' }));
 const instanciaSalas = new SalasController();
 const instanciaUsuarios = new UsuariosController();
 const instanciaReservaSalas = new ReservaSalas();
+const instanciaFavoritos = new FavoritosController();
 
 // Rotas públicas
 app.post('/usuarios', instanciaUsuarios.cadastrar.bind(instanciaUsuarios));
@@ -33,6 +35,12 @@ app.post('/reservas', authenticateToken, instanciaReservaSalas.criarReserva.bind
 app.get('/reservas', authenticateToken, instanciaReservaSalas.listarReservas.bind(instanciaReservaSalas));
 app.put('/reservas/:id', authenticateToken, instanciaReservaSalas.atualizarReserva.bind(instanciaReservaSalas));   // <== rota para atualizar reserva
 app.delete('/reservas/:id', authenticateToken, instanciaReservaSalas.excluirReserva.bind(instanciaReservaSalas)); // <== rota para excluir reserva
+
+// Rotas de favoritos (protegidas)
+app.get('/favoritos', authenticateToken, instanciaFavoritos.listar.bind(instanciaFavoritos));
+app.post('/favoritos', authenticateToken, instanciaFavoritos.adicionar.bind(instanciaFavoritos));
+app.delete('/favoritos', authenticateToken, instanciaFavoritos.remover.bind(instanciaFavoritos));
+app.get('/favoritos/:salaId', authenticateToken, instanciaFavoritos.verificar.bind(instanciaFavoritos));
 
 // Inicia o servidor
 app.listen(port, () => {

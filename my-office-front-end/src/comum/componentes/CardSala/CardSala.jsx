@@ -25,9 +25,11 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
-const ExpandMore = styled(({ expand, ...other }) => {
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
+import { toast } from 'react-toastify';
+
+const ExpandMore = styled(({ expand, ...other }) => (
+  <IconButton {...other} />
+))(({ theme, expand }) => ({
   marginLeft: 'auto',
   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
   transition: theme.transitions.create('transform', {
@@ -51,17 +53,14 @@ export default function CardSala({
   const [loadingReserva, setLoadingReserva] = React.useState(false);
   const [favorito, setFavorito] = React.useState(false);
 
+  const token = localStorage.getItem('auth-token');
+
   const handleExpandClick = () => {
-    setExpanded((prev) => !prev);
+    setExpanded(!expanded);
   };
 
-  const handleModalOpen = () => {
-    setModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
+  const handleModalOpen = () => setModalOpen(true);
+  const handleModalClose = () => setModalOpen(false);
 
   const handleCompartilhar = async () => {
     if (navigator.share) {
@@ -75,7 +74,7 @@ export default function CardSala({
         console.error('Erro ao compartilhar:', error);
       }
     } else {
-      alert('O compartilhamento não é suportado neste navegador.');
+      alert('Compartilhamento não suportado neste navegador.');
     }
   };
 
@@ -91,9 +90,9 @@ export default function CardSala({
         method: favorito ? 'DELETE' : 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ sala_id: salaId }), // só sala_id
+        body: JSON.stringify({ sala_id: salaId }),
       });
 
       if (!response.ok) {
@@ -101,9 +100,16 @@ export default function CardSala({
       }
 
       setFavorito(!favorito);
+
+      if (!favorito) {
+        toast.success('Adicionado à sua lista de favoritos!');
+      } else {
+        toast.info('❌ Removido da sua lista de favoritos.');
+      }
+
     } catch (error) {
       console.error('Erro ao favoritar/desfavoritar:', error);
-      alert('Não foi possível atualizar o favorito.');
+      toast.error('Erro ao atualizar favorito.');
     }
   };
 
@@ -112,29 +118,30 @@ export default function CardSala({
       try {
         const response = await fetch(`http://localhost:3000/favoritos/${salaId}`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
+            'Authorization': `Bearer ${token}`,
           },
         });
-        const data = await response.json();
-        if (response.ok) setFavorito(data.favoritado);
+
+        if (response.ok) {
+          const data = await response.json();
+          setFavorito(data.favoritado);
+        }
       } catch (error) {
         console.error('Erro ao verificar favorito:', error);
       }
     };
-    if (salaId) verificarFavorito();
-  }, [salaId]);
+
+    if (salaId) {
+      verificarFavorito();
+    }
+  }, [salaId, token]);
 
   const handleAgendamentoSubmit = async (e) => {
     e.preventDefault();
     const dataForm = new FormData(e.currentTarget);
+    const dataReserva = dataForm.get('data');
 
-    const reserva = {
-      usuario_id: usuarioId,
-      sala_id: salaId,
-      data: dataForm.get('data'),
-    };
-
-    if (!reserva.data) {
+    if (!dataReserva) {
       alert('Por favor, selecione uma data para a reserva.');
       return;
     }
@@ -146,9 +153,13 @@ export default function CardSala({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(reserva),
+        body: JSON.stringify({
+          usuario_id: usuarioId,
+          sala_id: salaId,
+          data: dataReserva,
+        }),
       });
 
       const result = await response.json();
@@ -178,12 +189,14 @@ export default function CardSala({
       }}
     >
       <CardHeader
-        avatar={<Avatar sx={{ bgcolor: red[500] }}>S</Avatar>}
+        avatar={<Avatar sx={{ bgcolor: red[500] }}>{titulo.charAt(0)}</Avatar>}
         title={<Typography variant="h6" noWrap>{titulo}</Typography>}
         subheader={
           <Box display="flex" alignItems="center" gap={0.5}>
             <LocationOnIcon fontSize="small" color="action" />
-            <Typography variant="body2" color="text.secondary" title={endereco}>{endereco}</Typography>
+            <Typography variant="body2" color="text.secondary" title={endereco}>
+              {endereco}
+            </Typography>
           </Box>
         }
       />
@@ -200,7 +213,7 @@ export default function CardSala({
           <Tooltip title="Preço por diária">
             <Box display="flex" alignItems="center" gap={0.5}>
               <AttachMoneyIcon sx={{ color: 'success.main' }} />
-              <Typography fontWeight={600}>{preco}</Typography>
+              <Typography fontWeight={600}>R$ {preco}</Typography>
             </Box>
           </Tooltip>
           <Tooltip title="Capacidade">
@@ -225,7 +238,11 @@ export default function CardSala({
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="favoritar" onClick={handleToggleFavorito} color={favorito ? 'error' : 'default'}>
+        <IconButton
+          aria-label="favoritar"
+          onClick={handleToggleFavorito}
+          color={favorito ? 'error' : 'default'}
+        >
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="compartilhar" onClick={handleCompartilhar}>
@@ -244,7 +261,7 @@ export default function CardSala({
         </ExpandMore>
       </CardActions>
 
-      {/* Modal com detalhes da sala */}
+      {/* Modal Detalhes da Sala */}
       <Modal open={modalOpen} onClose={handleModalClose}>
         <Box
           sx={{
@@ -261,14 +278,19 @@ export default function CardSala({
             overflowY: 'auto',
             outline: 'none',
           }}
-          tabIndex={-1}
         >
           <Typography variant="h5" mb={2}>{titulo}</Typography>
           <Box
             component="img"
             src={imagemBase64}
             alt={`Imagem detalhada da ${titulo}`}
-            sx={{ width: '100%', maxHeight: 300, objectFit: 'cover', borderRadius: 2, mb: 2 }}
+            sx={{
+              width: '100%',
+              maxHeight: 300,
+              objectFit: 'cover',
+              borderRadius: 2,
+              mb: 2,
+            }}
           />
           <Box display="flex" alignItems="center" gap={1} mb={1}>
             <LocationOnIcon color="action" />
@@ -306,7 +328,7 @@ export default function CardSala({
         </Box>
       </Modal>
 
-      {/* Modal para agendamento */}
+      {/* Modal Agendamento */}
       <Modal open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)}>
         <Box
           component="form"
@@ -326,10 +348,7 @@ export default function CardSala({
             gap: 2,
           }}
         >
-          <Typography variant="h6" mb={2}>
-            Reservar Sala
-          </Typography>
-          {/* <TextField label="Usuário ID" value={`Usuário ID: ${usuarioId}`} disabled fullWidth /> */}
+          <Typography variant="h6" mb={2}>Reservar Sala</Typography>
           <TextField
             label="Data da reserva"
             name="data"
@@ -337,7 +356,9 @@ export default function CardSala({
             fullWidth
             required
             InputLabelProps={{ shrink: true }}
-            inputProps={{ min: new Date().toISOString().split('T')[0] }}
+            inputProps={{
+              min: new Date().toISOString().split('T')[0],
+            }}
           />
           <Button
             type="submit"
@@ -350,7 +371,6 @@ export default function CardSala({
               py: 1.5,
               fontWeight: 'bold',
             }}
-            aria-busy={loadingReserva}
           >
             {loadingReserva ? 'Enviando...' : 'Confirmar'}
           </Button>

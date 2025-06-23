@@ -7,6 +7,10 @@ const db = mysql.createConnection({
     password: process.env.MYSQL_PWD,
     database: process.env.MYSQL_DB,
     dateStrings: true,
+    typeCast: (field, next) => {
+      if (field.type === 'DATE') return field.string();
+      return next();
+    }
   });
   
   db.connect((err) => {

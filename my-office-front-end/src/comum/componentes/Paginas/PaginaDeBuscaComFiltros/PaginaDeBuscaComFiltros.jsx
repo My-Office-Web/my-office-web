@@ -59,7 +59,9 @@ export default function PaginaDeBuscaComFiltros() {
   useEffect(() => {
     const fetchSalas = async () => {
       try {
-        const response = await fetch("http://localhost:3000/salas");
+        const response = await fetch(
+          "https://my-office-web.onrender.com/salas"
+        );
         const data = await response.json();
         setSalas(data);
 
@@ -178,10 +180,10 @@ export default function PaginaDeBuscaComFiltros() {
             Ver todas no mapa
           </Button>
         </Box>
-        <Container sx={{ py: 1, textAlign: 'center' }} maxWidth="">
-        <Typography variant="h4" mb={2}>
-          Resultados
-        </Typography>
+        <Container sx={{ py: 1, textAlign: "center" }} maxWidth="">
+          <Typography variant="h4" mb={2}>
+            Resultados
+          </Typography>
         </Container>
 
         {(loading || filtrando) && (

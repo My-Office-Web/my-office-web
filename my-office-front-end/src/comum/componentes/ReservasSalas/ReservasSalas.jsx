@@ -37,7 +37,7 @@ export default function ModalReservas({ open, onClose }) {
       const instanciaAutenticacao = new ServicoAutenticacao();
       const token = instanciaAutenticacao.obterToken();
 
-      const response = await axios.get('http://localhost:3000/reservas', {
+      const response = await axios.get('https://my-office-web.onrender.com/reservas', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -79,7 +79,7 @@ export default function ModalReservas({ open, onClose }) {
       const token = instanciaAutenticacao.obterToken();
 
       await axios.put(
-        `http://localhost:3000/reservas/${id}`,
+        `https://my-office-web.onrender.com/reservas/${id}`,
         { data: novaData },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -104,7 +104,7 @@ export default function ModalReservas({ open, onClose }) {
       const instanciaAutenticacao = new ServicoAutenticacao();
       const token = instanciaAutenticacao.obterToken();
 
-      await axios.delete(`http://localhost:3000/reservas/${idParaExcluir}`, {
+      await axios.delete(`https://my-office-web.onrender.com/reservas/${idParaExcluir}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

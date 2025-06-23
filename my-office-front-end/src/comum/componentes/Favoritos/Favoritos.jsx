@@ -20,7 +20,7 @@ const ModalFavoritos = ({ open, onClose }) => {
     if (!token) return;
     setCarregando(true);
 
-    axios.get("http://localhost:3000/favoritos", {
+    axios.get("https://my-office-web.onrender.com/favoritos", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => setFavoritos(res.data))

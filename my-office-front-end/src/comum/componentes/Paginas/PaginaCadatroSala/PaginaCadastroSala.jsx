@@ -18,7 +18,7 @@ import { UploadFile } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import ValidarCadastroSala from "../../../../classes/ValidarInputsSala/validarCadastroSala";
 import axios from "axios";
-import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";// ✅ NOVO: importação do serviço de autenticação
+import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao"; // ✅ NOVO: importação do serviço de autenticação
 
 export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
@@ -120,25 +120,24 @@ export default function ModalCadastroSala({ open, onClose }) {
     }
 
     try {
-      const instanciaAutenticacao = new ServicoAutenticacao()
-      const token = instanciaAutenticacao.obterToken(); // ✅ NOVO: pega o token do localStorage
-      const USUARIO =  instanciaAutenticacao.obterUsuario()
-    console.log(USUARIO);
-    
+      const instanciaAutenticacao = new ServicoAutenticacao();
+      const token = instanciaAutenticacao.obterToken();
+      const USUARIO = instanciaAutenticacao.obterUsuario();
+      console.log(USUARIO);
+
       const response = await axios.post(
-        "http://localhost:3000/salas",
+        "https://my-office-web.onrender.com/salas",
         {
           ...form,
           tipo: tipoSala,
           preco: parseFloat(form.preco),
           capacidade: parseInt(form.capacidade),
           usuario_id: USUARIO.id,
-
         },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // ✅ NOVO: passa o token no header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -157,12 +156,23 @@ export default function ModalCadastroSala({ open, onClose }) {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}>
+      <DialogTitle
+        sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}
+      >
         Cadastro de Sala
       </DialogTitle>
       <DialogContent dividers>
         <Grid container spacing={2}>
-          {[["cep", "CEP"], ["estado", "Estado"], ["cidade", "Cidade"], ["bairro", "Bairro"], ["rua", "Rua"], ["numero", "Número"], ["preco", "Preço (Diária)"], ["capacidade", "Capacidade"]].map(([name, label], i) => (
+          {[
+            ["cep", "CEP"],
+            ["estado", "Estado"],
+            ["cidade", "Cidade"],
+            ["bairro", "Bairro"],
+            ["rua", "Rua"],
+            ["numero", "Número"],
+            ["preco", "Preço (Diária)"],
+            ["capacidade", "Capacidade"],
+          ].map(([name, label], i) => (
             <Grid item xs={12} sm={6} key={i}>
               <TextField
                 name={name}

@@ -142,7 +142,7 @@ export default function ModalEdicaoSala({ open, onClose, sala }) {
       const USUARIO = instanciaAutenticacao.obterUsuario();
 
       await axios.put(
-        `http://localhost:3000/salas/${sala.id_sala}`, // use id_sala (ou id) conforme seu backend
+        `https://my-office-web.onrender.com/salas/${sala.id_sala}`,
         {
           ...form,
           tipo: tipoSala,

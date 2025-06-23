@@ -23,12 +23,12 @@ export default function ModalConfirmacaoExclusao({
   onClose,
   onConfirm,
   salaId,
-  loading = false,  // nova prop loading com valor default false
+  loading = false,  
 }) {
   return (
     <Dialog
       open={open}
-      onClose={loading ? null : onClose} // impede fechar enquanto loading
+      onClose={loading ? null : onClose} 
       maxWidth="xs"
       fullWidth
       TransitionComponent={Transition}

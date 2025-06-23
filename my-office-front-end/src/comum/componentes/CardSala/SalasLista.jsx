@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Grid, Typography, Box, Container } from '@mui/material';
 import CardSala from './CardSala';
 import SkeletonCardSala from './SkeletonCardSala';
 import ServicoAutenticacao from '../../servicos/ServicoAutenticacao';
+import { SalasContext } from '../SalasContext/SalasContext';
 
 const normalizarTexto = (texto) =>
   texto
@@ -11,32 +12,14 @@ const normalizarTexto = (texto) =>
     .toLowerCase();
 
 export default function SalasLista({ filtros }) {
-  const [salas, setSalas] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { salas, loading } = useContext(SalasContext);
   const [filtrando, setFiltrando] = useState(false);
   const [salasFiltradas, setSalasFiltradas] = useState([]);
 
   const auth = new ServicoAutenticacao();
   const usuarioLogado = auth.obterUsuario();
 
-  // Carregamento inicial das salas
-  useEffect(() => {
-    const fetchSalas = async () => {
-      try {
-        const response = await fetch('https://my-office-web.onrender.com/salas');
-        const data = await response.json();
-        setSalas(data);
-      } catch (error) {
-        console.error('Erro ao buscar salas:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSalas();
-  }, []);
-
-  // Filtro com carregamento simulado (Skeleton)
+  // Filtro com Skeleton
   useEffect(() => {
     if (!salas || salas.length === 0) {
       setSalasFiltradas([]);
@@ -71,12 +54,11 @@ export default function SalasLista({ filtros }) {
 
       setSalasFiltradas(resultado);
       setFiltrando(false);
-    }, 800); // tempo do skeleton ao filtrar
+    }, 800);
 
     return () => clearTimeout(timeout);
   }, [filtros, salas]);
 
-  // Mostra Skeletons durante carregamento inicial ou filtragem
   if (loading || filtrando) {
     return (
       <Box sx={{ width: '100%', mt: 5 }}>
@@ -93,8 +75,7 @@ export default function SalasLista({ filtros }) {
       </Box>
     );
   }
-  
-  // Nenhuma sala encontrada
+
   if (salasFiltradas.length === 0) {
     return (
       <Typography variant="h6" align="center">
@@ -102,7 +83,7 @@ export default function SalasLista({ filtros }) {
       </Typography>
     );
   }
-  
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Container sx={{ py: 4, textAlign: 'center' }}>
@@ -113,18 +94,17 @@ export default function SalasLista({ filtros }) {
 
       <Grid container spacing={10} justifyContent="center">
         {salasFiltradas.map((sala) => (
-          <Grid item xs={12} sm={6} md={4} key={sala.id}>
+          <Grid item xs={12} sm={6} md={4} key={sala.id_sala}>
             <CardSala
-              usuarioId={usuarioLogado?.id} // <-- ID do usuário logado
-              salaId={sala.id_sala}               // <-- ID da sala
+              usuarioId={usuarioLogado?.id}
+              salaId={sala.id_sala}
               titulo={`Sala ${sala.tipo}`}
               endereco={`${sala.rua}, ${sala.numero} - ${sala.bairro}, ${sala.cidade} - ${sala.estado}`}
               preco={sala.preco}
-              
               capacidade={sala.capacidade}
               descricao={sala.descricao}
               imagemBase64={sala.imagem}
-              />
+            />
           </Grid>
         ))}
       </Grid>

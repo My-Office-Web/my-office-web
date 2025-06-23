@@ -6,6 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import PaginaInicial from './comum/componentes/Paginas/PaginaInicial/PaginaInicial';
 import PaginaDeBuscaComFiltros from './comum/componentes/Paginas/PaginaDeBuscaComFiltros/PaginaDeBuscaComFiltros';
 import ScrollToTopWrapper from './comum/componentes/ScrollToTop/ScrollToTop';
+
+import { SalasProvider } from './comum/componentes/SalasContext/SalasContext';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -15,7 +18,6 @@ const router = createBrowserRouter([
       </ScrollToTopWrapper>
     ),
   },
-  
   {
     path: '/busca',
     element: (
@@ -28,10 +30,10 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <>
+    <SalasProvider>
       <ToastContainer position="top-right" autoClose={5000} />
       <RouterProvider router={router} />
-    </>
+    </SalasProvider>
   );
 }
 

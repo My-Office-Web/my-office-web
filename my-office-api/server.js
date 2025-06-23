@@ -28,8 +28,11 @@ app.put('/salas/:id', authenticateToken, instanciaSalas.editar.bind(instanciaSal
 app.delete('/salas/:id', authenticateToken, instanciaSalas.excluir.bind(instanciaSalas));
 app.get('/minhas-salas', authenticateToken, instanciaSalas.listarMinhasSalas.bind(instanciaSalas));
 
+// Rotas de reservas protegidas
 app.post('/reservas', authenticateToken, instanciaReservaSalas.criarReserva.bind(instanciaReservaSalas));
 app.get('/reservas', authenticateToken, instanciaReservaSalas.listarReservas.bind(instanciaReservaSalas));
+app.put('/reservas/:id', authenticateToken, instanciaReservaSalas.atualizarReserva.bind(instanciaReservaSalas));   // <== rota para atualizar reserva
+app.delete('/reservas/:id', authenticateToken, instanciaReservaSalas.excluirReserva.bind(instanciaReservaSalas)); // <== rota para excluir reserva
 
 // Inicia o servidor
 app.listen(port, () => {

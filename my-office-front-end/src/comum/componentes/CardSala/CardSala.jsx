@@ -1,20 +1,8 @@
 import * as React from 'react';
 import {
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Avatar,
-  IconButton,
-  Typography,
-  styled,
-  Box,
-  Tooltip,
-  Modal,
-  Divider,
-  Button,
-  TextField,
+  Card, CardHeader, CardMedia, CardContent, CardActions,
+  Avatar, IconButton, Typography, styled, Box, Tooltip,
+  Modal, Divider, Button, TextField
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -24,7 +12,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-
 import { toast } from 'react-toastify';
 
 const ExpandMore = styled(({ expand, ...other }) => (
@@ -40,12 +27,13 @@ const ExpandMore = styled(({ expand, ...other }) => (
 export default function CardSala({
   usuarioId,
   salaId,
-  titulo = 'Sala Corporativa Premium',
-  endereco = 'Av. Paulista, 1000 - São Paulo, SP',
+  titulo,
+  endereco,
   imagemBase64,
-  descricao = 'Espaço moderno e equipado para reuniões, treinamentos e workshops.',
-  preco = '250',
-  capacidade = '20',
+  descricao,
+  preco,
+  capacidade,
+  onFavoritoAlterado
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -55,10 +43,7 @@ export default function CardSala({
 
   const token = localStorage.getItem('auth-token');
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
+  const handleExpandClick = () => setExpanded(!expanded);
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
@@ -107,6 +92,10 @@ export default function CardSala({
         toast.info('❌ Removido da sua lista de favoritos.');
       }
 
+      if (onFavoritoAlterado) {
+        onFavoritoAlterado(); // 🔥 Atualiza a lista de favoritos no modal
+      }
+
     } catch (error) {
       console.error('Erro ao favoritar/desfavoritar:', error);
       toast.error('Erro ao atualizar favorito.');
@@ -117,9 +106,7 @@ export default function CardSala({
     const verificarFavorito = async () => {
       try {
         const response = await fetch(`http://localhost:3000/favoritos/${salaId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+          headers: { 'Authorization': `Bearer ${token}` },
         });
 
         if (response.ok) {
@@ -165,13 +152,13 @@ export default function CardSala({
       const result = await response.json();
 
       if (response.ok) {
-        alert('Reserva criada com sucesso! ID: ' + result.reservaId);
+        toast.success('Reserva criada com sucesso! ID: ' + result.reservaId);
         setAgendamentoOpen(false);
       } else {
-        alert('Erro: ' + (result.error || 'Não foi possível criar a reserva.'));
+        toast.error('Erro: ' + (result.error || 'Não foi possível criar a reserva.'));
       }
     } catch (error) {
-      alert('Erro ao conectar com o servidor.');
+      toast.error('Erro ao conectar com o servidor.');
       console.error(error);
     } finally {
       setLoadingReserva(false);
@@ -179,15 +166,13 @@ export default function CardSala({
   };
 
   return (
-    <Card
-      sx={{
-        maxWidth: 360,
-        borderRadius: 3,
-        boxShadow: 4,
-        transition: 'transform 0.3s',
-        '&:hover': { transform: 'scale(1.03)', boxShadow: 6 },
-      }}
-    >
+    <Card sx={{
+      maxWidth: 360,
+      borderRadius: 3,
+      boxShadow: 4,
+      transition: 'transform 0.3s',
+      '&:hover': { transform: 'scale(1.03)', boxShadow: 6 },
+    }}>
       <CardHeader
         avatar={<Avatar sx={{ bgcolor: red[500] }}>{titulo.charAt(0)}</Avatar>}
         title={<Typography variant="h6" noWrap>{titulo}</Typography>}
@@ -261,37 +246,26 @@ export default function CardSala({
         </ExpandMore>
       </CardActions>
 
-      {/* Modal Detalhes da Sala */}
+      {/* Modal Detalhes */}
       <Modal open={modalOpen} onClose={handleModalClose}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: { xs: '90vw', sm: 600 },
-            maxHeight: '90vh',
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            borderRadius: 2,
-            p: 3,
-            overflowY: 'auto',
-            outline: 'none',
-          }}
-        >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: '90vw', sm: 600 },
+          maxHeight: '90vh',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          borderRadius: 2,
+          p: 3,
+          overflowY: 'auto',
+          outline: 'none',
+        }}>
           <Typography variant="h5" mb={2}>{titulo}</Typography>
-          <Box
-            component="img"
-            src={imagemBase64}
-            alt={`Imagem detalhada da ${titulo}`}
-            sx={{
-              width: '100%',
-              maxHeight: 300,
-              objectFit: 'cover',
-              borderRadius: 2,
-              mb: 2,
-            }}
-          />
+          <Box component="img" src={imagemBase64} alt={titulo} sx={{
+            width: '100%', maxHeight: 300, objectFit: 'cover', borderRadius: 2, mb: 2,
+          }} />
           <Box display="flex" alignItems="center" gap={1} mb={1}>
             <LocationOnIcon color="action" />
             <Typography>{endereco}</Typography>
@@ -309,19 +283,12 @@ export default function CardSala({
           </Box>
           <Typography color="text.secondary" paragraph>{descricao}</Typography>
           <Box textAlign="right">
-            <Button
-              variant="contained"
-              onClick={() => setAgendamentoOpen(true)}
+            <Button variant="contained" onClick={() => setAgendamentoOpen(true)}
               sx={{
-                bgcolor: '#FF5A00',
-                color: 'white',
+                bgcolor: '#FF5A00', color: 'white',
                 '&:hover': { bgcolor: '#e64a00' },
-                px: 3,
-                py: 1.5,
-                borderRadius: '999px',
-                fontWeight: 'bold',
-              }}
-            >
+                px: 3, py: 1.5, borderRadius: '999px', fontWeight: 'bold',
+              }}>
               Reservar
             </Button>
           </Box>
@@ -330,48 +297,30 @@ export default function CardSala({
 
       {/* Modal Agendamento */}
       <Modal open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)}>
-        <Box
-          component="form"
-          onSubmit={handleAgendamentoSubmit}
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 3,
-            borderRadius: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-          }}
-        >
+        <Box component="form" onSubmit={handleAgendamentoSubmit} sx={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400, bgcolor: 'background.paper',
+          boxShadow: 24, p: 3, borderRadius: 2,
+          display: 'flex', flexDirection: 'column', gap: 2,
+        }}>
           <Typography variant="h6" mb={2}>Reservar Sala</Typography>
           <TextField
             label="Data da reserva"
             name="data"
             type="date"
-            fullWidth
-            required
+            fullWidth required
             InputLabelProps={{ shrink: true }}
             inputProps={{
               min: new Date().toISOString().split('T')[0],
             }}
           />
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={loadingReserva}
+          <Button type="submit" variant="contained" disabled={loadingReserva}
             sx={{
-              bgcolor: '#FF5A00',
-              color: 'white',
+              bgcolor: '#FF5A00', color: 'white',
               '&:hover': { bgcolor: '#e64a00' },
-              py: 1.5,
-              fontWeight: 'bold',
-            }}
-          >
+              py: 1.5, fontWeight: 'bold',
+            }}>
             {loadingReserva ? 'Enviando...' : 'Confirmar'}
           </Button>
         </Box>

@@ -221,30 +221,21 @@ export default function PaginaDeBuscaComFiltros() {
             sx={{ maxWidth: "1600px", mx: "auto" }}
           >
             {salasFiltradas.map((sala) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                key={sala.id}
-                sx={{ display: "flex", justifyContent: "center" }}
-              >
-                <CardSala
-                  usuarioId="1"
-                  salaId={sala.id}
-                  titulo={`Sala ${sala.tipo}`}
-                  endereco={`${sala.rua}, ${sala.numero} - ${sala.bairro}, ${sala.cidade} - ${sala.estado}`}
-                  preco={sala.preco}
-                  capacidade={sala.capacidade}
-                  descricao={sala.descricao}
-                  imagemBase64={sala.imagem}
-                  latitude={sala.latitude}
-                  longitude={sala.longitude}
-                />
-              </Grid>
-            ))}
+ <Grid item xs={12} sm={6} md={3} key={sala.id}>
+            <CardSala
+              titulo={`Sala em ${sala.bairro}`}
+              endereco={`${sala.rua}, ${sala.numero} `}
+              cidade={`${sala.cidade} / ${sala.estado}`}
+              preco={sala.preco}
+              capacidade={sala.capacidade}
+              descricao={sala.descricao}
+              imagemBase64={sala.imagem}
+              salaId={sala.id_sala}
+              usuarioId={sala.usuario_id}
+            />
           </Grid>
+        ))}
+      </Grid>
         )}
 
         <Container sx={{ py: 6 }} maxWidth="">

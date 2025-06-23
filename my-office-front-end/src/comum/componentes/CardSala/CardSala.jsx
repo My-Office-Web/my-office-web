@@ -1,37 +1,19 @@
 import * as React from 'react';
 import {
-<<<<<<< HEAD
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Avatar,
-  IconButton,
-  Typography,
-  Box,
-  Tooltip,
-  Modal,
-  Divider,
-  Button,
-  TextField,
-=======
   Card, CardHeader, CardMedia, CardContent, CardActions,
   Avatar, IconButton, Typography, styled, Box, Tooltip,
   Modal, Divider, Button, TextField
->>>>>>> Reservas-Salas
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ShareIcon from '@mui/icons-material/Share';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { toast } from 'react-toastify';
 
-<<<<<<< HEAD
-=======
 const ExpandMore = styled(({ expand, ...other }) => (
   <IconButton {...other} />
 ))(({ theme, expand }) => ({
@@ -42,53 +24,26 @@ const ExpandMore = styled(({ expand, ...other }) => (
   }),
 }));
 
->>>>>>> Reservas-Salas
 export default function CardSala({
   usuarioId,
   salaId,
   titulo,
   endereco,
   imagemBase64,
-<<<<<<< HEAD
-  descricao = 'Espaço moderno e equipado para reuniões, treinamentos e workshops.',
-  preco = '250',
-  capacidade = '20',
-  cidade,
-=======
   descricao,
   preco,
   capacidade,
   onFavoritoAlterado
->>>>>>> Reservas-Salas
 }) {
+  const [expanded, setExpanded] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [agendamentoOpen, setAgendamentoOpen] = React.useState(false);
   const [loadingReserva, setLoadingReserva] = React.useState(false);
   const [favorito, setFavorito] = React.useState(false);
 
-<<<<<<< HEAD
-  React.useEffect(() => {
-    const verificarFavorito = async () => {
-      try {
-        const response = await fetch(`https://my-office-web.onrender.com/favoritos/${salaId}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
-          },
-        });
-        const data = await response.json();
-        if (response.ok) setFavorito(data.favoritado);
-      } catch (error) {
-        console.error('Erro ao verificar favorito:', error);
-      }
-    };
-    if (salaId) verificarFavorito();
-  }, [salaId]);
-
-=======
   const token = localStorage.getItem('auth-token');
 
   const handleExpandClick = () => setExpanded(!expanded);
->>>>>>> Reservas-Salas
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
@@ -125,7 +80,10 @@ export default function CardSala({
         body: JSON.stringify({ sala_id: salaId }),
       });
 
-      if (!response.ok) throw new Error('Erro ao atualizar favorito');
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar favorito');
+      }
+
       setFavorito(!favorito);
 
       if (!favorito) {
@@ -144,18 +102,6 @@ export default function CardSala({
     }
   };
 
-<<<<<<< HEAD
-  const handleAgendamentoSubmit = async (e) => {
-    e.preventDefault();
-    const dataForm = new FormData(e.currentTarget);
-    const reserva = {
-      usuario_id: usuarioId,
-      sala_id: salaId,
-      data: dataForm.get('data'),
-    };
-
-    if (!reserva.data) {
-=======
   React.useEffect(() => {
     const verificarFavorito = async () => {
       try {
@@ -183,7 +129,6 @@ export default function CardSala({
     const dataReserva = dataForm.get('data');
 
     if (!dataReserva) {
->>>>>>> Reservas-Salas
       alert('Por favor, selecione uma data para a reserva.');
       return;
     }
@@ -221,9 +166,6 @@ export default function CardSala({
   };
 
   return (
-<<<<<<< HEAD
-    <Card sx={{ width: 400, height: 440, borderRadius: 3, boxShadow: 4 }}>
-=======
     <Card sx={{
       maxWidth: 360,
       borderRadius: 3,
@@ -231,27 +173,9 @@ export default function CardSala({
       transition: 'transform 0.3s',
       '&:hover': { transform: 'scale(1.03)', boxShadow: 6 },
     }}>
->>>>>>> Reservas-Salas
       <CardHeader
         avatar={<Avatar sx={{ bgcolor: red[500] }}>{titulo.charAt(0)}</Avatar>}
         title={<Typography variant="h6" noWrap>{titulo}</Typography>}
-<<<<<<< HEAD
- subheader={
-    <Box display="flex" flexDirection="column">
-      <Box display="flex" alignItems="center" gap={0.5}>
-        <LocationOnIcon fontSize="small" color="action" />
-        <Typography variant="body2" color="text.secondary" title={endereco}>
-          {endereco}
-        </Typography>
-      </Box>
-      <Typography variant="body2" color="text.secondary" sx={{ pl: 3 }}>
-        {cidade}
-      </Typography>
-    </Box>
-  }
-/>
-
-=======
         subheader={
           <Box display="flex" alignItems="center" gap={0.5}>
             <LocationOnIcon fontSize="small" color="action" />
@@ -261,16 +185,15 @@ export default function CardSala({
           </Box>
         }
       />
->>>>>>> Reservas-Salas
       <CardMedia
         component="img"
-        height="200"
+        height="180"
         image={imagemBase64}
         alt={titulo}
-        sx={{ objectFit: 'cover', cursor: 'pointer' }}
+        sx={{ cursor: 'pointer', objectFit: 'cover' }}
         onClick={handleModalOpen}
       />
-      <CardContent sx={{ height: 110, overflow: 'hidden' }}>
+      <CardContent>
         <Box display="flex" justifyContent="space-between" mb={1}>
           <Tooltip title="Preço por diária">
             <Box display="flex" alignItems="center" gap={0.5}>
@@ -289,8 +212,8 @@ export default function CardSala({
           variant="body2"
           color="text.secondary"
           sx={{
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
+            display: expanded ? 'block' : '-webkit-box',
+            WebkitLineClamp: expanded ? 'none' : 2,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -299,17 +222,12 @@ export default function CardSala({
           {descricao}
         </Typography>
       </CardContent>
-<<<<<<< HEAD
-      <CardActions sx={{ height: 3, px: 1, justifyContent: 'space-around' }}>
-        <IconButton aria-label="favoritar" onClick={handleToggleFavorito} color={favorito ? 'error' : 'default'}>
-=======
       <CardActions disableSpacing>
         <IconButton
           aria-label="favoritar"
           onClick={handleToggleFavorito}
           color={favorito ? 'error' : 'default'}
         >
->>>>>>> Reservas-Salas
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="compartilhar" onClick={handleCompartilhar}>
@@ -318,26 +236,16 @@ export default function CardSala({
         <IconButton aria-label="whatsapp" onClick={handleWhatsAppClick}>
           <WhatsAppIcon />
         </IconButton>
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label={expanded ? 'mostrar menos' : 'mostrar mais'}
+        >
+          <ExpandMoreIcon />
+        </ExpandMore>
       </CardActions>
 
-<<<<<<< HEAD
-      {/* Modal de detalhes da sala */}
-      <Modal open={modalOpen} onClose={handleModalClose}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: { xs: '90vw', sm: 600 },
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            borderRadius: 2,
-            p: 3,
-            outline: 'none',
-          }}
-        >
-=======
       {/* Modal Detalhes */}
       <Modal open={modalOpen} onClose={handleModalClose}>
         <Box sx={{
@@ -354,14 +262,13 @@ export default function CardSala({
           overflowY: 'auto',
           outline: 'none',
         }}>
->>>>>>> Reservas-Salas
           <Typography variant="h5" mb={2}>{titulo}</Typography>
           <Box component="img" src={imagemBase64} alt={titulo} sx={{
             width: '100%', maxHeight: 300, objectFit: 'cover', borderRadius: 2, mb: 2,
           }} />
           <Box display="flex" alignItems="center" gap={1} mb={1}>
             <LocationOnIcon color="action" />
-            <Typography>{endereco} - {cidade}</Typography>
+            <Typography>{endereco}</Typography>
           </Box>
           <Divider sx={{ mb: 2 }} />
           <Box display="flex" justifyContent="space-between" mb={2}>
@@ -388,30 +295,6 @@ export default function CardSala({
         </Box>
       </Modal>
 
-<<<<<<< HEAD
-      {/* Modal de agendamento */}
-      <Modal open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)}>
-        <Box
-          component="form"
-          onSubmit={handleAgendamentoSubmit}
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 3,
-            borderRadius: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-          }}
-        >
-          <Typography variant="h6" mb={2}>Agendar Sala</Typography>
-          <TextField label="Usuário ID" value={`Usuário ID: ${usuarioId}`} disabled fullWidth />
-=======
       {/* Modal Agendamento */}
       <Modal open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)}>
         <Box component="form" onSubmit={handleAgendamentoSubmit} sx={{
@@ -422,7 +305,6 @@ export default function CardSala({
           display: 'flex', flexDirection: 'column', gap: 2,
         }}>
           <Typography variant="h6" mb={2}>Reservar Sala</Typography>
->>>>>>> Reservas-Salas
           <TextField
             label="Data da reserva"
             name="data"

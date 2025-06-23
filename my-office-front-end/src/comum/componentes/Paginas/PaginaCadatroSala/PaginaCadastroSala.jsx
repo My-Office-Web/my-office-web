@@ -6,22 +6,19 @@ import {
   DialogActions,
   TextField,
   Button,
+  Typography,
+  Box,
   Grid,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  Box,
 } from "@mui/material";
 import { UploadFile } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import ValidarCadastroSala from "../../../../classes/ValidarInputsSala/validarCadastroSala";
 import axios from "axios";
-<<<<<<< HEAD
-import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
-=======
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao"; // ✅ NOVO: importação do serviço de autenticação
->>>>>>> Reservas-Salas
 
 export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
@@ -128,11 +125,7 @@ export default function ModalCadastroSala({ open, onClose }) {
       const USUARIO = instanciaAutenticacao.obterUsuario();
       console.log(USUARIO);
 
-<<<<<<< HEAD
-      await axios.post(
-=======
       const response = await axios.post(
->>>>>>> Reservas-Salas
         "https://my-office-web.onrender.com/salas",
         {
           ...form,
@@ -162,49 +155,13 @@ export default function ModalCadastroSala({ open, onClose }) {
   };
 
   return (
-<<<<<<< HEAD
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-      PaperProps={{
-        sx: {
-          maxHeight: "90vh",
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-        },
-      }}
-    >
-      <DialogTitle
-        sx={{
-          textAlign: "center",
-          fontWeight: "bold",
-          fontSize: "1.5rem",
-          mb: 2,
-          color: "#1976d3",
-          flexShrink: 0,
-        }}
-      >
-        Cadastre sua Sala
-=======
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle
         sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}
       >
         Cadastro de Sala
->>>>>>> Reservas-Salas
       </DialogTitle>
-
-      <DialogContent
-        dividers
-        sx={{
-          overflowY: "auto",
-          maxHeight: "calc(90vh - 130px)",
-          flexGrow: 1,
-        }}
-      >
+      <DialogContent dividers>
         <Grid container spacing={2}>
           {[
             ["cep", "CEP"],
@@ -259,6 +216,9 @@ export default function ModalCadastroSala({ open, onClose }) {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
+            <Typography variant="body1" fontWeight={500} gutterBottom>
+              Imagem da Sala
+            </Typography>
             <Button
               variant="outlined"
               component="label"
@@ -274,42 +234,28 @@ export default function ModalCadastroSala({ open, onClose }) {
               />
             </Button>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-          >
+          <Grid item xs={12} sm={6}>
             {preview && (
-              <Box
-                sx={{
-                  width: "100%",
-                  maxWidth: 400,
-                  height: 200,
-                  overflow: "hidden",
-                  borderRadius: 2,
-                }}
-              >
+              <Box>
+                <Typography variant="body2" mb={1}>
+                  Preview da Imagem
+                </Typography>
                 <img
                   src={preview}
                   alt="Preview"
                   style={{
                     width: "100%",
-                    height: "100%",
+                    height: 200,
                     objectFit: "cover",
-                    display: "block",
+                    borderRadius: 12,
                   }}
-                  draggable={false}
                 />
               </Box>
             )}
           </Grid>
         </Grid>
       </DialogContent>
-
-      <DialogActions
-        sx={{ justifyContent: "space-between", px: 3, py: 2, flexShrink: 0 }}
-      >
+      <DialogActions sx={{ justifyContent: "space-between", px: 3, py: 2 }}>
         <Button onClick={handleCancelar} color="secondary" variant="outlined">
           Cancelar
         </Button>

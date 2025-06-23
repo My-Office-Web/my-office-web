@@ -31,7 +31,7 @@ export default function ModalCadastro({ open, onClose, toggleModalLogin }) {
       return;
     }
     try {
-      const response = await fetch('https://my-office-web.onrender.com/usuarios', {
+      const response = await fetch('http://localhost:3000/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({...form}),

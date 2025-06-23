@@ -35,7 +35,7 @@ const ModalFavoritos = ({ open, onClose }) => {
     setCarregando(true);
 
     axios
-      .get("https://my-office-web.onrender.com/favoritos", {
+      .get("http://localhost:3000/favoritos", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setFavoritos(res.data))
@@ -54,7 +54,7 @@ const ModalFavoritos = ({ open, onClose }) => {
     if (!token) return;
 
     axios
-      .delete("https://my-office-web.onrender.com/favoritos", {
+      .delete("http://localhost:3000/favoritos", {
         headers: { Authorization: `Bearer ${token}` },
         data: { sala_id }, // corpo da requisição DELETE
       })

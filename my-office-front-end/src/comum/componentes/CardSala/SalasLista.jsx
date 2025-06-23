@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Typography, Box, Container } from '@mui/material';
 import CardSala from './CardSala';
-import SkeletonCardSala from './SkeletonCardSala'; 
+import SkeletonCardSala from './SkeletonCardSala';
+import ServicoAutenticacao from '../../servicos/ServicoAutenticacao';
 
 const normalizarTexto = (texto) =>
   texto
@@ -15,11 +16,14 @@ export default function SalasLista({ filtros }) {
   const [filtrando, setFiltrando] = useState(false);
   const [salasFiltradas, setSalasFiltradas] = useState([]);
 
+  const auth = new ServicoAutenticacao();
+  const usuarioLogado = auth.obterUsuario();
+
   // Carregamento inicial das salas
   useEffect(() => {
     const fetchSalas = async () => {
       try {
-        const response = await fetch('https://my-office-web.onrender.com/salas');
+        const response = await fetch('http://localhost:3000/salas');
         const data = await response.json();
         setSalas(data);
       } catch (error) {
@@ -89,7 +93,7 @@ export default function SalasLista({ filtros }) {
       </Box>
     );
   }
-
+  
   // Nenhuma sala encontrada
   if (salasFiltradas.length === 0) {
     return (
@@ -98,27 +102,30 @@ export default function SalasLista({ filtros }) {
       </Typography>
     );
   }
-
+  
   // Resultado final
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Container sx={{ py: 4, textAlign: 'center' }} maxWidth="">
-  <Typography variant="h4" gutterBottom>
-    Lista de Salas
-  </Typography> 
-</Container>
+      <Container sx={{ py: 4, textAlign: 'center' }}>
+        <Typography variant="h4" gutterBottom>
+          Lista de Salas
+        </Typography>
+      </Container>
 
       <Grid container spacing={10} justifyContent="center">
         {salasFiltradas.map((sala) => (
           <Grid item xs={12} sm={6} md={4} key={sala.id}>
             <CardSala
+              usuarioId={usuarioLogado?.id} // <-- ID do usuário logado
+              salaId={sala.id_sala}               // <-- ID da sala
               titulo={`Sala ${sala.tipo}`}
               endereco={`${sala.rua}, ${sala.numero} - ${sala.bairro}, ${sala.cidade} - ${sala.estado}`}
               preco={sala.preco}
+              
               capacidade={sala.capacidade}
               descricao={sala.descricao}
               imagemBase64={sala.imagem}
-            />
+              />
           </Grid>
         ))}
       </Grid>

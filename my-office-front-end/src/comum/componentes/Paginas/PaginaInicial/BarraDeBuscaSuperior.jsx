@@ -25,7 +25,7 @@ export default function FiltroImoveis({ local, tipo, setLocal, setTipo, onBuscar
   useEffect(() => {
     const fetchLocais = async () => {
       try {
-        const response = await fetch('https://my-office-web.onrender.com/salas');
+        const response = await fetch('http://localhost:3000/salas');
         const data = await response.json();
 
         const locais = new Set();

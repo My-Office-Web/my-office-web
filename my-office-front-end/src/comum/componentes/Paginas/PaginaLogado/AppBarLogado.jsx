@@ -25,6 +25,7 @@ import PaginaPerfilUsuario from "../../Perfil/Perfil";
 import ModalFavoritos from "../../Favoritos/Favoritos";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import { useNavigate } from "react-router-dom";
+import ModalReservas from "../../ReservasSalas/ReservasSalas";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
@@ -35,6 +36,7 @@ export default function AppBarLogado() {
   const [openModalMinhasSalas, setOpenModalMinhasSalas] = useState(false);
   const [openModalPerfil, setOpenModalPerfil] = useState(false);
   const [openFavoritos, setOpenFavoritos] = useState(false);
+  const [openModalReservas, setOpenModalReservas] = useState(false);
 
   const navigate = useNavigate();
 
@@ -116,8 +118,9 @@ export default function AppBarLogado() {
               </Typography>
             </IconButton>
 
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
-              <EventIcon />
+            <IconButton color="inherit" sx={{ marginLeft: 2 }}
+            onClick={() => setOpenModalReservas(true)}>
+              <EventIcon  />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
                 Reservas
               </Typography>
@@ -209,6 +212,8 @@ export default function AppBarLogado() {
         open={openFavoritos}
         onClose={() => setOpenFavoritos(false)}
       />
+
+      <ModalReservas open={openModalReservas} onClose={() => setOpenModalReservas(false)} />
     </Box>
   );
 }

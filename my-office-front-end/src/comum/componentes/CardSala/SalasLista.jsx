@@ -103,7 +103,6 @@ export default function SalasLista({ filtros }) {
     );
   }
   
-  // Resultado final
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Container sx={{ py: 4, textAlign: 'center' }}>

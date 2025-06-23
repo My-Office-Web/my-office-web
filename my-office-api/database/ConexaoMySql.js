@@ -18,6 +18,14 @@ const db = mysql.createConnection({
       console.error('Erro ao conectar no MySQL:', err);
       process.exit(1);
     }
+    db.query("SET time_zone = '-03:00'", (err2) => {
+      if (err2) {
+        console.error('Erro ao definir fuso horário:', err2);
+        process.exit(1);
+      } else {
+        console.log('Fuso horário definido para -03:00');
+      }
+    });  
     console.log('Conectado ao MySQL!');
   });
 

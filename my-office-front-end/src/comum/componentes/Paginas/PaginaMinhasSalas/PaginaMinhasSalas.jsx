@@ -146,6 +146,9 @@ export default function ModalMinhasSalas({ open, onClose }) {
                       <Typography variant="h6" fontWeight="bold" color="grey">
                         Sala {sala.id_sala}
                       </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {sala.bairro} - {sala.cidade}/{sala.estado}
+                      </Typography>
 
                       <Box
                         sx={{

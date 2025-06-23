@@ -300,7 +300,7 @@ export default function CardSala({
                 fontWeight: 'bold',
               }}
             >
-              Agendar
+              Reservar
             </Button>
           </Box>
         </Box>

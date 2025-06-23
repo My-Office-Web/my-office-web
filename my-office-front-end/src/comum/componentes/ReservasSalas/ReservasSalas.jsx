@@ -13,11 +13,13 @@ import {
   CardActions,
   IconButton,
   Chip,
+  Stack,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ServicoAutenticacao from '../../servicos/ServicoAutenticacao';
@@ -27,7 +29,7 @@ export default function ModalReservas({ open, onClose }) {
   const [loading, setLoading] = useState(false);
   const [editandoId, setEditandoId] = useState(null);
   const [novaData, setNovaData] = useState('');
-  const [idParaExcluir, setIdParaExcluir] = useState(null); // <- Controle do modal de confirmação
+  const [idParaExcluir, setIdParaExcluir] = useState(null);
 
   const buscarReservas = async () => {
     setLoading(true);
@@ -85,7 +87,8 @@ export default function ModalReservas({ open, onClose }) {
       toast.success('Reserva atualizada com sucesso.');
       setReservas((prev) =>
         prev.map((r) => (r.id === id ? { ...r, data: novaData } : r))
-      );
+    );
+    await buscarReservas();
       setEditandoId(null);
     } catch (error) {
       console.error('Erro ao atualizar reserva:', error);
@@ -117,7 +120,7 @@ export default function ModalReservas({ open, onClose }) {
       const mensagem = error.response?.data?.error || 'Erro ao excluir reserva.';
       toast.error(mensagem);
     } finally {
-      setIdParaExcluir(null); // Fecha o modal de confirmação
+      setIdParaExcluir(null);
     }
   };
 
@@ -131,7 +134,7 @@ export default function ModalReservas({ open, onClose }) {
               <CircularProgress />
             </Box>
           ) : reservas.length === 0 ? (
-            <Typography variant="body1" align="center">
+            <Typography variant="body1" align="center" color="text.secondary">
               Nenhuma reserva encontrada.
             </Typography>
           ) : (
@@ -240,17 +243,46 @@ export default function ModalReservas({ open, onClose }) {
       </Dialog>
 
       {/* Modal de Confirmação de Exclusão */}
-      <Dialog open={Boolean(idParaExcluir)} onClose={() => setIdParaExcluir(null)}>
-        <DialogTitle>Confirmar Exclusão</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Tem certeza que deseja <strong>excluir</strong> esta reserva? Essa ação não pode ser
-            desfeita.
+      <Dialog
+        open={Boolean(idParaExcluir)}
+        onClose={() => setIdParaExcluir(null)}
+        PaperProps={{ sx: { borderRadius: 3, p: 2, maxWidth: 400 } }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            bgcolor: 'error.main',
+            color: 'common.white',
+            p: 1.5,
+            borderRadius: '12px 12px 0 0',
+          }}
+        >
+          <WarningAmberIcon fontSize="large" />
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+            Confirmação de Exclusão
+          </Typography>
+        </Box>
+        <DialogContent sx={{ pt: 3 }}>
+          <Typography variant="body1" color="text.primary" sx={{ mb: 2 }}>
+            Tem certeza que deseja <strong>excluir</strong> esta reserva? Esta ação não poderá ser desfeita.
           </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIdParaExcluir(null)}>Cancelar</Button>
-          <Button onClick={handleConfirmarExclusao} color="error" variant="contained">
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button
+            variant="outlined"
+            onClick={() => setIdParaExcluir(null)}
+            sx={{ borderRadius: 2, minWidth: 100 }}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleConfirmarExclusao}
+            sx={{ borderRadius: 2, minWidth: 100 }}
+          >
             Excluir
           </Button>
         </DialogActions>

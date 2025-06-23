@@ -6,19 +6,18 @@ import {
   DialogActions,
   TextField,
   Button,
-  Typography,
-  Box,
   Grid,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Box,
 } from "@mui/material";
 import { UploadFile } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import ValidarCadastroSala from "../../../../classes/ValidarInputsSala/validarCadastroSala";
 import axios from "axios";
-import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";// ✅ NOVO: importação do serviço de autenticação
+import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 
 export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
@@ -120,12 +119,12 @@ export default function ModalCadastroSala({ open, onClose }) {
     }
 
     try {
-      const instanciaAutenticacao = new ServicoAutenticacao()
-      const token = instanciaAutenticacao.obterToken(); // ✅ NOVO: pega o token do localStorage
-      const USUARIO =  instanciaAutenticacao.obterUsuario()
-    console.log(USUARIO);
-    
-      const response = await axios.post(
+      const instanciaAutenticacao = new ServicoAutenticacao();
+      const token = instanciaAutenticacao.obterToken();
+      const USUARIO = instanciaAutenticacao.obterUsuario();
+      console.log(USUARIO);
+
+      await axios.post(
         "https://my-office-web.onrender.com/salas",
         {
           ...form,
@@ -133,12 +132,11 @@ export default function ModalCadastroSala({ open, onClose }) {
           preco: parseFloat(form.preco),
           capacidade: parseInt(form.capacidade),
           usuario_id: USUARIO.id,
-
         },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // ✅ NOVO: passa o token no header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -156,13 +154,52 @@ export default function ModalCadastroSala({ open, onClose }) {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}>
-        Cadastro de Sala
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          maxHeight: "90vh",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{
+          textAlign: "center",
+          fontWeight: "bold",
+          fontSize: "1.5rem",
+          mb: 2,
+          color: "#1976d3",
+          flexShrink: 0,
+        }}
+      >
+        Cadastre sua Sala
       </DialogTitle>
-      <DialogContent dividers>
+
+      <DialogContent
+        dividers
+        sx={{
+          overflowY: "auto",
+          maxHeight: "calc(90vh - 130px)",
+          flexGrow: 1,
+        }}
+      >
         <Grid container spacing={2}>
-          {[["cep", "CEP"], ["estado", "Estado"], ["cidade", "Cidade"], ["bairro", "Bairro"], ["rua", "Rua"], ["numero", "Número"], ["preco", "Preço (Diária)"], ["capacidade", "Capacidade"]].map(([name, label], i) => (
+          {[
+            ["cep", "CEP"],
+            ["estado", "Estado"],
+            ["cidade", "Cidade"],
+            ["bairro", "Bairro"],
+            ["rua", "Rua"],
+            ["numero", "Número"],
+            ["preco", "Preço (Diária)"],
+            ["capacidade", "Capacidade"],
+          ].map(([name, label], i) => (
             <Grid item xs={12} sm={6} key={i}>
               <TextField
                 name={name}
@@ -206,9 +243,6 @@ export default function ModalCadastroSala({ open, onClose }) {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="body1" fontWeight={500} gutterBottom>
-              Imagem da Sala
-            </Typography>
             <Button
               variant="outlined"
               component="label"
@@ -224,28 +258,42 @@ export default function ModalCadastroSala({ open, onClose }) {
               />
             </Button>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+          >
             {preview && (
-              <Box>
-                <Typography variant="body2" mb={1}>
-                  Preview da Imagem
-                </Typography>
+              <Box
+                sx={{
+                  width: "100%",
+                  maxWidth: 400,
+                  height: 200,
+                  overflow: "hidden",
+                  borderRadius: 2,
+                }}
+              >
                 <img
                   src={preview}
                   alt="Preview"
                   style={{
                     width: "100%",
-                    height: 200,
+                    height: "100%",
                     objectFit: "cover",
-                    borderRadius: 12,
+                    display: "block",
                   }}
+                  draggable={false}
                 />
               </Box>
             )}
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ justifyContent: "space-between", px: 3, py: 2 }}>
+
+      <DialogActions
+        sx={{ justifyContent: "space-between", px: 3, py: 2, flexShrink: 0 }}
+      >
         <Button onClick={handleCancelar} color="secondary" variant="outlined">
           Cancelar
         </Button>

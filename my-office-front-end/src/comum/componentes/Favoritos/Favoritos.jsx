@@ -9,101 +9,115 @@ import {
   Card,
   CardMedia,
   CardContent,
-  CardActions,
-  IconButton,
   Grid,
+  IconButton,
   CircularProgress,
+  Box,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { FaTrash } from "react-icons/fa";
 import ServicoAutenticacao from "../../servicos/ServicoAutenticacao";
 import axios from "axios";
-
-const servicoAutenticacao = new ServicoAutenticacao();
 
 const ModalFavoritos = ({ open, onClose }) => {
   const [favoritos, setFavoritos] = useState([]);
   const [carregando, setCarregando] = useState(false);
 
-  // Pega token e usuário para autenticação
-  const usuario = servicoAutenticacao.obterUsuario();
-  const token = servicoAutenticacao.obterToken();
-
-  // Função para buscar favoritos com dados das salas
-  const carregarFavoritos = () => {
-    if (!token) return;
-
-    setCarregando(true);
-
-    axios
-      .get("https://my-office-web.onrender.com/favoritos", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setFavoritos(res.data))
-      .catch((err) => console.error("Erro ao buscar favoritos", err))
-      .finally(() => setCarregando(false));
-  };
+  const autenticacao = new ServicoAutenticacao();
+  const token = autenticacao.obterToken();
 
   useEffect(() => {
-    if (open) {
-      carregarFavoritos();
-    }
+    if (open) carregarFavoritos();
   }, [open]);
 
-  // Função para remover favorito pelo id da sala
-  const removerFavorito = (sala_id) => {
+  const carregarFavoritos = async () => {
     if (!token) return;
-
-    axios
-      .delete("https://my-office-web.onrender.com/favoritos", {
+    setCarregando(true);
+    try {
+      const res = await axios.get("https://my-office-web.onrender.com/favoritos", {
         headers: { Authorization: `Bearer ${token}` },
-        data: { sala_id }, // corpo da requisição DELETE
-      })
-      .then(() => {
-        setFavoritos((prev) => prev.filter((fav) => fav.id !== sala_id));
-      })
-      .catch((err) => console.error("Erro ao remover favorito", err));
+      });
+      setFavoritos(res.data);
+    } catch (error) {
+      console.error("Erro ao buscar favoritos:", error);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const removerFavorito = async (sala_id) => {
+    try {
+      await axios.delete("https://my-office-web.onrender.com/favoritos", {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { sala_id },
+      });
+      setFavoritos((prev) => prev.filter((fav) => fav.id_sala !== sala_id));
+    } catch (err) {
+      console.error("Erro ao remover favorito", err);
+    }
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
-      <DialogTitle sx={{ fontWeight: "bold" }}>Salas Favoritas</DialogTitle>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+      <DialogTitle
+        sx={{
+          textAlign: "center",
+          fontWeight: "bold",
+          fontSize: "1.5rem",
+          mb: 2,
+          color: "#1976d3",
+        }}
+      >
+        Minhas Salas Favoritas
+      </DialogTitle>
 
       <DialogContent dividers>
         {carregando ? (
-          <CircularProgress />
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </Box>
         ) : favoritos.length === 0 ? (
-          <Typography>Você ainda não tem salas favoritas.</Typography>
+          <Typography variant="body1" align="center">
+            Você ainda não tem salas favoritas.
+          </Typography>
         ) : (
-          <Grid container spacing={3}>
-            {favoritos.map((fav) => (
-              <Grid item xs={12} sm={6} md={4} key={fav.id}>
+          <Grid container spacing={4} justifyContent="center">
+            {favoritos.map((fav, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <Card
-                  sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: 2,
+                    boxShadow: 3,
+                  }}
                 >
                   <CardMedia
                     component="img"
-                    height="160"
                     image={fav.imagem}
-                    alt={fav.tipo}
+                    alt={`Imagem da sala ${fav.tipo}`}
+                    sx={{
+                      width: 400,
+                      height: 200,
+                      objectFit: "cover",
+                    }}
                   />
-                  <CardContent>
-                    <Typography variant="h6">{fav.tipo}</Typography>
+                  <CardContent sx={{ textAlign: "center" }}>
+                    <Typography variant="h6" fontWeight="bold" color="grey">
+                      Sala {fav.id_sala}
+                    </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {fav.cidade} - {fav.estado}
+                      {fav.bairro} - {fav.cidade}/{fav.estado}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       R$ {fav.preco}
                     </Typography>
                   </CardContent>
-                  <CardActions>
-                    <IconButton
-                      color="error"
-                      onClick={() => removerFavorito(fav.id)}
-                      aria-label="Remover favorito"
-                    >
-                      <DeleteIcon />
+                  <Box sx={{ textAlign: "center", pb: 2 }}>
+                    <IconButton color="error" onClick={() => removerFavorito(fav.id_sala)}>
+                      <FaTrash />
                     </IconButton>
-                  </CardActions>
+                  </Box>
                 </Card>
               </Grid>
             ))}
@@ -111,8 +125,8 @@ const ModalFavoritos = ({ open, onClose }) => {
         )}
       </DialogContent>
 
-      <DialogActions>
-        <Button onClick={onClose} variant="contained">
+      <DialogActions sx={{ justifyContent: "center", mt: 2 }}>
+        <Button onClick={onClose} variant="contained" color="primary">
           Fechar
         </Button>
       </DialogActions>

@@ -32,9 +32,8 @@ export default function TemporaryDrawer({ open, toggleDrawer }) {
   };
 
   const menuItemsTop = [
-    { text: "Início", icon: <FaHome />, path: "/novo" },
-    // { text: "Alugar", icon: <FaBuilding />, path: "/alugar" },
-    // { text: "Anunciar", icon: <FaBullhorn />, path: "/anunciar" },
+    { text: "Início", icon: <FaHome />, path: "/" },
+   
   ];
 
   const menuItemsBottom = [

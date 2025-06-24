@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
-  Button, Typography, Grid, CircularProgress
+  Button, Typography, Grid, CircularProgress, Box
 } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -49,39 +49,55 @@ const ModalFavoritos = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
-      <DialogTitle sx={{ fontWeight: "bold" }}>Salas Favoritas</DialogTitle>
-      <DialogContent dividers>
-        {carregando ? (
-          <CircularProgress />
-        ) : favoritos.length === 0 ? (
-          <Typography>Você ainda não tem salas favoritas.</Typography>
-        ) : (
-          <Grid container spacing={3}>
-            {favoritos.map((fav) => (
-              <Grid item xs={12} sm={6} md={4} key={fav.id}>
-                <CardSala
-                  usuarioId={fav.usuario_id}
-                  salaId={fav.id}
-                  titulo={fav.tipo}
-                  endereco={`${fav.rua}, ${fav.numero} - ${fav.bairro}, ${fav.cidade} - ${fav.estado}`}
-                  imagemBase64={fav.imagem}
-                  descricao={fav.descricao}
-                  preco={fav.preco}
-                  capacidade={fav.capacidade}
-                  onFavoritoAlterado={handleFavoritoAlterado} // chama a função que atualiza tudo
-                />
-              </Grid>
-            ))}
+  <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+  <DialogTitle
+    sx={{
+      textAlign: "center",
+      fontWeight: "bold",
+      fontSize: "1.5rem",
+      mb: 2,
+      color: "#1976d3",
+    }}
+  >
+    Salas Favoritas
+  </DialogTitle>
+
+  <DialogContent dividers>
+    {carregando ? (
+      <Box display="flex" justifyContent="center" mt={4}>
+        <CircularProgress />
+      </Box>
+    ) : favoritos.length === 0 ? (
+      <Typography variant="body1" align="center">
+        Você ainda não tem salas favoritas.
+      </Typography>
+    ) : (
+      <Grid container spacing={4} justifyContent="center">
+        {favoritos.map((fav) => (
+          <Grid item xs={12} sm={6} md={4} key={fav.id}>
+            <CardSala
+              usuarioId={fav.usuario_id}
+              salaId={fav.id}
+              titulo={`Sala em ${fav.bairro}`}
+              endereco={`${fav.cidade}/${fav.estado}`}
+              imagemBase64={fav.imagem}
+              descricao={fav.descricao}
+              preco={fav.preco}
+              capacidade={fav.capacidade}
+              onFavoritoAlterado={handleFavoritoAlterado}
+            />
           </Grid>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} variant="contained">
-          Fechar
-        </Button>
-      </DialogActions>
-    </Dialog>
+        ))}
+      </Grid>
+    )}
+  </DialogContent>
+
+  <DialogActions sx={{ justifyContent: "center", mt: 2 }}>
+    <Button onClick={onClose} variant="contained" color="primary">
+      Fechar
+    </Button>
+  </DialogActions>
+</Dialog>
   );
 };
 

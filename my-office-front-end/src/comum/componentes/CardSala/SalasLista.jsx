@@ -86,20 +86,19 @@ export default function SalasLista({ filtros }) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Container sx={{ py: 4, textAlign: 'center' }}>
+      <Container sx={{  textAlign: 'center' }}>
         <Typography variant="h4" gutterBottom>
-          Lista de Salas
         </Typography>
       </Container>
 
-      <Grid container spacing={10} justifyContent="center">
+      <Grid container spacing={4} justifyContent="center">
         {salasFiltradas.map((sala) => (
           <Grid item xs={12} sm={6} md={4} key={sala.id_sala}>
             <CardSala
               usuarioId={usuarioLogado?.id}
               salaId={sala.id_sala}
-              titulo={`Sala ${sala.tipo}`}
-              endereco={`${sala.rua}, ${sala.numero} - ${sala.bairro}, ${sala.cidade} - ${sala.estado}`}
+              titulo={`Sala em ${sala.bairro}`}
+              endereco={` ${sala.cidade}/${sala.estado}`}
               preco={sala.preco}
               capacidade={sala.capacidade}
               descricao={sala.descricao}

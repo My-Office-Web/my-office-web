@@ -33,6 +33,7 @@ export default function CardSala({
   descricao,
   preco,
   capacidade,
+  cidade,
   onFavoritoAlterado
 }) {
   const [expanded, setExpanded] = React.useState(false);
@@ -80,22 +81,17 @@ export default function CardSala({
         body: JSON.stringify({ sala_id: salaId }),
       });
 
-      if (!response.ok) {
-        throw new Error('Erro ao atualizar favorito');
-      }
+      if (!response.ok) throw new Error('Erro ao atualizar favorito');
 
       setFavorito(!favorito);
 
-      if (!favorito) {
-        toast.success('Adicionado à sua lista de favoritos!');
-      } else {
-        toast.info('❌ Removido da sua lista de favoritos.');
-      }
+      toast[!favorito ? 'success' : 'info'](
+        !favorito
+          ? 'Adicionado à sua lista de favoritos!'
+          : '❌ Removido da sua lista de favoritos.'
+      );
 
-      if (onFavoritoAlterado) {
-        onFavoritoAlterado(); // 🔥 Atualiza a lista de favoritos no modal
-      }
-
+      if (onFavoritoAlterado) onFavoritoAlterado();
     } catch (error) {
       console.error('Erro ao favoritar/desfavoritar:', error);
       toast.error('Erro ao atualizar favorito.');
@@ -118,9 +114,7 @@ export default function CardSala({
       }
     };
 
-    if (salaId) {
-      verificarFavorito();
-    }
+    if (salaId) verificarFavorito();
   }, [salaId, token]);
 
   const handleAgendamentoSubmit = async (e) => {
@@ -128,10 +122,7 @@ export default function CardSala({
     const dataForm = new FormData(e.currentTarget);
     const dataReserva = dataForm.get('data');
 
-    if (!dataReserva) {
-      alert('Por favor, selecione uma data para a reserva.');
-      return;
-    }
+    if (!dataReserva) return alert('Por favor, selecione uma data para a reserva.');
 
     setLoadingReserva(true);
 
@@ -166,39 +157,48 @@ export default function CardSala({
   };
 
   return (
-    <Card sx={{
-      maxWidth: 360,
-      borderRadius: 3,
-      boxShadow: 4,
-      transition: 'transform 0.3s',
-      '&:hover': { transform: 'scale(1.03)', boxShadow: 6 },
-    }}>
+    <Card
+      sx={{
+        width: 400,
+        borderRadius: 3,
+        boxShadow: 4,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <CardHeader
-        avatar={<Avatar sx={{ bgcolor: red[500] }}>{titulo.charAt(0)}</Avatar>}
+        avatar={<Avatar sx={{ bgcolor: red[500] }}>S</Avatar>}
         title={<Typography variant="h6" noWrap>{titulo}</Typography>}
         subheader={
-          <Box display="flex" alignItems="center" gap={0.5}>
-            <LocationOnIcon fontSize="small" color="action" />
-            <Typography variant="body2" color="text.secondary" title={endereco}>
-              {endereco}
+          <Box display="flex" flexDirection="column">
+            <Box display="flex" alignItems="center" gap={0.5}>
+              <LocationOnIcon fontSize="small" color="action" />
+              <Typography variant="body2" color="text.secondary" title={endereco}>
+                {endereco}
+              </Typography>
+            </Box>
+            <Typography variant="body2" color="text.secondary" sx={{ pl: 3 }}>
+              {cidade}
             </Typography>
           </Box>
         }
       />
+
       <CardMedia
         component="img"
-        height="180"
+        height="200"
         image={imagemBase64}
         alt={titulo}
-        sx={{ cursor: 'pointer', objectFit: 'cover' }}
+        sx={{ objectFit: 'cover', cursor: 'pointer' }}
         onClick={handleModalOpen}
       />
-      <CardContent>
+
+      <CardContent sx={{ minHeight: 110, pb: 0.5 }}>
         <Box display="flex" justifyContent="space-between" mb={1}>
           <Tooltip title="Preço por diária">
             <Box display="flex" alignItems="center" gap={0.5}>
               <AttachMoneyIcon sx={{ color: 'success.main' }} />
-              <Typography fontWeight={600}>R$ {preco}</Typography>
+              <Typography fontWeight={600}>{preco}</Typography>
             </Box>
           </Tooltip>
           <Tooltip title="Capacidade">
@@ -208,21 +208,48 @@ export default function CardSala({
             </Box>
           </Tooltip>
         </Box>
+
         <Typography
           variant="body2"
           color="text.secondary"
-          sx={{
-            display: expanded ? 'block' : '-webkit-box',
-            WebkitLineClamp: expanded ? 'none' : 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
+          sx={
+            expanded
+              ? {}
+              : {
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }
+          }
         >
           {descricao}
         </Typography>
+
+        {expanded && (
+          <Box mt={2} textAlign="right">
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => setAgendamentoOpen(true)}
+              sx={{
+                bgcolor: '#FF5A00',
+                color: 'white',
+                '&:hover': { bgcolor: '#e64a00' },
+                fontWeight: 'bold',
+                borderRadius: 999,
+                px: 2,
+                py: 1,
+              }}
+            >
+              Reservar
+            </Button>
+          </Box>
+        )}
       </CardContent>
-      <CardActions disableSpacing>
+
+      <CardActions sx={{ px: 1, py: 1, justifyContent: 'center', gap: 1.5 }}>
         <IconButton
           aria-label="favoritar"
           onClick={handleToggleFavorito}
@@ -242,11 +269,10 @@ export default function CardSala({
           aria-expanded={expanded}
           aria-label={expanded ? 'mostrar menos' : 'mostrar mais'}
         >
-          <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
 
-      {/* Modal Detalhes */}
+      {/* Modal de Detalhes */}
       <Modal open={modalOpen} onClose={handleModalClose}>
         <Box sx={{
           position: 'absolute',

@@ -31,6 +31,11 @@ export default function ModalReservas({ open, onClose }) {
   const [novaData, setNovaData] = useState('');
   const [idParaExcluir, setIdParaExcluir] = useState(null);
 
+  const formatarDataBrasileira = (dataStr) => {
+    const [ano, mes, dia] = dataStr.split('-');
+    return `${dia}/${mes}/${ano}`;
+  }
+
   const buscarReservas = async () => {
     setLoading(true);
     try {
@@ -197,7 +202,7 @@ export default function ModalReservas({ open, onClose }) {
                         />
                       ) : (
                         <Chip
-                          label={`Data: ${new Date(reserva.data).toLocaleDateString()}`}
+                          label={`Data: ${formatarDataBrasileira(reserva.data)}`}
                           color="primary"
                           variant="outlined"
                           sx={{ mt: 1, width: 'fit-content' }}

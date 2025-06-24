@@ -152,7 +152,7 @@ export default function CardSala({
       const result = await response.json();
 
       if (response.ok) {
-        toast.success('Reserva criada com sucesso! ID: ' + result.reservaId);
+        toast.success('Reserva criada com sucesso!');
         setAgendamentoOpen(false);
       } else {
         toast.error('Erro: ' + (result.error || 'Não foi possível criar a reserva.'));

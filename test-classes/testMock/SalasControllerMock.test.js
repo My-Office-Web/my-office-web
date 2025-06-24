@@ -1,6 +1,6 @@
 const SalasController = require('../classes/classes-api-test/SalasController');
 const { db } = require('../database/fakeDbQuery');
-// const { db} = require('../database/fakeDbQuery');
+
 
 jest.mock('../database/fakeDbQuery', () => ({
   db: {

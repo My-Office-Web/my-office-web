@@ -1,5 +1,3 @@
-
-
 const ReservaSalas = require('../classes/classes-api-test/ReservaSalas');
 const { db} = require('../database/fakeDbQuery');
 // ReservaSalasMock.test.js

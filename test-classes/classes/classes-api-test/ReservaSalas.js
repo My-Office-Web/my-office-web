@@ -14,7 +14,6 @@ class ReservaSalas {
       const queryCheck = 'SELECT * FROM reservas WHERE sala_id = ? AND data = ?';
       this.db.query(queryCheck, [sala_id, data], (err, results) => {
         if (err) {
-          console.error('Erro ao verificar reserva:', err);
           return res.status(500).json({ error: 'Erro interno do servidor.' });
         }
   
@@ -25,7 +24,6 @@ class ReservaSalas {
         const queryInsert = 'INSERT INTO reservas (usuario_id, sala_id, data) VALUES (?, ?, ?)';
         this.db.query(queryInsert, [usuario_id, sala_id, data], (err2, results2) => {
           if (err2) {
-            console.error('Erro ao criar reserva:', err2);
             return res.status(500).json({ error: 'Erro ao salvar reserva.' });
           }
   
@@ -46,7 +44,6 @@ class ReservaSalas {
   
       this.db.query(query, (err, results) => {
         if (err) {
-          console.error('Erro ao listar reservas:', err);
           return res.status(500).json({ error: 'Erro ao buscar reservas.' });
         }
   

@@ -46,7 +46,6 @@ class SalasController {
       ],
       (err, results) => {
         if (err) {
-          console.error(err);
           return res.status(500).json({ error: "Erro ao salvar a sala" });
         }
         res.status(201).json({ id: results.insertId });
@@ -124,7 +123,6 @@ class SalasController {
       ],
       (err, results) => {
         if (err) {
-          console.error(err);
           return res.status(500).json({ error: "Erro ao atualizar a sala" });
         }
         if (results.affectedRows === 0) {
@@ -144,7 +142,6 @@ class SalasController {
 
     this.db.query(query, [id, usuario_id], (err, results) => {
       if (err) {
-        console.error("Erro ao excluir sala:", err);
         return res.status(500).json({ error: "Erro ao excluir sala" });
       }
 

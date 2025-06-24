@@ -3,7 +3,15 @@
     "jest": "^30.0.2"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:favotitos": "jest testMock/FavoritosControllerMock.test.js",
+     "test:Reserva": "jest testMock/ReservaSalasMock.test.js",
+     "test:Salas": "jest testMock/SalasControllerMock.test.js",
+     "test:Usuarios": "jest testMock/UsuariosControllerMock.test.js",
+     
+     "test:Cadastro": "jest test/validarCadastro.test.js",
+     "test:CadastroSala": "jest test/validarCadastroSala.test.js",
+     "test:Login": "jest test/validarLogin.test.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0"

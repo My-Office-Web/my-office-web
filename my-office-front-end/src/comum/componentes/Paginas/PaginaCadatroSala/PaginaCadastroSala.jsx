@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -18,26 +18,19 @@ import { UploadFile } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import ValidarCadastroSala from "../../../../classes/ValidarInputsSala/validarCadastroSala";
 import axios from "axios";
-import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao"; // ✅ NOVO: importação do serviço de autenticação
+import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+import { SalasContext } from "../../SalasContext/SalasContext";
 
 export default function ModalCadastroSala({ open, onClose }) {
   const [preview, setPreview] = useState(null);
   const [tipoSala, setTipoSala] = useState("");
   const [form, setForm] = useState({
-    cep: "",
-    estado: "",
-    cidade: "",
-    bairro: "",
-    rua: "",
-    numero: "",
-    telefone: "",
-    preco: "",
-    capacidade: "",
-    descricao: "",
-    imagem: "",
-    latitude: "",
-    longitude: "",
+    cep: "", estado: "", cidade: "", bairro: "", rua: "", numero: "",
+    telefone: "", preco: "", capacidade: "", descricao: "", imagem: "",
+    latitude: "", longitude: ""
   });
+
+  const { refreshSalas } = useContext(SalasContext);
 
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -89,24 +82,18 @@ export default function ModalCadastroSala({ open, onClose }) {
     }
   };
 
-  const handleCancelar = () => {
+  const resetarFormulario = () => {
     setForm({
-      cep: "",
-      estado: "",
-      cidade: "",
-      bairro: "",
-      rua: "",
-      numero: "",
-      telefone: "",
-      preco: "",
-      capacidade: "",
-      descricao: "",
-      imagem: "",
-      latitude: "",
-      longitude: "",
+      cep: "", estado: "", cidade: "", bairro: "", rua: "", numero: "",
+      telefone: "", preco: "", capacidade: "", descricao: "", imagem: "",
+      latitude: "", longitude: ""
     });
     setTipoSala("");
     setPreview(null);
+  };
+
+  const handleCancelar = () => {
+    resetarFormulario();
     onClose();
   };
 
@@ -123,9 +110,8 @@ export default function ModalCadastroSala({ open, onClose }) {
       const instanciaAutenticacao = new ServicoAutenticacao();
       const token = instanciaAutenticacao.obterToken();
       const USUARIO = instanciaAutenticacao.obterUsuario();
-      console.log(USUARIO);
 
-      const response = await axios.post(
+      await axios.post(
         "https://my-office-web.onrender.com/salas",
         {
           ...form,
@@ -143,11 +129,9 @@ export default function ModalCadastroSala({ open, onClose }) {
       );
 
       toast.success("Sala cadastrada com sucesso!");
-      setTimeout(() => {
-        onClose();
-        window.location.reload();
-      }, 1000);
-      handleCancelar();
+      await refreshSalas(); // ← Atualiza lista de salas no contexto
+      resetarFormulario();
+      onClose(); // ← Fecha modal após sucesso
     } catch (error) {
       toast.error("Erro ao cadastrar sala.");
       console.error(error);
@@ -163,16 +147,7 @@ export default function ModalCadastroSala({ open, onClose }) {
       </DialogTitle>
       <DialogContent dividers>
         <Grid container spacing={2}>
-          {[
-            ["cep", "CEP"],
-            ["estado", "Estado"],
-            ["cidade", "Cidade"],
-            ["bairro", "Bairro"],
-            ["rua", "Rua"],
-            ["numero", "Número"],
-            ["preco", "Preço (Diária)"],
-            ["capacidade", "Capacidade"],
-          ].map(([name, label], i) => (
+          {[["cep", "CEP"], ["estado", "Estado"], ["cidade", "Cidade"], ["bairro", "Bairro"], ["rua", "Rua"], ["numero", "Número"], ["preco", "Preço (Diária)"], ["capacidade", "Capacidade"]].map(([name, label], i) => (
             <Grid item xs={12} sm={6} key={i}>
               <TextField
                 name={name}
@@ -226,12 +201,7 @@ export default function ModalCadastroSala({ open, onClose }) {
               fullWidth
             >
               Importar Imagem
-              <input
-                hidden
-                accept="image/*"
-                type="file"
-                onChange={handleImageChange}
-              />
+              <input hidden accept="image/*" type="file" onChange={handleImageChange} />
             </Button>
           </Grid>
           <Grid item xs={12} sm={6}>

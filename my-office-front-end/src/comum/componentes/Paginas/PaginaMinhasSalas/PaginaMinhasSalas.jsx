@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -12,16 +12,16 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ModalEdicaoSala from "../PaginaCadatroSala/ModalEdicaoSala";
 import ModalConfirmacaoExclusao from "../PaginaCadatroSala/ModalConfirmacaoExclusao/ModalConfirmacaoExclusao";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { SalasContext } from "../../SalasContext/SalasContext";
 
 export default function ModalMinhasSalas({ open, onClose }) {
-  const [salas, setSalas] = useState([]);
   const [modalEditarAberto, setModalEditarAberto] = useState(false);
   const [salaSelecionada, setSalaSelecionada] = useState(null);
   const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
@@ -31,26 +31,17 @@ export default function ModalMinhasSalas({ open, onClose }) {
   const autenticacao = new ServicoAutenticacao();
   const usuarioLogado = autenticacao.obterUsuario();
 
+  const { salas, refreshSalas } = useContext(SalasContext); // ← usa contexto global
+  const [minhasSalas, setMinhasSalas] = useState([]);
+
   useEffect(() => {
-    if (open) {
-      fetchSalasDoUsuario();
-    }
-  }, [open]);
-
-  const fetchSalasDoUsuario = async () => {
-    try {
-      const response = await axios.get("https://my-office-web.onrender.com/salas");
-
-      const minhasSalas = response.data.filter(
-        (sala) => sala.usuario_id === usuarioLogado?.id
+    if (open && usuarioLogado) {
+      const salasUsuario = salas.filter(
+        (sala) => sala.usuario_id === usuarioLogado.id
       );
-
-      setSalas(minhasSalas);
-    } catch (error) {
-      console.error("Erro ao buscar salas:", error);
-      toast.error("Erro ao buscar suas salas.");
+      setMinhasSalas(salasUsuario);
     }
-  };
+  }, [open, salas, usuarioLogado]);
 
   const handleEditarSala = (sala) => {
     setSalaSelecionada(sala);
@@ -77,7 +68,6 @@ export default function ModalMinhasSalas({ open, onClose }) {
     setLoadingExcluir(true);
     try {
       const token = autenticacao.obterToken();
-
       await axios.delete(
         `https://my-office-web.onrender.com/salas/${salaExcluir.id_sala}`,
         {
@@ -86,12 +76,8 @@ export default function ModalMinhasSalas({ open, onClose }) {
       );
 
       toast.success("Sala excluída com sucesso!");
-      await fetchSalasDoUsuario();
       handleFecharModalExcluir();
-      setTimeout(() => {
-        onClose();
-        window.location.reload();
-      }, 1000);
+      await refreshSalas(); // ← atualiza via contexto
     } catch (error) {
       console.error("Erro ao excluir sala:", error);
       toast.error("Não foi possível excluir a sala. Tente novamente.");
@@ -114,15 +100,16 @@ export default function ModalMinhasSalas({ open, onClose }) {
         >
           Minhas Salas
         </DialogTitle>
+
         <DialogContent dividers>
-          {salas.length === 0 ? (
+          {minhasSalas.length === 0 ? (
             <Typography variant="body1" align="center">
               Nenhuma sala cadastrada ainda.
             </Typography>
           ) : (
             <Grid container spacing={4} justifyContent="center">
-              {salas.map((sala, index) => (
-                <Grid item xs={12} sm={6} key={index}>
+              {minhasSalas.map((sala) => (
+                <Grid item xs={12} sm={6} key={sala.id_sala}>
                   <Card
                     sx={{
                       width: "100%",
@@ -136,11 +123,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
                       component="img"
                       image={sala.imagem}
                       alt={`Imagem da sala ${sala.tipo}`}
-                      sx={{
-                        width: 400,
-                        height: 200,
-                        objectFit: "cover",
-                      }}
+                      sx={{ width: 400, height: 200, objectFit: "cover" }}
                     />
                     <CardContent sx={{ textAlign: "center" }}>
                       <Typography variant="h6" fontWeight="bold" color="grey">
@@ -179,6 +162,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
             </Grid>
           )}
         </DialogContent>
+
         <DialogActions sx={{ justifyContent: "center", mt: 2 }}>
           <Button onClick={onClose} variant="contained" color="primary">
             Fechar

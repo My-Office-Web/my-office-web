@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -19,25 +19,18 @@ import { toast } from "react-toastify";
 import ValidarCadastroSala from "../../../../classes/ValidarInputsSala/validarCadastroSala";
 import axios from "axios";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
+import { SalasContext } from "../../SalasContext/SalasContext";
 
 export default function ModalEdicaoSala({ open, onClose, sala }) {
   const [preview, setPreview] = useState(null);
   const [tipoSala, setTipoSala] = useState("");
   const [form, setForm] = useState({
-    cep: "",
-    estado: "",
-    cidade: "",
-    bairro: "",
-    rua: "",
-    numero: "",
-    telefone: "",
-    preco: "",
-    capacidade: "",
-    descricao: "",
-    imagem: "",
-    latitude: "",
-    longitude: "",
+    cep: "", estado: "", cidade: "", bairro: "", rua: "", numero: "",
+    telefone: "", preco: "", capacidade: "", descricao: "", imagem: "",
+    latitude: "", longitude: ""
   });
+
+  const { refreshSalas } = useContext(SalasContext);
 
   useEffect(() => {
     if (sala) {
@@ -46,27 +39,14 @@ export default function ModalEdicaoSala({ open, onClose, sala }) {
       setPreview(sala.imagem || null);
     } else {
       setForm({
-        cep: "",
-        estado: "",
-        cidade: "",
-        bairro: "",
-        rua: "",
-        numero: "",
-        telefone: "",
-        preco: "",
-        capacidade: "",
-        descricao: "",
-        imagem: "",
-        latitude: "",
-        longitude: "",
+        cep: "", estado: "", cidade: "", bairro: "", rua: "", numero: "",
+        telefone: "", preco: "", capacidade: "", descricao: "", imagem: "",
+        latitude: "", longitude: ""
       });
       setTipoSala("");
       setPreview(null);
     }
   }, [sala]);
-
-  console.log(sala.id_sala);
-  
 
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -84,9 +64,7 @@ export default function ModalEdicaoSala({ open, onClose, sala }) {
         return;
       }
 
-      const resp = await axios.get(
-        `https://brasilapi.com.br/api/cep/v2/${cepSemMascara}`
-      );
+      const resp = await axios.get(`https://brasilapi.com.br/api/cep/v2/${cepSemMascara}`);
 
       setForm((prev) => ({
         ...prev,
@@ -159,10 +137,8 @@ export default function ModalEdicaoSala({ open, onClose, sala }) {
       );
 
       toast.success("Sala editada com sucesso!");
-      setTimeout(() => {
-        onClose();
-        window.location.reload();
-      }, 1000);
+      await refreshSalas(); // ← atualiza dados via contexto
+      onClose(); // fecha modal após sucesso
     } catch (error) {
       toast.error("Erro ao editar sala.");
       console.error(error);
@@ -176,16 +152,7 @@ export default function ModalEdicaoSala({ open, onClose, sala }) {
       </DialogTitle>
       <DialogContent dividers>
         <Grid container spacing={2}>
-          {[
-            ["cep", "CEP"],
-            ["estado", "Estado"],
-            ["cidade", "Cidade"],
-            ["bairro", "Bairro"],
-            ["rua", "Rua"],
-            ["numero", "Número"],
-            ["preco", "Preço (Diária)"],
-            ["capacidade", "Capacidade"],
-          ].map(([name, label], i) => (
+          {[["cep", "CEP"], ["estado", "Estado"], ["cidade", "Cidade"], ["bairro", "Bairro"], ["rua", "Rua"], ["numero", "Número"], ["preco", "Preço (Diária)"], ["capacidade", "Capacidade"]].map(([name, label], i) => (
             <Grid item xs={12} sm={6} key={i}>
               <TextField
                 name={name}

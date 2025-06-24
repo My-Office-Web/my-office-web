@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "jest": "^30.0.2"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0"
+  }
+}

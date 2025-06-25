@@ -32,8 +32,6 @@ const normalizarTexto = (texto) =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 
-// (Imports mantidos)
-
 export default function PaginaDeBuscaComFiltros() {
   const isMobile = useMediaQuery("(max-width:600px)");
 
@@ -181,18 +179,11 @@ export default function PaginaDeBuscaComFiltros() {
           </Button>
         </Box>
         <Container sx={{ py: 1, textAlign: "center" }} maxWidth="">
-          <Typography variant="h4" mb={2}>
-            Resultados
-          </Typography>
-        </Container>
 
+        </Container>
         {(loading || filtrando) && (
-          <Grid
-            container
-            spacing={3}
-            justifyContent="center"
-            sx={{ maxWidth: "1600px", mx: "auto" }}
-          >
+          <Grid container spacing={2} justifyContent="center" sx={{ maxWidth: "1600px", mx: "auto" }}>
+
             {Array.from({ length: 6 }).map((_, i) => (
               <Grid
                 item
@@ -218,26 +209,33 @@ export default function PaginaDeBuscaComFiltros() {
         {!loading && !filtrando && salasFiltradas.length > 0 && (
           <Grid
             container
-            spacing={3}
+            spacing={4}
             justifyContent="center"
             sx={{ maxWidth: "1600px", mx: "auto" }}
           >
             {salasFiltradas.map((sala) => (
- <Grid item xs={12} sm={6} md={3} key={sala.id}>
-            <CardSala
-              titulo={`Sala em ${sala.bairro}`}
-              endereco={`${sala.rua}, ${sala.numero} `}
-              cidade={`${sala.cidade} / ${sala.estado}`}
-              preco={sala.preco}
-              capacidade={sala.capacidade}
-              descricao={sala.descricao}
-              imagemBase64={sala.imagem}
-              salaId={sala.id_sala}
-              usuarioId={sala.usuario_id}
-            />
+              <Grid
+                item
+                xs={12}    // 1 por linha em xs
+                sm={6}     // 2 por linha em sm
+                md={3}     // 4 por linha em md e lg
+                lg={3}
+                key={sala.id}
+
+              >
+                <CardSala
+                  titulo={`Sala em ${sala.bairro}`}
+                  endereco={`${sala.cidade} / ${sala.estado}`}                    
+                  preco={sala.preco}
+                  capacidade={sala.capacidade}
+                  descricao={sala.descricao}
+                  imagemBase64={sala.imagem}
+                  salaId={sala.id_sala}
+                  usuarioId={sala.usuario_id}
+                />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
         )}
 
         <Container sx={{ py: 6 }} maxWidth="">

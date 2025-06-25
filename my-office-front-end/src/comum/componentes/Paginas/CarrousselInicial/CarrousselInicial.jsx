@@ -11,7 +11,7 @@ const CustomCarousel = ({ width = '100%', height = 320, borderRadius = 6 }) => {
       subtitle: 'Só na MyOffice você encontra',
       buttonText: 'Eu quero',
       image: '/reuniao.jpg',
-      bgColor: '#0057ff',
+      bgColor: '#1976d3',
       buttonColor: '#FF5A00',
     },
     {
@@ -19,7 +19,7 @@ const CustomCarousel = ({ width = '100%', height = 320, borderRadius = 6 }) => {
       subtitle: 'Ambientes prontos para receber seu sucesso',
       buttonText: 'Encontre agora',
       image: '/sala-vazia.jpg',
-      bgColor: '#0057ff',
+      bgColor: '#1976d3',
       buttonColor: '#FF5A00',
     },
     {
@@ -27,7 +27,7 @@ const CustomCarousel = ({ width = '100%', height = 320, borderRadius = 6 }) => {
       subtitle: 'Locais inspiradores e profissionais com custo acessível',
       buttonText: 'Ver opções',
       image: '/mulher.png',
-      bgColor: '#0057ff',
+      bgColor: '#1976d3',
       buttonColor: '#FF5A00',
     },
   ];

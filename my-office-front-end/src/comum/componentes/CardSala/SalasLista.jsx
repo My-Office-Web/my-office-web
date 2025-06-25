@@ -37,7 +37,6 @@ export default function SalasLista({ filtros }) {
         const cidade = normalizarTexto(sala.cidade);
         const estado = normalizarTexto(sala.estado);
         const rua = normalizarTexto(sala.rua);
-        const tipoSala = normalizarTexto(sala.tipo);
 
         const localValido =
           !buscaNormalizada ||
@@ -62,9 +61,6 @@ export default function SalasLista({ filtros }) {
   if (loading || filtrando) {
     return (
       <Box sx={{ width: '100%', mt: 5 }}>
-        <Typography variant="h4" gutterBottom align="center">
-          Carregando Salas...
-        </Typography>
         <Grid container spacing={10} justifyContent="center">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item}>
@@ -86,11 +82,6 @@ export default function SalasLista({ filtros }) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Container sx={{  textAlign: 'center' }}>
-        <Typography variant="h4" gutterBottom>
-        </Typography>
-      </Container>
-
       <Grid container spacing={4} justifyContent="center">
         {salasFiltradas.map((sala) => (
           <Grid item xs={12} sm={6} md={4} key={sala.id_sala}>

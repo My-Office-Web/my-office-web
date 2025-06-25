@@ -46,7 +46,15 @@ const PaginaPerfilUsuario = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle sx={{ fontWeight: "bold" }}>Perfil do Usuário</DialogTitle>
+        <DialogTitle
+          sx={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: "1.5rem",
+            mb: 2,
+            color: "#1976d3",
+          }}
+        >Perfil do Usuário</DialogTitle>
       <DialogContent dividers>
         <Box
           display="flex"

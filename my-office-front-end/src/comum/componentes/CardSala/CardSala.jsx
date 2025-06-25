@@ -308,6 +308,7 @@ export default function CardSala({
             </Box>
           </Box>
           <Typography color="text.secondary" paragraph>{descricao}</Typography>
+
           <Box textAlign="right">
             <Button variant="contained" onClick={() => setAgendamentoOpen(true)}
               sx={{

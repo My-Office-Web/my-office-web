@@ -53,13 +53,13 @@ class UsuariosController {
         [email]
       );
       if (results.length === 0) {
-        return res.status(401).json({ error: 'Usuário não encontrado' });
+        return res.status(401).json({ error: 'Usuário ou senha incorreta' });
       }
 
       const usuario = results[0];
       const senhaValida = await bcrypt.compare(senha, usuario.senha);
       if (!senhaValida) {
-        return res.status(401).json({ error: 'Senha incorreta' });
+        return res.status(401).json({ error: 'Usuário ou senha incorreta' });
       }
 
       const token = jwt.sign(

@@ -109,7 +109,7 @@ describe('UsuariosController', () => {
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Usuário não encontrado'
+        error: 'Usuário ou senha incorreta'
       });
     });
 
@@ -134,7 +134,7 @@ describe('UsuariosController', () => {
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Senha incorreta'
+        error: 'Usuário ou senha incorreta'
       });
     });
   });

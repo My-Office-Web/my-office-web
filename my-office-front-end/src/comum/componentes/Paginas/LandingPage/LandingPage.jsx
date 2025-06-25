@@ -162,94 +162,93 @@ export default function LandingPage() {
         </Container>
       </Box>
 
-{/* DEPOIMENTOS */}
-<Box sx={{ bgcolor: isDark ? theme.palette.background.paper : '#fdfcff', py: 12 }}>
-  <Container>
-    <Typography variant="h4" fontWeight={700} textAlign="center" sx={{ mb: 8, color: isDark ? '#fff' : '#1976d3' }}>
-      O que nossos clientes dizem
-    </Typography>
-    <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={8000} emulateTouch swipeable stopOnHover dynamicHeight={false} showArrows>
-      {testimonials.map((depo, i) => (
-        <Box
-          key={i}
-          sx={{
-            textAlign: 'center',
-            px: { xs: 2, md: 12 },
-            py: 6,
-            maxWidth: 720,
-            mx: 'auto',
-            bgcolor: isDark ? theme.palette.grey[800] : 'white',
-            borderRadius: 6,
-            boxShadow: isDark
-              ? '0 10px 30px rgba(255,255,255,0.1)'
-              : '0 10px 30px rgba(108,99,255,0.12)',
-            userSelect: 'none',
-          }}
-        >
-          <Avatar
-            src={depo.avatar}
-            sx={{
-              width: 80,
-              height: 80,
-              mx: 'auto',
-              mb: 3,
-              border: `3px solid ${isDark ? theme.palette.primary.light : '#6C63FF'}`,
-            }}
-          />
-          <Typography
-            variant="body1"
-            fontStyle="italic"
-            sx={{ mb: 3, fontSize: '1.1rem', color: isDark ? theme.palette.grey[300] : '#555' }}
-          >
-            “{depo.text}”
+      {/* DEPOIMENTOS */}
+      <Box sx={{ bgcolor: isDark ? theme.palette.background.paper : '#fdfcff', py: 12 }}>
+        <Container>
+          <Typography variant="h4" fontWeight={700} textAlign="center" sx={{ mb: 8, color: isDark ? '#fff' : '#1976d3' }}>
+            O que nossos clientes dizem
           </Typography>
-          <Typography variant="subtitle1" fontWeight={600} sx={{ color: isDark ? '#fff' : '#1976d3' }}>
-            {depo.name}
+          <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={8000} emulateTouch swipeable stopOnHover dynamicHeight={false} showArrows>
+            {testimonials.map((depo, i) => (
+              <Box
+                key={i}
+                sx={{
+                  textAlign: 'center',
+                  px: { xs: 2, md: 12 },
+                  py: 6,
+                  maxWidth: 720,
+                  mx: 'auto',
+                  bgcolor: isDark ? theme.palette.grey[800] : 'white',
+                  borderRadius: 6,
+                  boxShadow: isDark
+                    ? '0 10px 30px rgba(255,255,255,0.1)'
+                    : '0 10px 30px rgba(108,99,255,0.12)',
+                  userSelect: 'none',
+                }}
+              >
+                <Avatar
+                  src={depo.avatar}
+                  sx={{
+                    width: 80,
+                    height: 80,
+                    mx: 'auto',
+                    mb: 3,
+                    border: `3px solid ${isDark ? theme.palette.primary.light : '#6C63FF'}`,
+                  }}
+                />
+                <Typography
+                  variant="body1"
+                  fontStyle="italic"
+                  sx={{ mb: 3, fontSize: '1.1rem', color: isDark ? theme.palette.grey[300] : '#555' }}
+                >
+                  “{depo.text}”
+                </Typography>
+                <Typography variant="subtitle1" fontWeight={600} sx={{ color: isDark ? '#fff' : '#1976d3' }}>
+                  {depo.name}
+                </Typography>
+              </Box>
+            ))}
+          </Carousel>
+        </Container>
+      </Box>
+
+      {/* FAQ */}
+      <Box sx={{ py: 12, bgcolor: isDark ? theme.palette.background.default : '#f4f6ff' }}>
+        <Container maxWidth="md">
+          <Typography variant="h4" fontWeight={700} textAlign="center" sx={{ mb: 8, color: isDark ? '#fff' : '#1976d3' }}>
+            Dúvidas Frequentes
           </Typography>
-        </Box>
-      ))}
-    </Carousel>
-  </Container>
-</Box>
-
-{/* FAQ */}
-<Box sx={{ py: 12, bgcolor: isDark ? theme.palette.background.default : '#f4f6ff' }}>
-  <Container maxWidth="md">
-    <Typography variant="h4" fontWeight={700} textAlign="center" sx={{ mb: 8, color: isDark ? '#fff' : '#1976d3' }}>
-      Dúvidas Frequentes
-    </Typography>
-    {faqs.map((faq, i) => (
-      <Accordion
-        key={i}
-        sx={{
-          mb: 4,
-          borderRadius: 3,
-          boxShadow: isDark
-            ? '0 3px 12px rgba(255,255,255,0.06)'
-            : '0 3px 12px rgba(0,0,0,0.06)',
-          '&:hover': {
-            boxShadow: isDark
-              ? '0 6px 20px rgba(255,255,255,0.12)'
-              : '0 6px 20px rgba(108,99,255,0.12)',
-          },
-          bgcolor: isDark ? theme.palette.grey[800] : 'unset',
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ color: '#1976d3' }} />}
-          sx={{ bgcolor: isDark ? theme.palette.grey[900] : '#fff', borderRadius: 3 }}
-        >
-          <Typography sx={{ fontWeight: 600, color: isDark ? '#fff' : '#1976d3' }}>{faq.q}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography sx={{ color: isDark ? theme.palette.grey[300] : '#555' }}>{faq.a}</Typography>
-        </AccordionDetails>
-      </Accordion>
-    ))}
-  </Container>
-</Box>
-
-      {/* CTA FINAL */}
+          {faqs.map((faq, i) => (
+            <Accordion
+              key={i}
+              sx={{
+                mb: 4,
+                borderRadius: 3,
+                boxShadow: isDark
+                  ? '0 3px 12px rgba(255,255,255,0.06)'
+                  : '0 3px 12px rgba(0,0,0,0.06)',
+                '&:hover': {
+                  boxShadow: isDark
+                    ? '0 6px 20px rgba(255,255,255,0.12)'
+                    : '0 6px 20px rgba(108,99,255,0.12)',
+                },
+                bgcolor: isDark ? theme.palette.grey[800] : 'unset',
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon sx={{ color: '#1976d3' }} />}
+                sx={{ bgcolor: isDark ? theme.palette.grey[900] : '#fff', borderRadius: 3 }}
+              >
+                <Typography sx={{ fontWeight: 600, color: isDark ? '#fff' : '#1976d3' }}>{faq.q}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography sx={{ color: isDark ? theme.palette.grey[300] : '#555' }}>{faq.a}</Typography>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Container>
+      </Box>
+  {/* CTA FINAL */}
       <Box sx={{ bgcolor: '#1976d3', py: 10, textAlign: 'center', color: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 32, px: 3 }}>
         <Typography variant="h4" fontWeight="bold" sx={{ mb: 3, letterSpacing: 1 }}>
           Está pronto para transformar seu espaço em lucro?

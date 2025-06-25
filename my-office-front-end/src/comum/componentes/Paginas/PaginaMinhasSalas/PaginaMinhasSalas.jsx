@@ -20,8 +20,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { SalasContext } from "../../SalasContext/SalasContext";
+import { useTheme } from "@mui/material/styles"; // << usa o tema
 
 export default function ModalMinhasSalas({ open, onClose }) {
+  const theme = useTheme(); // << hook para acessar o tema
   const [modalEditarAberto, setModalEditarAberto] = useState(false);
   const [salaSelecionada, setSalaSelecionada] = useState(null);
   const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
@@ -86,20 +88,35 @@ export default function ModalMinhasSalas({ open, onClose }) {
 
   return (
     <>
-      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            backgroundColor: theme.palette.background.paper,
+          },
+        }}
+      >
         <DialogTitle
           sx={{
             textAlign: "center",
             fontWeight: "bold",
             fontSize: "1.5rem",
             mb: 2,
-            color: "#1976d3",
+            color: "#1976d3"
           }}
         >
           Minhas Salas
         </DialogTitle>
 
-        <DialogContent dividers sx={{ bgcolor: "#fafafa" }}>
+        <DialogContent
+          dividers
+          sx={{
+            backgroundColor: theme.palette.background.paper,
+          }}
+        >
           {loadingSalas ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
               <CircularProgress />
@@ -120,6 +137,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
                     p: 2,
                     borderRadius: 3,
                     boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                    backgroundColor: theme.palette.background.default,
                   }}
                 >
                   <Box
@@ -131,7 +149,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
                       height: 130,
                       objectFit: "cover",
                       borderRadius: 2,
-                      bgcolor: "#f0f0f0",
+                      bgcolor: theme.palette.grey[300],
                     }}
                   />
                   <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between">
@@ -143,7 +161,8 @@ export default function ModalMinhasSalas({ open, onClose }) {
                         {`${sala.cidade} - ${sala.estado}`}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Capacidade: {sala.capacidade} pessoas | <strong>R$ {Number(sala.preco).toFixed(2)}</strong>
+                        Capacidade: {sala.capacidade} pessoas |{" "}
+                        <strong>R$ {Number(sala.preco).toFixed(2)}</strong>
                       </Typography>
                       <Typography
                         variant="body2"
@@ -176,12 +195,10 @@ export default function ModalMinhasSalas({ open, onClose }) {
         </DialogActions>
       </Dialog>
 
-      {/* Modal de Edição */}
       {salaSelecionada && (
         <ModalEdicaoSala open={modalEditarAberto} onClose={handleFecharModalEdicao} sala={salaSelecionada} />
       )}
 
-      {/* Modal de Confirmação de Exclusão */}
       {salaExcluir && (
         <ModalConfirmacaoExclusao
           open={modalExcluirAberto}

@@ -11,6 +11,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import HelpIcon from "@mui/icons-material/Help";
@@ -24,7 +25,7 @@ import ModalMinhasSalas from "../PaginaMinhasSalas/PaginaMinhasSalas";
 import PaginaPerfilUsuario from "../../Perfil/Perfil";
 import ModalFavoritos from "../../Favoritos/Favoritos";
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ModalReservas from "../../ReservasSalas/ReservasSalas";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
@@ -39,6 +40,8 @@ export default function AppBarLogado() {
   const [openModalReservas, setOpenModalReservas] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const estaNaPaginaInicial = location.pathname === "/";
 
   const toggleDrawer = (open) => () => {
     setOpenDrawer(open);
@@ -86,10 +89,9 @@ export default function AppBarLogado() {
               <MenuIcon />
             </IconButton>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
-          </Box>
-
+            <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+              <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
+            </Box>
           </Box>
 
           {/* Central Items */}
@@ -101,12 +103,16 @@ export default function AppBarLogado() {
               justifyContent: "center",
             }}
           >
-            <IconButton color="inherit" onClick={() => navigate("/")}>
-              <HomeIcon />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                Início
-              </Typography>
-            </IconButton>
+<IconButton
+  color="inherit"
+  onClick={() => navigate(estaNaPaginaInicial ? "/busca" : "/")}
+>
+  {estaNaPaginaInicial ? <SearchIcon /> : <HomeIcon />}
+  <Typography variant="body2" sx={{ marginLeft: 1 }}>
+    {estaNaPaginaInicial ? "Busca Avançada" : "Início"}
+  </Typography>
+</IconButton>
+
 
             <IconButton
               color="inherit"
@@ -119,9 +125,12 @@ export default function AppBarLogado() {
               </Typography>
             </IconButton>
 
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}
-            onClick={() => setOpenModalReservas(true)}>
-              <EventIcon  />
+            <IconButton
+              color="inherit"
+              sx={{ marginLeft: 2 }}
+              onClick={() => setOpenModalReservas(true)}
+            >
+              <EventIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
                 Reservas
               </Typography>
@@ -214,7 +223,11 @@ export default function AppBarLogado() {
         onClose={() => setOpenFavoritos(false)}
       />
 
-      <ModalReservas open={openModalReservas} onClose={() => setOpenModalReservas(false)} />
+      {/* Modal de Reservas */}
+      <ModalReservas
+        open={openModalReservas}
+        onClose={() => setOpenModalReservas(false)}
+      />
     </Box>
   );
 }

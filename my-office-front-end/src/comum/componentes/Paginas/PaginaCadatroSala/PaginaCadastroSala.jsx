@@ -196,10 +196,7 @@ export default function ModalCadastroSala({ open, onClose }) {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1" fontWeight={500} gutterBottom>
-              Imagem da Sala
-            </Typography>
+          <Grid item xs={12} sm={6}>  
             <Button
               variant="outlined"
               component="label"
@@ -213,9 +210,6 @@ export default function ModalCadastroSala({ open, onClose }) {
           <Grid item xs={12} sm={6}>
             {preview && (
               <Box>
-                <Typography variant="body2" mb={1}>
-                  Preview da Imagem
-                </Typography>
                 <img
                   src={preview}
                   alt="Preview"

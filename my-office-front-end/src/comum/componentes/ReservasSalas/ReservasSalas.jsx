@@ -13,7 +13,6 @@ import {
   CardActions,
   IconButton,
   Chip,
-  Stack,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -23,8 +22,10 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ServicoAutenticacao from '../../servicos/ServicoAutenticacao';
+import { useTheme } from '@mui/material/styles';
 
 export default function ModalReservas({ open, onClose }) {
+  const theme = useTheme();
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editandoId, setEditandoId] = useState(null);
@@ -34,7 +35,7 @@ export default function ModalReservas({ open, onClose }) {
   const formatarDataBrasileira = (dataStr) => {
     const [ano, mes, dia] = dataStr.split('-');
     return `${dia}/${mes}/${ano}`;
-  }
+  };
 
   const buscarReservas = async () => {
     setLoading(true);
@@ -90,15 +91,11 @@ export default function ModalReservas({ open, onClose }) {
       );
 
       toast.success('Reserva atualizada com sucesso.');
-      setReservas((prev) =>
-        prev.map((r) => (r.id === id ? { ...r, data: novaData } : r))
-      );
       await buscarReservas();
       setEditandoId(null);
     } catch (error) {
       console.error('Erro ao atualizar reserva:', error);
-      const mensagem = error.response?.data?.error || 'Erro ao atualizar reserva.';
-      toast.error(mensagem);
+      toast.error(error.response?.data?.error || 'Erro ao atualizar reserva.');
     }
   };
 
@@ -122,8 +119,7 @@ export default function ModalReservas({ open, onClose }) {
       }
     } catch (error) {
       console.error('Erro ao excluir reserva:', error);
-      const mensagem = error.response?.data?.error || 'Erro ao excluir reserva.';
-      toast.error(mensagem);
+      toast.error(error.response?.data?.error || 'Erro ao excluir reserva.');
     } finally {
       setIdParaExcluir(null);
     }
@@ -131,16 +127,28 @@ export default function ModalReservas({ open, onClose }) {
 
   return (
     <>
-      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: { backgroundColor: theme.palette.background.paper },
+        }}
+      >
         <DialogTitle
           sx={{
-            textAlign: "center",
-            fontWeight: "bold",
-            fontSize: "1.5rem",
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: '1.5rem',
             mb: 2,
-            color: "#1976d3",
-          }}>Minhas Reservas</DialogTitle>
-        <DialogContent dividers sx={{ bgcolor: '#fafafa' }}>
+            color: "#1976d3"
+          }}
+        >
+          Minhas Reservas
+        </DialogTitle>
+
+        <DialogContent dividers sx={{ backgroundColor: theme.palette.background.paper }}>
           {loading ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
               <CircularProgress />
@@ -161,6 +169,7 @@ export default function ModalReservas({ open, onClose }) {
                     p: 2,
                     borderRadius: 3,
                     boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                    backgroundColor: theme.palette.background.default,
                   }}
                 >
                   <Box
@@ -172,7 +181,7 @@ export default function ModalReservas({ open, onClose }) {
                       height: 130,
                       objectFit: 'cover',
                       borderRadius: 2,
-                      bgcolor: '#f0f0f0',
+                      bgcolor: theme.palette.grey[300],
                     }}
                   />
                   <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between">
@@ -247,6 +256,7 @@ export default function ModalReservas({ open, onClose }) {
             </Box>
           )}
         </DialogContent>
+
         <DialogActions sx={{ p: 2 }}>
           <Button onClick={onClose} variant="contained" color="primary">
             Fechar
@@ -258,15 +268,22 @@ export default function ModalReservas({ open, onClose }) {
       <Dialog
         open={Boolean(idParaExcluir)}
         onClose={() => setIdParaExcluir(null)}
-        PaperProps={{ sx: { borderRadius: 3, p: 2, maxWidth: 400 } }}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            p: 2,
+            maxWidth: 400,
+            backgroundColor: theme.palette.background.paper,
+          },
+        }}
       >
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             gap: 1,
-            bgcolor: 'error.main',
-            color: 'common.white',
+            bgcolor: theme.palette.error.main,
+            color: theme.palette.common.white,
             p: 1.5,
             borderRadius: '12px 12px 0 0',
           }}

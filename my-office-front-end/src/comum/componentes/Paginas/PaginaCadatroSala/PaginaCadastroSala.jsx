@@ -140,9 +140,15 @@ export default function ModalCadastroSala({ open, onClose }) {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle
-        sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}
-      >
+        <DialogTitle
+          sx={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: "1.5rem",
+            mb: 2,
+            color: "#1976d3",
+          }}
+        >
         Cadastro de Sala
       </DialogTitle>
       <DialogContent dividers>

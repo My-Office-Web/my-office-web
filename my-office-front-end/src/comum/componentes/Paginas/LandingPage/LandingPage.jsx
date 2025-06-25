@@ -28,17 +28,17 @@ const steps = [
 ];
 const benefits = [
   {
-    icon: <WorkspacePremiumIcon sx={{ fontSize: 60, color: '#6C63FF', mb: 2 }} />,
+    icon: <WorkspacePremiumIcon sx={{ fontSize: 60, color: '#1976d3', mb: 2 }} />,
     title: 'Divulgação Premium',
     desc: 'Anúncios segmentados que atingem o público certo em todo o Brasil.',
   },
   {
-    icon: <AttachMoneyIcon sx={{ fontSize: 60, color: '#6C63FF', mb: 2 }} />,
+    icon: <AttachMoneyIcon sx={{ fontSize: 60, color: '#1976d3', mb: 2 }} />,
     title: 'Receita Extra Garantida',
     desc: 'Transforme seu espaço ocioso em uma fonte de renda mensal consistente.',
   },
   {
-    icon: <SecurityIcon sx={{ fontSize: 60, color: '#6C63FF', mb: 2 }} />,
+    icon: <SecurityIcon sx={{ fontSize: 60, color: '#1976d3', mb: 2 }} />,
     title: 'Segurança Total',
     desc: 'Suporte ativo, contratos digitais e pagamentos 100% seguros na plataforma.',
   },
@@ -93,7 +93,7 @@ export default function LandingPage() {
               fontWeight: 600,
               textTransform: 'uppercase',
               letterSpacing: 2,
-              color: isDark ? theme.palette.grey[100] : '#6C63FF',
+              color: isDark ? theme.palette.grey[100] : '#1976d3',
             }}
           >
             Confiado por grandes empresas
@@ -127,7 +127,7 @@ export default function LandingPage() {
       {/* BENEFÍCIOS */}
       <Box sx={{ bgcolor: isDark ? theme.palette.background.paper : '#ffffff', py: 12 }}>
         <Container maxWidth="lg" sx={{ textAlign: 'center' }}>
-          <Typography variant="h4" fontWeight={700} sx={{ mb: 8, color: isDark ? '#fff' : '#303179' }}>
+          <Typography variant="h4" fontWeight={700} sx={{ mb: 8, color: isDark ? '#fff' : '#1976d3' }}>
             Por que anunciar com a My Office?
           </Typography>
           <Grid container spacing={6} justifyContent="center">
@@ -135,7 +135,7 @@ export default function LandingPage() {
               <Grid item xs={12} sm={6} md={4} key={i}>
                 <Paper elevation={3} sx={{ p: 5, borderRadius: '20px', textAlign: 'center', backgroundColor: isDark ? theme.palette.grey[800] : '#fdfcff', transition: 'transform 0.3s ease', '&:hover': { transform: 'translateY(-8px)', boxShadow: isDark ? '0 12px 24px rgba(255,255,255,0.1)' : '0 12px 24px rgba(108,99,255,0.2)' } }}>
                   {b.icon}
-                  <Typography variant="h6" fontWeight={600} sx={{ color: '#6C63FF', mt: 2 }}>{b.title}</Typography>
+                  <Typography variant="h6" fontWeight={600} sx={{ color: '#1976d3', mt: 2 }}>{b.title}</Typography>
                   <Typography variant="body2" sx={{ mt: 1, fontSize: '1rem', color: isDark ? theme.palette.grey[300] : 'text.secondary' }}>{b.desc}</Typography>
                 </Paper>
               </Grid>
@@ -148,12 +148,12 @@ export default function LandingPage() {
       {/* COMO FUNCIONA */}
       <Box sx={{ bgcolor: isDark ? theme.palette.background.default : '#f4f6ff', py: 12 }}>
         <Container maxWidth="lg" sx={{ textAlign: 'center' }}>
-          <Typography variant="h4" fontWeight={700} sx={{ mb: 8, color: isDark ? '#fff' : '#303179' }}>Como funciona?</Typography>
+          <Typography variant="h4" fontWeight={700} sx={{ mb: 8, color: isDark ? '#fff' : '#1976d3' }}>Como funciona?</Typography>
           <Grid container spacing={6} justifyContent="center">
             {steps.map((step, i) => (
               <Grid item xs={12} sm={6} md={4} key={i}>
                 <Paper elevation={2} sx={{ p: 5, borderRadius: '20px', backgroundColor: isDark ? theme.palette.grey[800] : '#fff', transition: 'all 0.3s', '&:hover': { boxShadow: isDark ? '0 10px 30px rgba(255,255,255,0.08)' : '0 10px 30px rgba(108,99,255,0.2)', transform: 'translateY(-6px)' } }}>
-                  <Typography variant="h6" fontWeight={600} sx={{ color: '#6C63FF', mb: 1 }}>{step.title}</Typography>
+                  <Typography variant="h6" fontWeight={600} sx={{ color: '#1976d3', mb: 1 }}>{step.title}</Typography>
                   <Typography variant="body2" sx={{ color: isDark ? theme.palette.grey[300] : 'text.secondary' }}>{step.desc}</Typography>
                 </Paper>
               </Grid>
@@ -165,7 +165,7 @@ export default function LandingPage() {
 {/* DEPOIMENTOS */}
 <Box sx={{ bgcolor: isDark ? theme.palette.background.paper : '#fdfcff', py: 12 }}>
   <Container>
-    <Typography variant="h4" fontWeight={700} textAlign="center" sx={{ mb: 8, color: isDark ? '#fff' : '#303179' }}>
+    <Typography variant="h4" fontWeight={700} textAlign="center" sx={{ mb: 8, color: isDark ? '#fff' : '#1976d3' }}>
       O que nossos clientes dizem
     </Typography>
     <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={8000} emulateTouch swipeable stopOnHover dynamicHeight={false} showArrows>
@@ -203,7 +203,7 @@ export default function LandingPage() {
           >
             “{depo.text}”
           </Typography>
-          <Typography variant="subtitle1" fontWeight={600} sx={{ color: isDark ? '#fff' : '#303179' }}>
+          <Typography variant="subtitle1" fontWeight={600} sx={{ color: isDark ? '#fff' : '#1976d3' }}>
             {depo.name}
           </Typography>
         </Box>
@@ -215,7 +215,7 @@ export default function LandingPage() {
 {/* FAQ */}
 <Box sx={{ py: 12, bgcolor: isDark ? theme.palette.background.default : '#f4f6ff' }}>
   <Container maxWidth="md">
-    <Typography variant="h4" fontWeight={700} textAlign="center" sx={{ mb: 8, color: isDark ? '#fff' : '#303179' }}>
+    <Typography variant="h4" fontWeight={700} textAlign="center" sx={{ mb: 8, color: isDark ? '#fff' : '#1976d3' }}>
       Dúvidas Frequentes
     </Typography>
     {faqs.map((faq, i) => (
@@ -236,10 +236,10 @@ export default function LandingPage() {
         }}
       >
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ color: '#6C63FF' }} />}
+          expandIcon={<ExpandMoreIcon sx={{ color: '#1976d3' }} />}
           sx={{ bgcolor: isDark ? theme.palette.grey[900] : '#fff', borderRadius: 3 }}
         >
-          <Typography sx={{ fontWeight: 600, color: isDark ? '#fff' : '#303179' }}>{faq.q}</Typography>
+          <Typography sx={{ fontWeight: 600, color: isDark ? '#fff' : '#1976d3' }}>{faq.q}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography sx={{ color: isDark ? theme.palette.grey[300] : '#555' }}>{faq.a}</Typography>
@@ -250,7 +250,7 @@ export default function LandingPage() {
 </Box>
 
       {/* CTA FINAL */}
-      <Box sx={{ bgcolor: '#6C63FF', py: 10, textAlign: 'center', color: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 32, px: 3 }}>
+      <Box sx={{ bgcolor: '#1976d3', py: 10, textAlign: 'center', color: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 32, px: 3 }}>
         <Typography variant="h4" fontWeight="bold" sx={{ mb: 3, letterSpacing: 1 }}>
           Está pronto para transformar seu espaço em lucro?
         </Typography>
@@ -261,13 +261,13 @@ export default function LandingPage() {
           to="/"
           sx={{
             bgcolor: 'white',
-            color: '#6C63FF',
+            color: '#1976d3',
             px: 6,
             py: 2,
             borderRadius: 6,
             fontWeight: 600,
             fontSize: '1rem',
-            '&:hover': { bgcolor: '#f0f0ff', color: '#6C63FF' },
+            '&:hover': { bgcolor: '#f0f0ff', color: '#1976d3' },
           }}
         >
           Quero anunciar agora

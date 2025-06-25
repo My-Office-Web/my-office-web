@@ -92,8 +92,8 @@ export default function ModalReservas({ open, onClose }) {
       toast.success('Reserva atualizada com sucesso.');
       setReservas((prev) =>
         prev.map((r) => (r.id === id ? { ...r, data: novaData } : r))
-    );
-    await buscarReservas();
+      );
+      await buscarReservas();
       setEditandoId(null);
     } catch (error) {
       console.error('Erro ao atualizar reserva:', error);
@@ -132,7 +132,14 @@ export default function ModalReservas({ open, onClose }) {
   return (
     <>
       <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-        <DialogTitle sx={{ fontWeight: 'bold' }}>Minhas Reservas</DialogTitle>
+        <DialogTitle
+          sx={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: "1.5rem",
+            mb: 2,
+            color: "#1976d3",
+          }}>Minhas Reservas</DialogTitle>
         <DialogContent dividers sx={{ bgcolor: '#fafafa' }}>
           {loading ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
@@ -171,7 +178,7 @@ export default function ModalReservas({ open, onClose }) {
                   <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between">
                     <Box display="flex" flexDirection="column" gap={0.5}>
                       <Typography variant="h6" color="primary">
-                        {reserva.sala_tipo}
+                        Sala em {reserva.bairro}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         {`${reserva.rua}, ${reserva.numero} - ${reserva.bairro}, ${reserva.cidade} - ${reserva.estado}`}

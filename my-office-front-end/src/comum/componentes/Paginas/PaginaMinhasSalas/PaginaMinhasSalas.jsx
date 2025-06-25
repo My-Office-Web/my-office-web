@@ -3,14 +3,14 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Grid,
-  Typography,
-  Card,
-  CardMedia,
-  CardContent,
   DialogActions,
   Button,
+  Typography,
   Box,
+  CircularProgress,
+  Card,
+  CardActions,
+  IconButton,
 } from "@mui/material";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ModalEdicaoSala from "../PaginaCadatroSala/ModalEdicaoSala";
@@ -27,19 +27,20 @@ export default function ModalMinhasSalas({ open, onClose }) {
   const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
   const [salaExcluir, setSalaExcluir] = useState(null);
   const [loadingExcluir, setLoadingExcluir] = useState(false);
+  const [loadingSalas, setLoadingSalas] = useState(false);
 
   const autenticacao = new ServicoAutenticacao();
   const usuarioLogado = autenticacao.obterUsuario();
 
-  const { salas, refreshSalas } = useContext(SalasContext); // ← usa contexto global
+  const { salas, refreshSalas } = useContext(SalasContext);
   const [minhasSalas, setMinhasSalas] = useState([]);
 
   useEffect(() => {
     if (open && usuarioLogado) {
-      const salasUsuario = salas.filter(
-        (sala) => sala.usuario_id === usuarioLogado.id
-      );
+      setLoadingSalas(true);
+      const salasUsuario = salas.filter((sala) => sala.usuario_id === usuarioLogado.id);
       setMinhasSalas(salasUsuario);
+      setLoadingSalas(false);
     }
   }, [open, salas, usuarioLogado]);
 
@@ -68,16 +69,13 @@ export default function ModalMinhasSalas({ open, onClose }) {
     setLoadingExcluir(true);
     try {
       const token = autenticacao.obterToken();
-      await axios.delete(
-        `https://my-office-web.onrender.com/salas/${salaExcluir.id_sala}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.delete(`https://my-office-web.onrender.com/salas/${salaExcluir.id_sala}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       toast.success("Sala excluída com sucesso!");
       handleFecharModalExcluir();
-      await refreshSalas(); // ← atualiza via contexto
+      await refreshSalas();
     } catch (error) {
       console.error("Erro ao excluir sala:", error);
       toast.error("Não foi possível excluir a sala. Tente novamente.");
@@ -101,65 +99,73 @@ export default function ModalMinhasSalas({ open, onClose }) {
           Minhas Salas
         </DialogTitle>
 
-        <DialogContent dividers>
-          {minhasSalas.length === 0 ? (
-            <Typography variant="body1" align="center">
+        <DialogContent dividers sx={{ bgcolor: "#fafafa" }}>
+          {loadingSalas ? (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
+              <CircularProgress />
+            </Box>
+          ) : minhasSalas.length === 0 ? (
+            <Typography variant="body1" align="center" color="text.secondary">
               Nenhuma sala cadastrada ainda.
             </Typography>
           ) : (
-            <Grid container spacing={4} justifyContent="center">
+            <Box display="flex" flexDirection="column" gap={3}>
               {minhasSalas.map((sala) => (
-                <Grid item xs={12} sm={6} key={sala.id_sala}>
-                  <Card
+                <Card
+                  key={sala.id_sala}
+                  variant="outlined"
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    p: 2,
+                    borderRadius: 3,
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={sala.imagem}
+                    alt={`Imagem da sala ${sala.tipo}`}
                     sx={{
-                      width: "100%",
-                      display: "flex",
-                      flexDirection: "column",
+                      width: 200,
+                      height: 130,
+                      objectFit: "cover",
                       borderRadius: 2,
-                      boxShadow: 3,
+                      bgcolor: "#f0f0f0",
                     }}
-                  >
-                    <CardMedia
-                      component="img"
-                      image={sala.imagem}
-                      alt={`Imagem da sala ${sala.tipo}`}
-                      sx={{ width: 400, height: 200, objectFit: "cover" }}
-                    />
-                    <CardContent sx={{ textAlign: "center" }}>
-                      <Typography variant="h6" fontWeight="bold" color="grey">
-                        Sala {sala.id_sala}
+                  />
+                  <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between">
+                    <Box display="flex" flexDirection="column" gap={0.5}>
+                      <Typography variant="h6" color="primary">
+                        Sala em {sala.bairro}
                       </Typography>
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: 2,
-                          mt: 2,
-                        }}
+                      <Typography variant="body2" color="text.secondary">
+                        {`${sala.cidade} - ${sala.estado}`}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Capacidade: {sala.capacidade} pessoas | <strong>R$ {Number(sala.preco).toFixed(2)}</strong>
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
                       >
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-                          onClick={() => handleEditarSala(sala)}
-                        >
-                          <FaEdit style={{ marginRight: 4, color: "#1976d3" }} />
-                          <Typography variant="body2">Editar Sala</Typography>
-                        </Box>
+                        {sala.descricao}
+                      </Typography>
+                    </Box>
 
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-                          onClick={() => handleAbrirModalExcluir(sala)}
-                        >
-                          <FaTrash style={{ marginRight: 4, color: "red" }} />
-                          <Typography variant="body2">Excluir Sala</Typography>
-                        </Box>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                    <CardActions sx={{ p: 0, pt: 1 }}>
+                      <IconButton color="primary" onClick={() => handleEditarSala(sala)}>
+                        <FaEdit />
+                      </IconButton>
+                      <IconButton color="error" onClick={() => handleAbrirModalExcluir(sala)}>
+                        <FaTrash />
+                      </IconButton>
+                    </CardActions>
+                  </Box>
+                </Card>
               ))}
-            </Grid>
+            </Box>
           )}
         </DialogContent>
 
@@ -172,11 +178,7 @@ export default function ModalMinhasSalas({ open, onClose }) {
 
       {/* Modal de Edição */}
       {salaSelecionada && (
-        <ModalEdicaoSala
-          open={modalEditarAberto}
-          onClose={handleFecharModalEdicao}
-          sala={salaSelecionada}
-        />
+        <ModalEdicaoSala open={modalEditarAberto} onClose={handleFecharModalEdicao} sala={salaSelecionada} />
       )}
 
       {/* Modal de Confirmação de Exclusão */}

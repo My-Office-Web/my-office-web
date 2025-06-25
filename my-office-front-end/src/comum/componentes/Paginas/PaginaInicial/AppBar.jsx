@@ -1,56 +1,82 @@
 import React, { useState } from 'react';
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import TemporaryDrawer from "./MenuLateral";
-import { TbLogin2 } from "react-icons/tb";
-import ModalCadastro from "../PaginaCadastro/PaginaCadastro";
-import ModalLogin from "../PaginaLogin/PaginaLogin";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'; 
+import { TbLogin2 } from 'react-icons/tb';
 
+import TemporaryDrawer from './MenuLateral';
+import ModalCadastro from '../PaginaCadastro/PaginaCadastro';
+import ModalLogin from '../PaginaLogin/PaginaLogin';
+import AjudaModal from '../../Ajuda/AjudaModal';
 
 export default function ButtonAppBar() {
+  // Estados de modais e menu lateral
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openModalCadastro, setOpenModalCadastro] = useState(false);
   const [openModalLogin, setOpenModalLogin] = useState(false);
+  const [openAjudaModal, setOpenAjudaModal] = useState(false);
 
+  // Funções toggle
   const toggleDrawer = (open) => () => {
     setOpenDrawer(open);
   };
 
   const toggleModalCadastro = () => {
     setOpenModalCadastro(!openModalCadastro);
-    if (openModalLogin) setOpenModalLogin(false); 
+    setOpenModalLogin(false);
+    setOpenAjudaModal(false);
   };
 
   const toggleModalLogin = () => {
     setOpenModalLogin(!openModalLogin);
-    if (openModalCadastro) setOpenModalCadastro(false); 
+    setOpenModalCadastro(false);
+    setOpenAjudaModal(false);
+  };
+
+  const toggleAjudaModal = () => {
+    setOpenAjudaModal(!openAjudaModal);
+    setOpenModalCadastro(false);
+    setOpenModalLogin(false);
   };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
+          {/* Botão de menu lateral */}
           <IconButton
             size="large"
             edge="start"
             color="inherit"
-            aria-label="menu"
+            aria-label="abrir menu"
             sx={{ mr: 2 }}
             onClick={toggleDrawer(true)}
           >
             <MenuIcon />
           </IconButton>
 
+          {/* Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
             <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
           </Box>
 
-          {/* BOTÃO CRIAR CONTA abre modal */}
+          {/* Botão Ajuda */}
+          <Button
+            color="inherit"
+            onClick={toggleAjudaModal}
+            startIcon={<HelpOutlineIcon />}
+          >
+            Ajuda
+          </Button>
+
+          {/* Botão Criar Conta */}
           <Button
             sx={{ mr: 2 }}
             variant="contained"
@@ -60,31 +86,37 @@ export default function ButtonAppBar() {
             Criar Conta
           </Button>
 
-          {/* BOTÃO LOGIN ABRE O MODAL DE LOGIN */}
+          {/* Botão Entrar */}
           <Button
             variant="contained"
             color="success"
-            onClick={toggleModalLogin} 
+            onClick={toggleModalLogin}
+            startIcon={<TbLogin2 size={20} />}
           >
-            <TbLogin2 size={20} /> Entrar
+            Entrar
           </Button>
         </Toolbar>
       </AppBar>
 
+      {/* Menu lateral */}
       <TemporaryDrawer open={openDrawer} toggleDrawer={toggleDrawer} />
 
-      {/* MODAL DE CADASTRO */}
+      {/* Modais */}
       <ModalCadastro
         open={openModalCadastro}
-        onClose={toggleModalCadastro} 
-        toggleModalLogin={toggleModalLogin} 
+        onClose={toggleModalCadastro}
+        toggleModalLogin={toggleModalLogin}
       />
 
-      {/* MODAL DE LOGIN */}
       <ModalLogin
         open={openModalLogin}
-        onClose={toggleModalLogin} 
-        toggleModalCadastro={toggleModalCadastro} 
+        onClose={toggleModalLogin}
+        toggleModalCadastro={toggleModalCadastro}
+      />
+
+      <AjudaModal
+        open={openAjudaModal}
+        onClose={toggleAjudaModal}
       />
     </Box>
   );

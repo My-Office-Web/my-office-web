@@ -24,9 +24,11 @@ import ModalCadastroSala from "../PaginaCadatroSala/PaginaCadastroSala";
 import ModalMinhasSalas from "../PaginaMinhasSalas/PaginaMinhasSalas";
 import PaginaPerfilUsuario from "../../Perfil/Perfil";
 import ModalFavoritos from "../../Favoritos/Favoritos";
+import ModalReservas from "../../ReservasSalas/ReservasSalas";
+import AjudaModal from "../../Ajuda/AjudaModal"; // ✅ Importado aqui
+
 import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
 import { useNavigate, useLocation } from "react-router-dom";
-import ModalReservas from "../../ReservasSalas/ReservasSalas";
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
@@ -38,6 +40,7 @@ export default function AppBarLogado() {
   const [openModalPerfil, setOpenModalPerfil] = useState(false);
   const [openFavoritos, setOpenFavoritos] = useState(false);
   const [openModalReservas, setOpenModalReservas] = useState(false);
+  const [openAjudaModal, setOpenAjudaModal] = useState(false); // ✅ Novo estado
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,7 +77,7 @@ export default function AppBarLogado() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: "" }}>
+      <AppBar position="static">
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           {/* Menu Lateral */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -103,16 +106,15 @@ export default function AppBarLogado() {
               justifyContent: "center",
             }}
           >
-<IconButton
-  color="inherit"
-  onClick={() => navigate(estaNaPaginaInicial ? "/busca" : "/")}
->
-  {estaNaPaginaInicial ? <SearchIcon /> : <HomeIcon />}
-  <Typography variant="body2" sx={{ marginLeft: 1 }}>
-    {estaNaPaginaInicial ? "Busca Avançada" : "Início"}
-  </Typography>
-</IconButton>
-
+            <IconButton
+              color="inherit"
+              onClick={() => navigate(estaNaPaginaInicial ? "/busca" : "/")}
+            >
+              {estaNaPaginaInicial ? <SearchIcon /> : <HomeIcon />}
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                {estaNaPaginaInicial ? "Busca Avançada" : "Início"}
+              </Typography>
+            </IconButton>
 
             <IconButton
               color="inherit"
@@ -158,7 +160,12 @@ export default function AppBarLogado() {
               </Typography>
             </IconButton>
 
-            <IconButton color="inherit" sx={{ marginLeft: 2 }}>
+            {/* ✅ Botão Ajuda com ação */}
+            <IconButton
+              color="inherit"
+              sx={{ marginLeft: 2 }}
+              onClick={() => setOpenAjudaModal(true)}
+            >
               <HelpIcon />
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
                 Ajuda
@@ -198,35 +205,33 @@ export default function AppBarLogado() {
       {/* Menu lateral */}
       <TemporaryDrawer open={openDrawer} toggleDrawer={toggleDrawer} />
 
-      {/* Modal de Cadastro de Sala */}
+      {/* Modais */}
       <ModalCadastroSala
         open={openModalCadastroSala}
         onClose={() => setOpenModalCadastroSala(false)}
       />
-
-      {/* Modal de Minhas Salas */}
       <ModalMinhasSalas
         open={openModalMinhasSalas}
         onClose={() => setOpenModalMinhasSalas(false)}
       />
-
-      {/* Modal de Perfil do Usuário */}
       <PaginaPerfilUsuario
         open={openModalPerfil}
         onClose={() => setOpenModalPerfil(false)}
         usuario={usuarioLogado}
       />
-
-      {/* Modal de Favoritos */}
       <ModalFavoritos
         open={openFavoritos}
         onClose={() => setOpenFavoritos(false)}
       />
-
-      {/* Modal de Reservas */}
       <ModalReservas
         open={openModalReservas}
         onClose={() => setOpenModalReservas(false)}
+      />
+
+      {/* ✅ Modal de Ajuda */}
+      <AjudaModal
+        open={openAjudaModal}
+        onClose={() => setOpenAjudaModal(false)}
       />
     </Box>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Grid, Typography, Box, Container } from '@mui/material';
+import { Grid, Typography, Box } from '@mui/material';
 import CardSala from './CardSala';
 import SkeletonCardSala from './SkeletonCardSala';
 import ServicoAutenticacao from '../../servicos/ServicoAutenticacao';
@@ -7,8 +7,8 @@ import { SalasContext } from '../SalasContext/SalasContext';
 
 const normalizarTexto = (texto) =>
   texto
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 
 export default function SalasLista({ filtros }) {
@@ -19,7 +19,6 @@ export default function SalasLista({ filtros }) {
   const auth = new ServicoAutenticacao();
   const usuarioLogado = auth.obterUsuario();
 
-  // Filtro com Skeleton
   useEffect(() => {
     if (!salas || salas.length === 0) {
       setSalasFiltradas([]);
@@ -33,10 +32,11 @@ export default function SalasLista({ filtros }) {
       const buscaNormalizada = normalizarTexto(local || '');
 
       const resultado = salas.filter((sala) => {
-        const bairro = normalizarTexto(sala.bairro);
-        const cidade = normalizarTexto(sala.cidade);
-        const estado = normalizarTexto(sala.estado);
-        const rua = normalizarTexto(sala.rua);
+        const bairro = normalizarTexto(sala.bairro || '');
+        const cidade = normalizarTexto(sala.cidade || '');
+        const estado = normalizarTexto(sala.estado || '');
+        const rua = normalizarTexto(sala.rua || '');
+        const tipoSala = normalizarTexto(sala.tipo || '');
 
         const localValido =
           !buscaNormalizada ||
@@ -74,7 +74,7 @@ export default function SalasLista({ filtros }) {
 
   if (salasFiltradas.length === 0) {
     return (
-      <Typography variant="h6" align="center">
+      <Typography variant="h6" align="center" sx={{ mt: 5 }}>
         Nenhuma sala encontrada com os filtros informados.
       </Typography>
     );
@@ -89,7 +89,7 @@ export default function SalasLista({ filtros }) {
               usuarioId={usuarioLogado?.id}
               salaId={sala.id_sala}
               titulo={`Sala em ${sala.bairro}`}
-              endereco={` ${sala.cidade}/${sala.estado}`}
+              endereco={`${sala.cidade}/${sala.estado}`}
               preco={sala.preco}
               capacidade={sala.capacidade}
               descricao={sala.descricao}

@@ -11,8 +11,6 @@ import {
   Divider,
   useMediaQuery,
   Button,
-  Modal,
-  CircularProgress,
   Drawer,
   IconButton,
   Container,
@@ -21,7 +19,6 @@ import {
   GlobalStyles,
 } from "@mui/material";
 import { FaFilter } from "react-icons/fa";
-import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
 import AppBarLogado from "../PaginaLogado/AppBarLogado";
 import CardSala from "../../CardSala/CardSala";
@@ -70,8 +67,6 @@ export default function PaginaDeBuscaComFiltros() {
   const [filtrando, setFiltrando] = useState(false);
   const [buscaLocal, setBuscaLocal] = useState("");
   const [opcoesAutoComplete, setOpcoesAutoComplete] = useState([]);
-
-  const [modalMapaAberto, setModalMapaAberto] = useState(false);
   const [drawerFiltroAberto, setDrawerFiltroAberto] = useState(false);
 
   useEffect(() => {
@@ -140,29 +135,6 @@ export default function PaginaDeBuscaComFiltros() {
     setFiltros({ ...filtros, [e.target.name]: e.target.checked });
   };
 
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyDjT2WABBTtCsB6n_yKSO3iLH1v5woOh6U",
-  });
-
-  const calcularCentro = () => {
-    if (!salasFiltradas.length) return { lat: -27.5945, lng: -46.633308 };
-
-    const latSum = salasFiltradas.reduce(
-      (acc, sala) => acc + parseFloat(sala.latitude),
-      0
-    );
-    const lngSum = salasFiltradas.reduce(
-      (acc, sala) => acc + parseFloat(sala.longitude),
-      0
-    );
-
-    return {
-      lat: latSum / salasFiltradas.length,
-      lng: lngSum / salasFiltradas.length,
-    };
-  };
-
   return (
     <>
       <DarkMode isDark={isDark} toggleTheme={toggleTheme} />
@@ -196,13 +168,6 @@ export default function PaginaDeBuscaComFiltros() {
                 />
               )}
             />
-            <Button
-              variant="outlined"
-              onClick={() => setModalMapaAberto(true)}
-              disabled={salasFiltradas.length === 0}
-            >
-              Ver todas no mapa
-            </Button>
           </Box>
 
           {(loading || filtrando) && (
@@ -242,14 +207,7 @@ export default function PaginaDeBuscaComFiltros() {
               sx={{ maxWidth: "1600px", mx: "auto" }}
             >
               {salasFiltradas.map((sala) => (
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  md={3}
-                  lg={3}
-                  key={sala.id}
-                >
+                <Grid item xs={12} sm={6} md={3} lg={3} key={sala.id}>
                   <CardSala
                     titulo={`Sala em ${sala.bairro}`}
                     endereco={`${sala.cidade} / ${sala.estado}`}
@@ -273,7 +231,6 @@ export default function PaginaDeBuscaComFiltros() {
           </Container>
         </Box>
 
-        {/* Drawer de filtros */}
         <Drawer
           anchor="left"
           open={drawerFiltroAberto}
@@ -329,52 +286,6 @@ export default function PaginaDeBuscaComFiltros() {
             </Button>
           </Box>
         </Drawer>
-
-        {/* Modal com o mapa */}
-        <Modal open={modalMapaAberto} onClose={() => setModalMapaAberto(false)}>
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: { xs: "95vw", sm: "80vw", md: "70vw" },
-              height: { xs: "70vh", sm: "70vh", md: "75vh" },
-              bgcolor: "background.paper",
-              boxShadow: 24,
-              borderRadius: 2,
-              overflow: "hidden",
-            }}
-          >
-            {isLoaded ? (
-              <GoogleMap
-                mapContainerStyle={{ width: "100%", height: "100%" }}
-                center={calcularCentro()}
-                zoom={13}
-              >
-                {salasFiltradas.map((sala) => (
-                  <Marker
-                    key={sala.id}
-                    position={{
-                      lat: parseFloat(sala.latitude),
-                      lng: parseFloat(sala.longitude),
-                    }}
-                    title={`Sala ${sala.tipo} - R$${sala.preco}`}
-                  />
-                ))}
-              </GoogleMap>
-            ) : (
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                height="100%"
-              >
-                <CircularProgress />
-              </Box>
-            )}
-          </Box>
-        </Modal>
       </ThemeProvider>
     </>
   );

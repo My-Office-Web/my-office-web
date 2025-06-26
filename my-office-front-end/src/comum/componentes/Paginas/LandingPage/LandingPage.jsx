@@ -20,24 +20,29 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useTheme } from '@mui/material/styles';
 
 import ModalCadastroSala from '../PaginaCadatroSala/PaginaCadastroSala';
-import ModalLogin from '../PaginaLogin/PaginaLogin';
 import ServicoAutenticacao from '../../../servicos/ServicoAutenticacao';
+import ModalCadastro from '../PaginaCadastro/PaginaCadastro';
+import ModalLogin from '../PaginaLogin/PaginaLogin';
 
 export default function LandingPage() {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
 
+  const [openModalCadastro, setOpenModalCadastro] = useState(false);
   const [openModalLogin, setOpenModalLogin] = useState(false);
   const [openModalCadastroSala, setOpenModalCadastroSala] = useState(false);
 
+  const toggleModalCadastro = () => {
+    setOpenModalCadastro(!openModalCadastro);
+    if (openModalCadastroSala) setOpenModalCadastroSala(false);
+  };
   const toggleModalLogin = () => {
     setOpenModalLogin(!openModalLogin);
-    if (openModalCadastroSala) setOpenModalCadastroSala(false);
   };
 
   const toggleModalCadastroSala = () => {
     setOpenModalCadastroSala(!openModalCadastroSala);
-    if (openModalLogin) setOpenModalLogin(false);
+    if (openModalCadastro) setOpenModalCadastro(false);
   };
 
   const handleCliqueCTA = () => {
@@ -45,7 +50,7 @@ export default function LandingPage() {
     if (instanciaAutenticacao.usuarioEstaLogado()) {
       toggleModalCadastroSala();
     } else {
-      toggleModalLogin();
+      toggleModalCadastro();
     }
   };
 
@@ -256,14 +261,21 @@ export default function LandingPage() {
   {/* MODAIS */}
   <ModalLogin
     open={openModalLogin}
-    onClose={toggleModalLogin}
-    toggleModalCadastro={toggleModalCadastroSala}
+    onClose={toggleModalCadastro}
+    toggleModalCadastro={toggleModalCadastro}
   />
+
+  <ModalCadastro
+  open={openModalCadastro}
+  onClose={toggleModalCadastro}
+  toggleModalLogin={toggleModalLogin}/>
   <ModalCadastroSala
     open={openModalCadastroSala}
     onClose={toggleModalCadastroSala}
   />
 </Box>
+
+
 
     </Box>
   );

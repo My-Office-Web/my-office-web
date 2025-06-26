@@ -81,16 +81,7 @@ export default function ModalConfirmacaoExclusao({
 
       <DialogContent dividers sx={{ textAlign: "center" }}>
         <Typography variant="body1" sx={{ fontSize: 16, mb: 1 }}>
-          Você tem certeza que deseja excluir a sala{" "}
-          <Typography
-            component="span"
-            fontWeight="bold"
-            color="text.primary"
-            sx={{ fontSize: 16 }}
-          >
-            {salaId}
-          </Typography>
-          ?
+          Você tem certeza que deseja excluir a sala?
         </Typography>
         <Typography
           variant="body2"

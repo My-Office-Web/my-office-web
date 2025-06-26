@@ -208,8 +208,6 @@ export default function ModalMinhasSalas({ open, onClose }) {
           loading={loadingExcluir}
         />
       )}
-
-      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 }

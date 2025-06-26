@@ -8,11 +8,13 @@ import axios from 'axios';
 
 import ValidarLogin from '../../../../classes/ValidarInputsUsuario/validarLogin';
 import ServicoAutenticacao from '../../../servicos/ServicoAutenticacao';
+import { useNavigate } from 'react-router-dom';
 
 const instanciaAutenticacao = new ServicoAutenticacao();
 
 export default function ModalLogin({ open, onClose, toggleModalCadastro }) {
   const [form, setForm] = useState({ email: '', senha: '' });
+  const navigate = useNavigate()
 
   const handleChange = ({ target }) => {
     setForm((prev) => ({ ...prev, [target.name]: target.value }));
@@ -36,14 +38,13 @@ export default function ModalLogin({ open, onClose, toggleModalCadastro }) {
       });
       
       const { token, usuario } = response.data;
-      console.log(usuario);
 
       instanciaAutenticacao.login(token, usuario);
       toast.success('Login realizado com sucesso!');
 
       setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+        navigate('/')
+      }, 500);
 
       setTimeout(() => {
         onClose();

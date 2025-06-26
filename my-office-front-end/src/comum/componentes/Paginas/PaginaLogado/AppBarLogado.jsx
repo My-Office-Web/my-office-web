@@ -60,7 +60,7 @@ export default function AppBarLogado() {
 
   const handleLogout = () => {
     instanciaAutenticacao.logout();
-    window.location.reload();
+    navigate('/visitante')
   };
 
   const usuarioLogado = JSON.parse(localStorage.getItem("usuario-logado")) || {};

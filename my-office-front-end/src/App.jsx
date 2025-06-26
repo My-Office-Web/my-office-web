@@ -3,29 +3,44 @@ import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import PaginaInicial from './comum/componentes/Paginas/PaginaInicial/PaginaInicial';
 import PaginaDeBuscaComFiltros from './comum/componentes/Paginas/PaginaDeBuscaComFiltros/PaginaDeBuscaComFiltros';
 import ScrollToTopWrapper from './comum/componentes/ScrollToTop/ScrollToTop';
 
 import { SalasProvider } from './comum/componentes/SalasContext/SalasContext';
+import PaginaInicialLogado from './comum/componentes/Paginas/PaginaLogado/PaginaInicialLogado';
+import PaginaInicialVisitante from './comum/componentes/Paginas/PaginaInicial/PaginaInicialVisitante';
+import VerificarAutenticacao from './comum/componentes/VerificarAutorizacao/VerificarAutorizacao';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/visitante',
     element: (
       <ScrollToTopWrapper>
-        <PaginaInicial />
+        <PaginaInicialVisitante />
       </ScrollToTopWrapper>
     ),
   },
   {
-    path: '/busca',
-    element: (
-      <ScrollToTopWrapper>
-        <PaginaDeBuscaComFiltros />
-      </ScrollToTopWrapper>
-    ),
-  },
+    path: '',
+    element: <VerificarAutenticacao />,
+    children: [
+    {
+      path: '/',
+      element: (
+        <ScrollToTopWrapper>
+          <PaginaInicialLogado />
+        </ScrollToTopWrapper>
+      ),
+    },
+    {
+      path: '/busca',
+      element: (
+        <ScrollToTopWrapper>
+          <PaginaDeBuscaComFiltros />
+        </ScrollToTopWrapper>
+      ),
+    },
+  ]},
 ]);
 
 function App() {

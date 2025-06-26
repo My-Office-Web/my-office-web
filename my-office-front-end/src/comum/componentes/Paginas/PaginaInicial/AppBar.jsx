@@ -3,12 +3,10 @@ import {
   AppBar,
   Box,
   Toolbar,
-  Typography,
   Button,
   IconButton,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'; 
 import { TbLogin2 } from 'react-icons/tb';
 
 import TemporaryDrawer from './MenuLateral';
@@ -66,15 +64,6 @@ export default function ButtonAppBar() {
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
             <img src="/logo.png" alt="Logo MyOffice" style={{ height: 50 }} />
           </Box>
-
-          {/* Botão Ajuda */}
-          <Button
-            color="inherit"
-            onClick={toggleAjudaModal}
-            startIcon={<HelpOutlineIcon />}
-          >
-            Ajuda
-          </Button>
 
           {/* Botão Criar Conta */}
           <Button

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Container,
   ThemeProvider,
@@ -6,20 +6,16 @@ import {
   GlobalStyles,
 } from "@mui/material";
 
-import ButtonAppBar from "../../Paginas/PaginaInicial/AppBar";
-import FiltroImoveis from "../../Paginas/PaginaInicial/BarraDeBuscaSuperior";
+import ButtonAppBar from "./AppBar";
+import FiltroImoveis from "./BarraDeBuscaSuperior";
 import CustomCarousel from "../CarrousselInicial/CarrousselInicial";
 import DarkMode from "../../DarkMode/DarkMode";
 import Footer from "../Footer/Footer";
 
 import { lightTheme, darkTheme } from "../../../Theme/theme";
-import ServicoAutenticacao from "../../../servicos/ServicoAutenticacao";
-import AppBarLogado from "../PaginaLogado/AppBarLogado";
 import SalasLista from "../../CardSala/SalasLista";
 import AgeoBold from "../../../../assets/fonts/Ageo-Bold.otf";
 import LandingPage from "../LandingPage/LandingPage";
-
-const instanciaAutenticacao = new ServicoAutenticacao();
 
 const FonteGlobal = () => (
   <GlobalStyles
@@ -34,8 +30,7 @@ const FonteGlobal = () => (
   />
 );
 
-const PaginaInicial = () => {
-  const [usuarioAutenticado, setUsuarioAutenticado] = useState(false);
+const PaginaInicialVisitante = () => {
   const [isDark, setIsDark] = useState(false);
 
   // Filtro controlado
@@ -46,11 +41,6 @@ const PaginaInicial = () => {
   const toggleTheme = (checked) => {
     setIsDark(checked);
   };
-
-  useEffect(() => {
-    const usuarioLogado = instanciaAutenticacao.usuarioEstaLogado();
-    setUsuarioAutenticado(usuarioLogado);
-  }, []);
 
   const onBuscar = () => {
     setFiltros({ local, tipo });
@@ -63,7 +53,7 @@ const PaginaInicial = () => {
         <CssBaseline />
         <FonteGlobal />
 
-        {usuarioAutenticado ? <AppBarLogado /> : <ButtonAppBar />}
+        <ButtonAppBar />
 
         <Container sx={{ py: 4 }} maxWidth="">
           <FiltroImoveis
@@ -93,4 +83,4 @@ const PaginaInicial = () => {
   );
 };
 
-export default PaginaInicial;
+export default PaginaInicialVisitante;
